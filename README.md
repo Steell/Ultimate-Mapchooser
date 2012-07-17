@@ -15,10 +15,6 @@ You can control how the randomization works by dividing your map rotation into g
  
 In order for this to work, I had to completely bypass RTV, Mapchooser, and Nominations, which means I rewrote each's functionality into this plugin. You can control each of these features via Ultimate Mapchooser's cvars.
 
-
-----
-
-
 ##Features:
 Any and all features can be turned on and off.
 
