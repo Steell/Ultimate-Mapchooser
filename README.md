@@ -1,8 +1,8 @@
 #Ultimate Mapchooser
 
-  <b>ul·ti·mate</b>  _/ˈəltəmit/_
-    _Noun_: The best achievable or imaginable of its kind: "the ultimate in decorative luxury".
-    _Adjective_: Being or happening at the end of a process; final: "their ultimate aim was to force his resignation"
+> <b>ul·ti·mate</b>  _/ˈəltəmit/_  
+> _Noun_: The best achievable or imaginable of its kind: "the ultimate in decorative luxury".  
+> _Adjective_: Being or happening at the end of a process; final: "their ultimate aim was to force his resignation"
 
 Basically, this is the last mapchooser you will ever need.
 
@@ -14,6 +14,7 @@ Ultimate Mapchooser allows for increased control over map selection. This includ
 You can control how the randomization works by dividing your map rotation into groups, and controlling the weights of each group or each individual map, specify a minimum or maximum number of players allowed on the server for the map to be available, specify how many maps from a group are allowed in a vote, etc.
  
 In order for this to work, I had to completely bypass RTV, Mapchooser, and Nominations, which means I rewrote each's functionality into this plugin. You can control each of these features via Ultimate Mapchooser's cvars.
+
 
 ##Features:
 Any and all features can be turned on and off.
