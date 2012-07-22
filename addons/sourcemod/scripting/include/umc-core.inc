@@ -175,7 +175,8 @@ forward Action:UMC_OnDetermineMapExclude(Handle:kv, const String:map[], const St
  * @param runoffSound   Sound to be played when the runoff vote starts (must be precached already).
  * @param nominationStrictness  Specifies how nominations should be handled.
  * @param allowDuplicates   Determines if the same map (in different groups) can appear in the vote.
- * @param adminFlags    String of flags required for players to see the vote.
+ * @param clients   String of flags required for players to see the vote.
+ * @param numClients    Number of clients to read from clients array.
  * @param runExclusion  Determines if UMC will filter the mapcycle through the Map Exclusion system.
  * 
  * @return True on success, false on failure.
@@ -185,7 +186,7 @@ native bool:UMC_StartVote(const String:id[], Handle:mapcycle, Handle:originalMap
     bool:extendOption, Float:timestep, roundstep, fragstep, bool:dontChangeOption, Float:threshold,
     UMC_ChangeMapTime:successAction, UMC_VoteFailAction:failAction, maxRunoffs, maxRunoffMaps,
     UMC_RunoffFailAction:runoffFailAction, const String:runoffSound[], bool:nominationStrictness,
-    bool:allowDuplicates, const String:adminFlags[], bool:runExclusion=true);
+    bool:allowDuplicates, const clients[], numClients, bool:runExclusion=true);
     
     
 /**
@@ -401,7 +402,7 @@ native bool:UMC_StopVote(const String:id[]);
  *
  * @return Plugin_Continue on success, Plugin_Stop to prevent the vote.
  */
-functag UMC_VoteHandler Action:public(duration, Handle:vote_items, Handle:clients,
+functag UMC_VoteHandler Action:public(duration, Handle:vote_items, const clients[], numClients,
                                       const String:startSound[]);
 
 /**
@@ -471,7 +472,8 @@ forward UMC_DisplayMapCycle(client, bool:filtered);
 /**
  *
  */
-forward UMC_VoteStarted(const String:voteManagerId[], Handle:clients, Handle:voteOptions);
+forward UMC_VoteStarted(const String:voteManagerId[], const clients[], numClients, 
+                        Handle:voteOptions);
 
 
 /**

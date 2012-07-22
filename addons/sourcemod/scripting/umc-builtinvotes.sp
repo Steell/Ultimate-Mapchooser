@@ -123,17 +123,17 @@ public OnPluginEnd()
 //************************************************************************************************//
 
 //
-public Action:VM_MapVote(duration, Handle:vote_items, Handle:clients, const String:startSound[])
+public Action:VM_MapVote(duration, Handle:vote_items, const clients[], numClients,
+                         const String:startSound[])
 {
     new bool:verboseLogs = cvar_logging != INVALID_HANDLE && GetConVarBool(cvar_logging);
 
     decl clientArr[MAXPLAYERS+1];
     new count = 0;
-    new size = GetArraySize(clients);
     new client;
-    for (new i = 0; i < size; i++)
+    for (new i = 0; i < numClients; i++)
     {
-        client = GetArrayCell(clients, i);
+        client = clients[i];
         if (IsClientInGame(client))
         {
             if (verboseLogs)

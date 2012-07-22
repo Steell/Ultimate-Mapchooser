@@ -742,12 +742,20 @@ stock bool:IsPlayerCountBetween(min, max)
 
 
 //Converts an adt_array to a standard array.
-stock ConvertArray(Handle:arr, any:newArr[], size)
+stock ConvertAdtArray(Handle:arr, any:newArr[], size)
 {
     new arraySize = GetArraySize(arr);
     new min = size < arraySize ? size : arraySize;
     for (new i = 0; i < min; i++)
         newArr[i] = GetArrayCell(arr, i);
+}
+
+
+//
+stock ConvertArray(const any:arr[], amt, Handle:newArr)
+{
+    for (new i = 0; i < amt; i++)
+        PushArrayCell(newArr, arr[i]);
 }
 
 
@@ -780,7 +788,7 @@ stock bool:GetWeightedRandomSubKey(String:buffer[], size, Handle:weightArr, Hand
     DEBUG_MESSAGE("Setting up array of weights.")
     //Convert the adt_array of weights to a normal array.
     new Float:weights[total];
-    ConvertArray(weightArr, weights, total);
+    ConvertAdtArray(weightArr, weights, total);
 
     DEBUG_MESSAGE("Picking a random number.")
     //We select a random number here by getting a random Float in the
@@ -1083,21 +1091,22 @@ stock bool:VoteMenuToAllWithFlags(Handle:menu, time, const String:flagstring[]="
 
 
 //
-stock Handle:GetClientsWithFlags(const String:flagstring[])
+stock GetClientsWithFlags(const String:flagstring[], clients[], maxlen, &amt)
 {
-    new Handle:result = CreateArray();
     new bool:checkFlags = strlen(flagstring) > 0;
     new flags = ReadFlagString(flagstring);
-    for (new i = 1; i <= MaxClients; i++)
+    new limit = maxlen < MaxClients ? maxlen : MaxClients;
+    new count = 0;
+    for (new i = 1; i <= limit; i++)
     {
         if (IsClientInGame(i) && !IsFakeClient(i)
             && (!checkFlags || (flags & GetUserFlagBits(i))))
         {
             DEBUG_MESSAGE("Client has correct flags: %L (%i) [F: %s]", i, i, flagstring)
-            PushArrayCell(result, i);
+            clients[count++] = i;
         }
     }
-    return result;
+    amt = count;
 }
 
 
@@ -1276,4 +1285,24 @@ stock Handle:CloseAndClone(Handle:hndl, Handle:newOwner)
     new Handle:result = CloneHandle(hndl, newOwner);
     CloseHandle(hndl);
     return result;
+}
+
+
+//
+stock ConvertClientsToUserIDs(const clients[], userIds[], amt)
+{
+    for (new i = 0; i < amt; i++)
+    {
+        userIds[i] = GetClientUserId(clients[i]);
+    }
+}
+
+
+//
+stock ConvertUserIDsToClients(const userIds[], clients[], amt)
+{
+    for (new i = 0; i < amt; i++)
+    {
+        clients[i] = GetClientOfUserId(userIds[i]);
+    }
 }

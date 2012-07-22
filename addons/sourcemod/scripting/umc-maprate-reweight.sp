@@ -236,7 +236,7 @@ public UMC_OnReweightMap(Handle:kv, const String:map[], const String:group[])
 
 
 //Display String for Map
-public UMC_OnFormatTemplateString(String:template[], maxlen, Handle:kv, const String:map[]
+public UMC_OnFormatTemplateString(String:template[], maxlen, Handle:kv, const String:map[],
                                   const String:group[])
 {
     new Float:weight;

@@ -654,6 +654,10 @@ ChangeToValidMap(Handle:cvar)
             
                 decl String:flags[64];
                 GetConVarString(cvar_flags, flags, sizeof(flags));
+                
+                new clients[MAXPLAYERS+1];
+                new numClients;
+                GetClientsWithFlags(flags, clients, sizeof(clients), numClients);
             
                 //Start the UMC vote.
                 UMC_StartVote(
@@ -679,7 +683,8 @@ ChangeToValidMap(Handle:cvar)
                     runoff_sound,                                               //Runoff Sound
                     GetConVarBool(cvar_strict_noms),                            //Nomination Strictness
                     GetConVarBool(cvar_vote_allowduplicates),                   //Ignore Duplicates
-                    flags                                                       //Admin Flags
+                    clients,
+                    numClients
                 );
             }
             else

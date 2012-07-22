@@ -412,6 +412,10 @@ public Action:Command_Vote(client, args)
     
     decl String:flags[64];
     GetConVarString(cvar_flags, flags, sizeof(flags));
+    
+    new clients[MAXPLAYERS+1];
+    new numClients;
+    GetClientsWithFlags(flags, clients, sizeof(clients), numClients);
 
     //Start the UMC vote.
     new bool:result = UMC_StartVote(
@@ -437,7 +441,8 @@ public Action:Command_Vote(client, args)
         runoff_sound,                                               //Runoff Sound
         GetConVarBool(cvar_strict_noms),                            //Nomination Strictness
         GetConVarBool(cvar_vote_allowduplicates),                   //Ignore Duplicates
-        flags                                                       //Admin Flags
+        clients,
+        numClients
     );
     
     if (result)

@@ -1861,6 +1861,10 @@ DoMapVote(client)
     
     GetTrieString(trie, "flags", flags, sizeof(flags));
     
+    new clients[MAXPLAYERS+1];
+    new numClients;
+    GetClientsWithFlags(flags, clients, sizeof(clients), numClients);
+    
     GetTrieValue(trie, "ignore_exclusion", ignoreExclusion);
     
     CloseClientVoteTrie(client);
@@ -1875,8 +1879,8 @@ DoMapVote(client)
         vote_end_sound, extend, GetConVarFloat(cvar_extend_time), GetConVarInt(cvar_extend_rounds),
         GetConVarInt(cvar_extend_frags), dontChange, threshold, when, failAction, runoffs,
         GetConVarInt(cvar_runoff_max), runoffFailAction, runoff_sound,
-        GetConVarBool(cvar_strict_noms), GetConVarBool(cvar_vote_allowduplicates), flags,
-        !ignoreExclusion
+        GetConVarBool(cvar_strict_noms), GetConVarBool(cvar_vote_allowduplicates), clients, 
+        numClients, !ignoreExclusion
     );
     
     DEBUG_MESSAGE("Cleanup")

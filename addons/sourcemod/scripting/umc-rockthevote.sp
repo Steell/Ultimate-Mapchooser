@@ -834,6 +834,10 @@ public StartRTV()
         GetConVarString(cvar_voteflags, flags, sizeof(flags));
         DEBUG_MESSAGE("Vote Flags: \"%s\"", flags)
         
+        new clients[MAXPLAYERS+1];
+        new numClients;
+        GetClientsWithFlags(flags, clients, sizeof(clients), numClients);
+        
         //Start the UMC vote.
         new bool:result = UMC_StartVote(
             "core",
@@ -858,7 +862,8 @@ public StartRTV()
             runoff_sound,                                               //Runoff Sound
             GetConVarBool(cvar_strict_noms),                            //Nomination Strictness
             GetConVarBool(cvar_vote_allowduplicates),                   //Ignore Duplicates
-            flags                                                       //Admin Flags
+            clients,
+            numClients
         );
         
         if (!result)

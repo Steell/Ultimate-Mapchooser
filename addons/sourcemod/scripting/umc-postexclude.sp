@@ -57,8 +57,6 @@ public OnPluginStart()
     AutoExecConfig(true, "umc-postexclude");
     
     time_played_trie = CreateTrie();
-    
-    UMC_RegTemplateVariable(POSTEX_KEY_MAP, OnTemplateRequested);
 }
 
 
@@ -103,33 +101,6 @@ bool:IsStillDelayed(const String:map[], const String:group[], minsDelayed)
 #else
     return minsSincePlayed <= minsDelayed;
 #endif
-}
-
-
-//
-public OnTemplateRequested(const String:varName[], String:buffer[], maxlen, Handle:kv, 
-                           const String:map[], const String:group[])
-{
-    new def, val;
-    
-    KvRewind(kv);
-    if (KvJumpToKey(kv, group))
-    {
-        def = KvGetNum(kv, POSTEX_KEY_GROUP, POSTEX_DEFAULT_VALUE);
-    
-        if (KvJumpToKey(kv, map))
-        {    
-            val = KvGetNum(kv, POSTEX_KEY_MAP, def);
-            KvGoBack(kv);
-        }
-        else
-        {
-            val = def;
-        }
-        KvGoBack(kv);
-    }
-    
-    FormatEx(buffer, maxlen, "Allowed every %i minutes", val);
 }
 
 

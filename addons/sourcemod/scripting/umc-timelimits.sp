@@ -137,7 +137,7 @@ public Action:UMC_OnDetermineMapExclude(Handle:kv, const String:map[], const Str
 
 //Display Template
 public UMC_OnFormatTemplateString(String:template[], maxlen, Handle:kv, const String:map[], 
-                                  const String:group[]);
+                                  const String:group[])
 {
     new defaultMin, defaultMax;
     new min, max;

@@ -661,7 +661,7 @@ public OnPluginStart()
     cvar_novote = CreateConVar(
         "sm_umc_votemanager_core_novote",
         "0",
-        "Enable No Vote option at the top of vote menus. Requires SourceMod >= 1.4"
+        "Enable No Vote option at the top of vote menus. Requires SourceMod >= 1.4",
         0, true, 0.0, true, 1.0
     );
 
@@ -829,7 +829,7 @@ public OnPluginStart()
     );
     
     vote_start_forward = CreateGlobalForward(
-        "UMC_VoteStarted", ET_Ignore, Param_String, Param_Cell, Param_Cell
+        "UMC_VoteStarted", ET_Ignore, Param_String, Param_Array, Param_Cell, Param_Cell
     );
     
     vote_end_forward = CreateGlobalForward(
@@ -1022,7 +1022,7 @@ public OnMapEnd()
 public Native_UMCFormatDisplay(Handle:plugin, numParams)
 {
     new maxlen = GetNativeCell(2);
-    Handle:kv = CreateKeyValues("umc_mapcycle");
+    new Handle:kv = CreateKeyValues("umc_mapcycle");
     KvCopySubkeys(Handle:GetNativeCell(3), kv);
     
     new len;
@@ -1040,7 +1040,7 @@ public Native_UMCFormatDisplay(Handle:plugin, numParams)
     KvGetString(kv, "display-template", gDisp, sizeof(gDisp), "{MAP}");
     KvGoBack(kv);
     
-    GetMapDisplayString(kv, group, map, display, sizeof(display));
+    GetMapDisplayString(kv, group, map, gDisp, display, sizeof(display));
     SetNativeString(1, display, maxlen);
     
     CloseHandle(kv);
@@ -1535,14 +1535,11 @@ public Native_UMCStartVote(Handle:plugin, numParams)
     new bool:nominationStrictness = bool:GetNativeCell(21);
     new bool:allowDuplicates = bool:GetNativeCell(22);
     
-    GetNativeStringLength(23, len);
-    new String:adminFlags[len+1];
-    if (len > 0)
-        GetNativeString(23, adminFlags, len+1);
-        
-    DEBUG_MESSAGE("Vote Admin Flags: \"%s\"", adminFlags)
-        
-    new bool:runExclusionCheck = (numParams >= 24) ? (bool:GetNativeCell(24)) : true;
+    new voteClients[MAXPLAYERS+1];
+    GetNativeArray(23, voteClients, sizeof(voteClients));
+    new numClients = GetNativeCell(24);
+    
+    new bool:runExclusionCheck = (numParams >= 25) ? (bool:GetNativeCell(25)) : true;
     
     //OK now that that's done, let's save 'em.
     SetTrieValue(voteManager, "stored_type", type);
@@ -1582,7 +1579,9 @@ public Native_UMCStartVote(Handle:plugin, numParams)
     SetTrieString(voteManager, "stored_end_sound", endSound);
     SetTrieString(voteManager, "stored_runoff_sound", (strlen(runoffSound) > 0) ? runoffSound : startSound);
     
-    SetTrieString(voteManager, "stored_adminflags", adminFlags);
+    new users[MAXPLAYERS+1];
+    ConvertClientsToUserIDs(voteClients, users, numClients);
+    SetTrieArray(voteManager, "stored_users", users, numClients);
     
     SetTrieValue(voteManager, "stored_exclude", runExclusionCheck);
     
@@ -1594,20 +1593,14 @@ public Native_UMCStartVote(Handle:plugin, numParams)
     //    ...the menu was created successfully.
     if (options != INVALID_HANDLE)
     {
-        //Play the vote start sound if...
-        //  ...the filename is defined.
-        //if (strlen(startSound) > 0)
-        //    EmitSoundToAll(startSound);
-        
-        new Handle:clients = GetClientsWithFlags(adminFlags);
-        
-        //return _:VoteMenuToAllWithFlags(menu, time, adminFlags);
-        new bool:vote_active = PerformVote(voteManager, type, options, time, clients, startSound);
+        new bool:vote_active = PerformVote(voteManager, type, options, time, voteClients,
+                                           numClients, startSound);
         if (vote_active)
         {
             Call_StartForward(vote_start_forward);
             Call_PushString(voteManagerID);
-            Call_PushCell(clients);
+            Call_PushArray(voteClients, numClients);
+            Call_PushCell(numClients);
             Call_PushCell(options);
             Call_Finish();
         }
@@ -1619,7 +1612,6 @@ public Native_UMCStartVote(Handle:plugin, numParams)
         }        
         
         FreeOptions(options);
-        CloseHandle(clients);
         return _:vote_active;
     }
     else
@@ -1933,7 +1925,8 @@ public Action:Command_StopVote(client, args)
 new bool:core_vote_active;
 
 //
-public Action:VM_MapVote(duration, Handle:vote_items, Handle:clients, const String:startSound[])
+public Action:VM_MapVote(duration, Handle:vote_items, const clients[], numClients,
+                         const String:startSound[])
 {
     new bool:verboseLogs = GetConVarBool(cvar_logging);
 
@@ -1943,11 +1936,10 @@ public Action:VM_MapVote(duration, Handle:vote_items, Handle:clients, const Stri
     DEBUG_MESSAGE("Attempting to start core vote...")
     decl clientArr[MAXPLAYERS+1];
     new count = 0;
-    new size = GetArraySize(clients);
     new client;
-    for (new i = 0; i < size; i++)
+    for (new i = 0; i < numClients; i++)
     {
-        client = GetArrayCell(clients, i);
+        client = clients[i];
         if (IsClientInGame(client))
         {
             if (verboseLogs)
@@ -1985,7 +1977,8 @@ public Action:VM_MapVote(duration, Handle:vote_items, Handle:clients, const Stri
 
 
 //
-public Action:VM_GroupVote(duration, Handle:vote_items, Handle:clients, const String:startSound[])
+public Action:VM_GroupVote(duration, Handle:vote_items, const clients[], numClients,
+                           const String:startSound[])
 {
     new bool:verboseLogs = GetConVarBool(cvar_logging);
 
@@ -1994,11 +1987,10 @@ public Action:VM_GroupVote(duration, Handle:vote_items, Handle:clients, const St
 
     decl clientArr[MAXPLAYERS+1];
     new count = 0;
-    new size = GetArraySize(clients);
     new client;
-    for (new i = 0; i < size; i++)
+    for (new i = 0; i < numClients; i++)
     {
-        client = GetArrayCell(clients, i);
+        client = clients[i];
         if (IsClientInGame(client))
         {
             if (verboseLogs)
@@ -2307,8 +2299,8 @@ FreeOptions(Handle:options)
 
 
 //
-bool:PerformVote(Handle:voteManager, UMC_VoteType:type, Handle:options, time, Handle:clients,
-                 const String:startSound[])
+bool:PerformVote(Handle:voteManager, UMC_VoteType:type, Handle:options, time, const clients[], 
+                 numClients, const String:startSound[])
 {
     new Handle:plugin = INVALID_HANDLE;
     GetTrieValue(voteManager, "plugin", plugin);
@@ -2337,7 +2329,8 @@ bool:PerformVote(Handle:voteManager, UMC_VoteType:type, Handle:options, time, Ha
     Call_StartFunction(plugin, handler);
     Call_PushCell(time);
     Call_PushCell(options);
-    Call_PushCell(clients);
+    Call_PushArray(clients, numClients);
+    Call_PushCell(numClients);
     Call_PushString(startSound);
     Call_Finish(result);
     
@@ -3273,12 +3266,12 @@ GetMapDisplayString(Handle:kv, const String:group[], const String:map[], const S
 {
     KvJumpToKey(kv, group);
     KvJumpToKey(kv, map);
-    KvGetString(kv, "display", display, sizeof(display), template);
+    KvGetString(kv, "display", buffer, maxlen, template);
     KvGoBack(kv);
     KvGoBack(kv);
     
     Call_StartForward(template_forward);
-    Call_PushStringEx(buffer, maxlen, SP_PARAM_STRING_UTF8, SP_PARAM_COPYBACK);
+    Call_PushStringEx(buffer, maxlen, SM_PARAM_STRING_UTF8, SM_PARAM_COPYBACK);
     Call_PushCell(maxlen);
     Call_PushCell(kv);
     Call_PushString(map);
@@ -3788,27 +3781,26 @@ DoRunoffVote(Handle:vM, Handle:response)
     //Setup the timer if...
     //  ...the menu was built successfully
     if (runoffOptions != INVALID_HANDLE)
-    {        
+    {   
+        new clients[MAXPLAYERS+1];
+        new numClients;
+    
         //Empty storage and add all clients if we're revoting completely.
         if (!GetConVarBool(cvar_runoff_selective))
         {
             DEBUG_MESSAGE("Non-selective runoff vote: erasing storage and adding all clients.")
+            ClearArray(runoffClients);
             EmptyStorage(vM);
-            //ClearArray(runoffClients);
-            CloseHandle(runoffClients);
             
-            decl String:adminFlags[64];
-            GetTrieString(vM, "stored_adminflags", adminFlags, sizeof(adminFlags));
+            /* decl String:adminFlags[64];
+            GetTrieString(vM, "stored_adminflags", adminFlags, sizeof(adminFlags)); */
             
-            runoffClients = GetClientsWithFlags(adminFlags);
-            /*for (new i = 1; i <= MaxClients; i++)
-            {
-                if (IsClientInGame(i))
-                {
-                    DEBUG_MESSAGE("Adding client %i", i)
-                    PushArrayCell(runoffClients, i);
-                }
-            }*/
+            new users[MAXPLAYERS+1];
+            GetTrieArray(vM, "stored_users", users, sizeof(users), numClients);
+            ConvertUserIDsToClients(users, clients, numClients);
+            
+            //runoffClients = GetClientsWithFlags(adminFlags);
+            ConvertArray(clients, numClients, runoffClients);
         }
         
         //Setup timer to delay the start of the runoff vote.
@@ -4039,7 +4031,13 @@ public Action:Handle_RunoffVoteTimer(Handle:timer, Handle:datapack)
     }
     
     new Handle:options = Handle:ReadPackCell(datapack);
-    new Handle:clients = Handle:ReadPackCell(datapack);
+    new Handle:voteClients = Handle:ReadPackCell(datapack);
+    
+    new clients[MAXPLAYERS+1];
+    new numClients = GetArraySize(voteClients);
+    ConvertAdtArray(voteClients, clients, sizeof(clients));
+    
+    CloseHandle(voteClients);
     
     new UMC_VoteType:type;
     GetTrieValue(vM, "stored_type", type);
@@ -4048,7 +4046,7 @@ public Action:Handle_RunoffVoteTimer(Handle:timer, Handle:datapack)
     decl String:sound[PLATFORM_MAX_PATH];
     GetTrieString(vM, "stored_runoff_sound", sound, sizeof(sound));
     
-    new bool:vote_active = PerformVote(vM, type, options, time, clients, sound);
+    new bool:vote_active = PerformVote(vM, type, options, time, clients, numClients, sound);
     if (!vote_active)
     {
         DeleteVoteParams(vM);
@@ -4058,7 +4056,6 @@ public Action:Handle_RunoffVoteTimer(Handle:timer, Handle:datapack)
     }
     
     FreeOptions(options);
-    CloseHandle(clients);
     
    /*  //Play the vote start sound if...
     //  ...the filename is defined.
@@ -4639,9 +4636,15 @@ public Action:Handle_TieredVoteTimer(Handle:timer, Handle:pack)
         //Display the menu.
         VoteMenuToAllWithFlags(menu, stored_votetime, stored_adminflags); */
         
-        decl String:stored_start_sound[PLATFORM_MAX_PATH], String:adminFlags[64];
+        decl String:stored_start_sound[PLATFORM_MAX_PATH]; //, String:adminFlags[64];
         GetTrieString(vM, "stored_start_sound", stored_start_sound, sizeof(stored_start_sound));
-        GetTrieString(vM, "stored_adminflags", adminFlags, sizeof(adminFlags));
+        //GetTrieString(vM, "stored_adminflags", adminFlags, sizeof(adminFlags));
+        
+        new users[MAXPLAYERS+1];
+        new numClients;
+        GetTrieArray(vM, "stored_users", users, sizeof(users), numClients);
+        new clients[MAXPLAYERS+1];
+        ConvertUserIDsToClients(users, clients, numClients);
         
         SetTrieValue(vM, "stored_type", VoteType_Map);
         
@@ -4649,11 +4652,9 @@ public Action:Handle_TieredVoteTimer(Handle:timer, Handle:pack)
         GetTrieValue(vM, "stored_votetime", stored_votetime);
         
         //vote_active = true;
-        new Handle:clients = GetClientsWithFlags(adminFlags);
         new bool:vote_active = PerformVote(vM, VoteType_Map, options, stored_votetime, clients,
-                                           stored_start_sound);
-                                           
-        CloseHandle(clients);
+                                           numClients, stored_start_sound);
+        
         FreeOptions(options);
         
         if (!vote_active)
