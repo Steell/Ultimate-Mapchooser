@@ -2803,6 +2803,8 @@ Handle:BuildMapVoteItems(Handle:voteManager, Handle:okv, Handle:mapcycle, bool:s
             }
         }
         
+        DEBUG_MESSAGE("Current gDisp value: %s", gDisp)
+        
         //We no longer need the nominations array, so we close the handle.
         CloseHandle(nominationsFromCat);
         
@@ -2892,6 +2894,8 @@ Handle:BuildMapVoteItems(Handle:voteManager, Handle:okv, Handle:mapcycle, bool:s
             KvCopySubkeys(okv, dispKV);
             GetMapDisplayString(dispKV, catName, mapName, gDisp, display, sizeof(display));
             CloseHandle(dispKV);
+            
+            DEBUG_MESSAGE("Display name for %s: '%s'", mapName, display)
             
             /* KvJumpToKey(kv, mapName);
             KvGetString(kv, "display", display, sizeof(display), gDisp);
@@ -3264,19 +3268,30 @@ Handle:BuildCatVoteItems(Handle:vM, Handle:okv, Handle:mapcycle, bool:scramble,
 GetMapDisplayString(Handle:kv, const String:group[], const String:map[], const String:template[],
                     String:buffer[], maxlen)
 {
-    KvJumpToKey(kv, group);
-    KvJumpToKey(kv, map);
-    KvGetString(kv, "display", buffer, maxlen, template);
-    KvGoBack(kv);
-    KvGoBack(kv);
+    strcopy(buffer, maxlen, "");
+    if (KvJumpToKey(kv, group))
+    {
+        if (KvJumpToKey(kv, map))
+        {
+            KvGetString(kv, "display", buffer, maxlen, template);
+            KvGoBack(kv);
+        }
+        KvGoBack(kv);
+    }
     
     Call_StartForward(template_forward);
-    Call_PushStringEx(buffer, maxlen, SM_PARAM_STRING_UTF8, SM_PARAM_COPYBACK);
+    Call_PushStringEx(
+        buffer, maxlen, 
+        SM_PARAM_STRING_UTF8|SM_PARAM_STRING_COPY, 
+        SM_PARAM_COPYBACK
+    );
     Call_PushCell(maxlen);
     Call_PushCell(kv);
     Call_PushString(map);
     Call_PushString(group);
     Call_Finish();
+    
+    DEBUG_MESSAGE("GMDS Buffer: %s", buffer)
 }
 
 
@@ -3284,6 +3299,8 @@ GetMapDisplayString(Handle:kv, const String:group[], const String:map[], const S
 public UMC_OnFormatTemplateString(String:template[], maxlen, Handle:kv, const String:map[], 
                                   const String:group[])
 {
+    DEBUG_MESSAGE("OFTS: '%s' '%s' '%s'", map, group, template)
+
     if (strlen(template) == 0)
     {
         strcopy(template, maxlen, map);
@@ -3295,6 +3312,8 @@ public UMC_OnFormatTemplateString(String:template[], maxlen, Handle:kv, const St
     decl String:nomString[16];
     GetConVarString(cvar_nomdisp, nomString, sizeof(nomString));
     ReplaceString(template, maxlen, "{NOMINATED}", nomString, false);
+    
+    DEBUG_MESSAGE("OFTS End: %s", template)
 }
 
 

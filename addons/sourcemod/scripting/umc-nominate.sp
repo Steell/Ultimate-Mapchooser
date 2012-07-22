@@ -266,14 +266,14 @@ public Action:OnPlayerChat(client, const String:command[], argc)
             DEBUG_MESSAGE("Checking for argument...")
             if (next != -1)
             {
-                DEBUG_MESSAGE("Argument found!")
                 BreakString(text[next], arg, sizeof(arg));
+                
+                DEBUG_MESSAGE("Argument found! '%s'", arg)
                 
                 //Get the selected map.
                 decl String:groupName[MAP_LENGTH], String:nomGroup[MAP_LENGTH];
-                KvFindGroupOfMap(map_kv, arg, groupName, sizeof(groupName));
                 
-                if (StrEqual(groupName, INVALID_GROUP))
+                if (!KvFindGroupOfMap(map_kv, arg, groupName, sizeof(groupName)))
                 {
                     //TODO: Change to translation phrase
                     PrintToChat(client, "\x03[UMC]\x01 Could not find map \"%s\"", arg);
@@ -310,10 +310,10 @@ public Action:OnPlayerChat(client, const String:command[], argc)
                     }
                     else
                     {
+                        DEBUG_MESSAGE("Nomination via extra arg -- chat.")
+                        
                         //Nominate it.
                         UMC_NominateMap(map_kv, arg, groupName, client, nomGroup);
-                        
-                        DEBUG_MESSAGE("Nomination via extra arg -- chat.")
                     
                         //Display a message.
                         decl String:clientName[MAX_NAME_LENGTH];
@@ -416,9 +416,8 @@ public Action:Command_Nominate(client, args)
             
             //Get the selected map.
             decl String:groupName[MAP_LENGTH], String:nomGroup[MAP_LENGTH];
-            KvFindGroupOfMap(map_kv, arg, groupName, sizeof(groupName));
-            
-            if (StrEqual(groupName, INVALID_GROUP))
+                        
+            if (!KvFindGroupOfMap(map_kv, arg, groupName, sizeof(groupName)))
             {
                 //TODO: Change to translation phrase
                 ReplyToCommand(client, "\x03[UMC]\x01 Could not find map \"%s\"", arg);
