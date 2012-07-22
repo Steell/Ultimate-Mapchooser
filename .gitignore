@@ -1,5 +1,6 @@
 addons/sourcemod/plugins
 *.smx
+*.zip
 
 ##DEFAULTS##
 
