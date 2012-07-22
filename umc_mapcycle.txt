@@ -12,8 +12,18 @@
 //      {                                                                    //
 //          //Text to display for maps from this group in the vote. If left  //
 //          //blank or omitted, the map's name will be used as the default.  //
-//          //Note: The string "{MAP}" will be replaced by the map's name.   //
-//          // (Default value: "{MAP})                                       //
+//          //The following string will be replaced when parsed:             //
+//          //  {MAP}           =   The map's name                           //
+//          //  {NOMINATED}     =   If nominated, a string determined by the //
+//          //                      "sm_umc_nomination_display" cvar in      //
+//          //                      "ultimate-mapchooser.cfg"                //
+//          //  {MIN_PLAYERS}                                                //
+//          //  {MAX_PLATERS}   =   The "min_players" and "max_players"      //
+//          //                      settings for the map.                    //
+//          //  {MIN_TIME}                                                   //
+//          //  {MAX_TIME}      =   The "min_time" and "max_time" settings   //
+//          //                      for the map.                             //
+//          // (Default value: "{MAP}")                                      //
 //          "display-template"      "any value"                              //
 //            //Defined in "umc-core.smx"                                    //
 //                                                                           //
@@ -81,8 +91,6 @@
 //          {                                                                //
 //              //Text to display for this map in the vote. If left blank    //
 //              //or omitted, the map's name will be used instead.           //
-//              //Note: The string "{MAP}" will be replaced by the map's     //
-//              //      name.                                                //
 //              // (Default value: "{MAP}")                                  //
 //              "display"       "any value"                                  //
 //                //Defined in "umc-core.smx"                                //
@@ -182,5 +190,17 @@
 
 "umc_mapcycle"
 {
-
+    "A Group" //Name this whatever you like
+    {
+        "maps_invote"   "5"
+        //...other settings...
+        
+        //Place maps here
+        //-------------
+        //"MAPNAME"
+        //{
+        //    ...settings...
+        //}
+        //...
+    }
 }

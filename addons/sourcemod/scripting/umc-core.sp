@@ -41,10 +41,19 @@ public Plugin:myinfo =
 //Changelog:
 /*
 3.3.3 (3//2012)
+Added ability to specify different map change times for End of Map Votes
+-New cvar "sm_umc_endvote_changetime" to control this ability.
 Added advanced template system for map names.
 -New templates: {NOMINATED}, {MIN_PLAYERS}, {MAX_PLAYERS}, {MIN_TIME}, {MAX_TIME}, {RATING}
+-New cvar "sm_umc_nomination_display" in ultimate-mapchooser.cfg
 Added Map Start indicator to UMC logs.
+Fixed RTV entrance threshold so that admin flags are taken into account.
+Fixed Non-Selective runoff votes so that admin flags are taken into account.
 Fixed issue where Extend Map and Don't Change options would not appear in Group votes.
+Fixed issue where nominating a map via chat with an argument would display incorrect information.
+Fixed rare issue where clients connecting could get recently-disconnected clients' votes.
+Fixed memory leak with nominations
+Moved source code repository to GitHub.
 
 3.3.2 (3/4/2012)
 Updated UMC Logging functionality
@@ -3926,7 +3935,7 @@ Handle:BuildRunoffOptions(Handle:vM, Handle:clientArray)
         
         if (verboseLogs)
         {
-            decl String:dispBuf[255];
+            new String:dispBuf[255];
             GetTrieString(voteItem, "display", dispBuf, sizeof(dispBuf));
             LogUMCMessage(
                 "RUNOFF MENU: (Verbose) '%s' was removed from the vote. It had %i votes (%.f%% of total)",
