@@ -55,6 +55,16 @@ stock LogUMCMessage(const String:message[], any:...)
 }
 
 
+stock StringToUpper(String:str[])
+{
+    new i = 0;
+    while (str[i] != 0)
+    {
+        str[i] = CharToUpper(str[i]);
+    }
+}
+
+
 //Utility function to build a map trie.
 stock Handle:CreateMapTrie(const String:map[], const String:group[])
 {

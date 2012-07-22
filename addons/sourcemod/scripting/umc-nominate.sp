@@ -528,6 +528,10 @@ Handle:BuildNominationMenu(client, const String:cat[]=INVALID_GROUP)
     }
     
     KvRewind(map_kv);
+    
+    //Copy over for template processing
+    new Handle:dispKV = CreateKeyValues("umc_mapcycle");
+    KvCopySubkeys(map_kv, dispKV);
 
     //Get map array.
     new Handle:mapArray = UMC_CreateValidMapArray(map_kv, umc_mapcycle, cat, true, false);
@@ -550,7 +554,7 @@ Handle:BuildNominationMenu(client, const String:cat[]=INVALID_GROUP)
     nom_menu_nomgroups[client] = CreateArray(numCells);
     new Handle:menuItems = CreateArray(numCells);
     new Handle:menuItemDisplay = CreateArray(numCells);
-    decl String:display[MAP_LENGTH], String:gDisp[MAP_LENGTH];
+    decl String:display[MAP_LENGTH]; //, String:gDisp[MAP_LENGTH];
     new Handle:mapTrie = INVALID_HANDLE;
     decl String:mapBuff[MAP_LENGTH], String:groupBuff[MAP_LENGTH];
     decl String:group[MAP_LENGTH];
@@ -578,7 +582,6 @@ Handle:BuildNominationMenu(client, const String:cat[]=INVALID_GROUP)
             continue;
         }
         
-        KvGetString(map_kv, "display-template", gDisp, sizeof(gDisp), "{MAP}");
         KvGetString(map_kv, NOMINATE_ADMINFLAG_KEY, gAdminFlags, sizeof(gAdminFlags), dAdminFlags);
         
         KvJumpToKey(map_kv, mapBuff);
@@ -596,12 +599,15 @@ Handle:BuildNominationMenu(client, const String:cat[]=INVALID_GROUP)
         //Get the name of the current map.
         KvGetSectionName(map_kv, mapBuff, sizeof(mapBuff));
         
-        KvGetString(map_kv, "display", display, sizeof(display), gDisp);
+        //Get the display string.
+        UMC_FormatDisplayString(display, sizeof(display), dispKV, mapBuff, groupBuff);
+        
+        /* KvGetString(map_kv, "display", display, sizeof(display), gDisp);
                     
         if (strlen(display) == 0)
             display = mapBuff;
         else
-            ReplaceString(display, sizeof(display), "{MAP}", mapBuff, false);
+            ReplaceString(display, sizeof(display), "{MAP}", mapBuff, false); */
                 
         //Add map data to the arrays.
         PushArrayString(menuItems, mapBuff);
@@ -620,6 +626,9 @@ Handle:BuildNominationMenu(client, const String:cat[]=INVALID_GROUP)
     CloseHandle(menuItemDisplay);
     ClearHandleArray(mapArray);
     CloseHandle(mapArray);
+    
+    //Or the display KV
+    CloseHandle(dispKV);
     
     //Success!
     return menu;

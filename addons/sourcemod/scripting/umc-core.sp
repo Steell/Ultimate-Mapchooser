@@ -41,6 +41,9 @@ public Plugin:myinfo =
 //Changelog:
 /*
 3.3.3 (3//2012)
+Added advanced template system for map names.
+-New templates: {NOMINATED}, {MIN_PLAYERS}, {MAX_PLAYERS}, {MIN_TIME}, {MAX_TIME}, {RATING}
+Added Map Start indicator to UMC logs.
 Fixed issue where Extend Map and Don't Change options would not appear in Group votes.
 
 3.3.2 (3/4/2012)
@@ -478,20 +481,21 @@ Initial Release
 //************************************************************************************************//
 
     ////----CONVARS-----/////
-new Handle:cvar_runoff_display     = INVALID_HANDLE;
-new Handle:cvar_runoff_selective   = INVALID_HANDLE;        
-new Handle:cvar_vote_tieramount    = INVALID_HANDLE;
-new Handle:cvar_vote_tierdisplay   = INVALID_HANDLE;
-new Handle:cvar_logging            = INVALID_HANDLE;
-new Handle:cvar_extend_display     = INVALID_HANDLE;
-new Handle:cvar_dontchange_display = INVALID_HANDLE;
-new Handle:cvar_valvemenu          = INVALID_HANDLE;
-new Handle:cvar_version            = INVALID_HANDLE;
-new Handle:cvar_count_sound        = INVALID_HANDLE;
-new Handle:cvar_extend_command     = INVALID_HANDLE;
-new Handle:cvar_default_vm         = INVALID_HANDLE;
-new Handle:cvar_block_slots        = INVALID_HANDLE;
-new Handle:cvar_novote               = INVALID_HANDLE;
+new Handle:cvar_runoff_display      = INVALID_HANDLE;
+new Handle:cvar_runoff_selective    = INVALID_HANDLE;        
+new Handle:cvar_vote_tieramount     = INVALID_HANDLE;
+new Handle:cvar_vote_tierdisplay    = INVALID_HANDLE;
+new Handle:cvar_logging             = INVALID_HANDLE;
+new Handle:cvar_extend_display      = INVALID_HANDLE;
+new Handle:cvar_dontchange_display  = INVALID_HANDLE;
+new Handle:cvar_valvemenu           = INVALID_HANDLE;
+new Handle:cvar_version             = INVALID_HANDLE;
+new Handle:cvar_count_sound         = INVALID_HANDLE;
+new Handle:cvar_extend_command      = INVALID_HANDLE;
+new Handle:cvar_default_vm          = INVALID_HANDLE;
+new Handle:cvar_block_slots         = INVALID_HANDLE;
+new Handle:cvar_novote              = INVALID_HANDLE;
+new Handle:cvar_nomdisp             = INVALID_HANDLE;
 
 //Stores the number of runoffs available.
 //new remaining_runoffs;
@@ -588,6 +592,9 @@ new Handle:vote_manager_ids = INVALID_HANDLE;
 /* Maplist Display */
 new Handle:maplistdisplay_forward = INVALID_HANDLE;
 
+/* Template System */
+new Handle:template_forward = INVALID_HANDLE;
+
 //Flags
 //new bool:vote_completed;   //Has a vote been completed?
 new bool:change_map_round; //Change map when the round ends?
@@ -602,23 +609,6 @@ RunTests()
     LogUMCMessage("TEST: Running UMC tests.");
     
     //TESTS GO HERE
-    new Handle:kv = CreateKeyValues("umc_rotation");
-    KvJumpToKey(kv, "group", true);
-    KvJumpToKey(kv, "MAP", true);
-    KvRewind(kv);
-    
-    LogKv(kv);
-    if (KvDeleteSubKey(kv, "group"))
-        LogUMCMessage("Key Deleted");
-        
-    if (KvJumpToKey(kv, "group"))
-    {
-        LogUMCMessage("Jumped to key. What the fuck?");
-        KvGoBack(kv);
-    }
-    LogKv(kv);
-    
-    CloseHandle(kv);
     
     LogUMCMessage("TEST: Finished running UMC tests.");
 }
@@ -650,7 +640,8 @@ public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
     CreateNative("UMC_UnregisterVoteManager", Native_UMCUnregVoteManager);
     CreateNative("UMC_VoteManagerVoteCompleted", Native_UMCVoteManagerComplete);
     CreateNative("UMC_VoteManagerVoteCancelled", Native_UMCVoteManagerCancel);
-    CreateNative("UMC_VoteManagerClientVoted", Native_UMC_VoteManagerVoted);
+    CreateNative("UMC_VoteManagerClientVoted", Native_UMCVoteManagerVoted);
+    CreateNative("UMC_FormatDisplayString", Native_UMCFormatDisplay);
     
     RegPluginLibrary("umccore");
     
@@ -661,10 +652,17 @@ public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
 //Called when the plugin is finished loading.
 public OnPluginStart()
 {
+    cvar_nomdisp = CreateConVar(
+        "sm_umc_nomination_display",
+        "^",
+        "String to replace the {NOMINATED} map display-template string with."
+    );
+
     cvar_novote = CreateConVar(
         "sm_umc_votemanager_core_novote",
         "0",
         "Enable No Vote option at the top of vote menus. Requires SourceMod >= 1.4"
+        0, true, 0.0, true, 1.0
     );
 
     cvar_block_slots = CreateConVar(
@@ -842,6 +840,12 @@ public OnPluginStart()
         "UMC_ClientVoted", ET_Ignore, Param_String, Param_Cell, Param_Cell
     );
     
+    template_forward = CreateGlobalForward(
+        "UMC_OnFormatTemplateString",
+        ET_Ignore, 
+        Param_String, Param_Cell, Param_Cell, Param_String, Param_String
+    );
+    
     vote_managers = CreateTrie();
     vote_manager_ids = CreateArray(ByteCountToCells(64));
     
@@ -1015,8 +1019,35 @@ public OnMapEnd()
 //                                             NATIVES                                            //
 //************************************************************************************************//
 
+public Native_UMCFormatDisplay(Handle:plugin, numParams)
+{
+    new maxlen = GetNativeCell(2);
+    Handle:kv = CreateKeyValues("umc_mapcycle");
+    KvCopySubkeys(Handle:GetNativeCell(3), kv);
+    
+    new len;
+    GetNativeStringLength(4, len);
+    new String:map[len+1];
+    if (len > 0)
+        GetNativeString(4, map, len+1);
+    GetNativeStringLength(5, len);
+    new String:group[len+1];
+    if (len > 0)
+        GetNativeString(5, group, len+1);
+        
+    decl String:display[MAP_LENGTH], String:gDisp[MAP_LENGTH];
+    KvJumpToKey(kv, group);
+    KvGetString(kv, "display-template", gDisp, sizeof(gDisp), "{MAP}");
+    KvGoBack(kv);
+    
+    GetMapDisplayString(kv, group, map, display, sizeof(display));
+    SetNativeString(1, display, maxlen);
+    
+    CloseHandle(kv);
+}
+
 //
-public Native_UMC_VoteManagerVoted(Handle:plugin, numParams)
+public Native_UMCVoteManagerVoted(Handle:plugin, numParams)
 {
     new len;
     GetNativeStringLength(1, len);
@@ -2599,9 +2630,17 @@ Handle:BuildMapVoteItems(Handle:voteManager, Handle:okv, Handle:mapcycle, bool:s
                         //Get the position in the vote array to add the map to
                         position = GetNextMenuIndex(voteCounter, scramble);
                         
-                        DEBUG_MESSAGE("Fetching extra info for the map from the mapcycle.")
-                        //Get extra fields from the map
-                        KvJumpToKey(nomKV, nomGroup);
+                        DEBUG_MESSAGE("Fetching display info for the map from the mapcycle.")
+                        
+                        //Template
+                        new Handle:dispKV = CreateKeyValues("umc_mapcycle");
+                        KvCopySubkeys(nomKV, dispKV);
+                        GetMapDisplayString(
+                            dispKV, nomGroup, mapName, gDisp, display, sizeof(display)
+                        );
+                        CloseHandle(dispKV);
+                        
+                        /* KvJumpToKey(nomKV, nomGroup);
                         KvJumpToKey(nomKV, mapName);
                         KvGetString(nomKV, "display", display, sizeof(display), gDisp);
                         
@@ -2612,7 +2651,7 @@ Handle:BuildMapVoteItems(Handle:voteManager, Handle:okv, Handle:mapcycle, bool:s
                             ReplaceString(display, sizeof(display), "{MAP}", mapName, false);
                         
                         KvGoBack(nomKV);
-                        KvGoBack(nomKV);
+                        KvGoBack(nomKV); */
                         
                         DEBUG_MESSAGE("Adding nomination to the vote.")
                         
@@ -2697,7 +2736,12 @@ Handle:BuildMapVoteItems(Handle:voteManager, Handle:okv, Handle:mapcycle, bool:s
                     GetTrieString(nom, "nom_group", nomGroup, sizeof(nomGroup));
                 
                     //Get extra fields from the map
-                    KvJumpToKey(nomKV, nomGroup);
+                    new Handle:dispKV = CreateKeyValues("umc_mapcycle");
+                    KvCopySubkeys(nomKV, dispKV);
+                    GetMapDisplayString(dispKV, nomGroup, mapName, gDisp, display, sizeof(display));
+                    CloseHandle(dispKV);
+                                        
+                    /* KvJumpToKey(nomKV, nomGroup);
                     KvJumpToKey(nomKV, mapName);
                     KvGetString(nomKV, "display", display, sizeof(display), gDisp);
                     
@@ -2708,7 +2752,7 @@ Handle:BuildMapVoteItems(Handle:voteManager, Handle:okv, Handle:mapcycle, bool:s
                         ReplaceString(display, sizeof(display), "{MAP}", mapName, false);
                         
                     KvGoBack(nomKV);
-                    KvGoBack(nomKV);
+                    KvGoBack(nomKV); */
                     
                     DEBUG_MESSAGE("Determining where to place the map in the vote.")
                     //Get the position in the vote array to add the map to.
@@ -2849,9 +2893,14 @@ Handle:BuildMapVoteItems(Handle:voteManager, Handle:okv, Handle:mapcycle, bool:s
                 }
             }
             
-            DEBUG_MESSAGE("Fetching extra info for the map from the mapcycle.")
+            DEBUG_MESSAGE("Fetching display info for the map from the mapcycle.")
             //Get extra fields from the map
-            KvJumpToKey(kv, mapName);
+            new Handle:dispKV = CreateKeyValues("umc_mapcycle");
+            KvCopySubkeys(okv, dispKV);
+            GetMapDisplayString(dispKV, catName, mapName, gDisp, display, sizeof(display));
+            CloseHandle(dispKV);
+            
+            /* KvJumpToKey(kv, mapName);
             KvGetString(kv, "display", display, sizeof(display), gDisp);
             
             DEBUG_MESSAGE("Setting proper display string.")
@@ -2860,7 +2909,7 @@ Handle:BuildMapVoteItems(Handle:voteManager, Handle:okv, Handle:mapcycle, bool:s
             else 
                 ReplaceString(display, sizeof(display), "{MAP}", mapName, false);
             
-            KvGoBack(kv);
+            KvGoBack(kv); */
             
             DEBUG_MESSAGE("Determining where to place the map in the vote.")
             //Get the position in the vote array to add the map to.
@@ -3210,6 +3259,49 @@ Handle:BuildCatVoteItems(Handle:vM, Handle:okv, Handle:mapcycle, bool:scramble,
 //         SetCorrectMenuPagination(menu, voteSlots);
 //         return menu; //Return our finished menu!
 //     }
+}
+
+
+//Calls the templating system to format a map's display string.
+//  kv: Mapcycle containing the template info to use
+//  group:  Group of the map we're getting display info for.
+//  map:    Name of the map we're getting display info for.
+//  buffer: Buffer to store the display string.
+//  maxlen: Maximum length of the buffer.
+GetMapDisplayString(Handle:kv, const String:group[], const String:map[], const String:template[],
+                    String:buffer[], maxlen)
+{
+    KvJumpToKey(kv, group);
+    KvJumpToKey(kv, map);
+    KvGetString(kv, "display", display, sizeof(display), template);
+    KvGoBack(kv);
+    KvGoBack(kv);
+    
+    Call_StartForward(template_forward);
+    Call_PushStringEx(buffer, maxlen, SP_PARAM_STRING_UTF8, SP_PARAM_COPYBACK);
+    Call_PushCell(maxlen);
+    Call_PushCell(kv);
+    Call_PushString(map);
+    Call_PushString(group);
+    Call_Finish();
+}
+
+
+//Replaces {MAP} and {NOMINATED} in template strings.
+public UMC_OnFormatTemplateString(String:template[], maxlen, Handle:kv, const String:map[], 
+                                  const String:group[])
+{
+    if (strlen(template) == 0)
+    {
+        strcopy(template, maxlen, map);
+        return;
+    }
+    
+    ReplaceString(template, maxlen, "{MAP}", map, false);
+    
+    decl String:nomString[16];
+    GetConVarString(cvar_nomdisp, nomString, sizeof(nomString));
+    ReplaceString(template, maxlen, "{NOMINATED}", nomString, false);
 }
 
 

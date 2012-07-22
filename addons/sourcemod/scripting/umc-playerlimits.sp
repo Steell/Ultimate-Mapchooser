@@ -117,3 +117,38 @@ public Action:UMC_OnDetermineMapExclude(Handle:kv, const String:map[], const Str
     DEBUG_MESSAGE("Excluded")
     return Plugin_Stop;
 }
+
+
+//Display Template
+public UMC_OnFormatTemplateString(String:template[], maxlen, Handle:kv, const String:map[], 
+                                  const String:group[]);
+{
+    new defaultMin, defaultMax;
+    new min, max;
+    
+    KvRewind(kv);
+    if (KvJumpToKey(kv, group))
+    {
+        defaultMin = KvGetNum(kv, PLAYERLIMIT_KEY_GROUP_MIN, 0);
+        defaultMax = KvGetNum(kv, PLAYERLIMIT_KEY_GROUP_MAX, MaxClients);
+    
+        if (KvJumpToKey(kv, map))
+        {    
+            min = KvGetNum(kv, PLAYERLIMIT_KEY_MAP_MIN, defaultMin);
+            max = KvGetNum(kv, PLAYERLIMIT_KEY_MAP_MAX, defaultMax);
+            KvGoBack(kv);
+        }
+        KvGoBack(kv);
+    }
+    
+    decl String:minString[3], String:maxString[3];
+    Format(minString, sizeof(minString), "%d", min);
+    Format(maxString, sizeof(maxString), "%d", max);
+    
+    decl String:minSearch[12], String:maxSearch[12];
+    Format(minSearch, sizeof(minSearch), "{%s}", PLAYERLIMIT_KEY_MAP_MIN);
+    Format(maxSearch, sizeof(maxSearch), "{%s}", PLAYERLIMIT_KEY_MAP_MAX);
+    
+    ReplaceString(template, maxlen, minSearch, minString, false);
+    ReplaceString(template, maxlen, maxSearch, maxString, false);
+}

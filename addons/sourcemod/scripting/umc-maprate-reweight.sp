@@ -234,3 +234,17 @@ public UMC_OnReweightMap(Handle:kv, const String:map[], const String:group[])
 #endif
 }
 
+
+//Display String for Map
+public UMC_OnFormatTemplateString(String:template[], maxlen, Handle:kv, const String:map[]
+                                  const String:group[])
+{
+    new Float:weight;
+    if (!GetTrieValue(map_ratings, map, weight))
+    {
+        weight = 0.0;
+    }
+    new String:rating[4];
+    Format(rating, sizeof(rating), "%.1f", weight);
+    ReplaceString(template, maxlen, "{RATING}", rating, false);
+}

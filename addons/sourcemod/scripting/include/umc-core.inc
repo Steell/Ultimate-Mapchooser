@@ -44,6 +44,7 @@ public __pl_umccore_SetNTVOptional()
     MarkNativeAsOptional("UMC_VoteManagerVoteCompleted");
     MarkNativeAsOptional("UMC_VoteManagerVoteCancelled");
     MarkNativeAsOptional("UMC_VoteManagerClientVoted");
+    MarkNativeAsOptional("UMC_FormatDisplayString");
 }
 
 #define INVALID_GROUP ""
@@ -431,7 +432,9 @@ functag UMC_VoteResponseHandler public(UMC_VoteResponse:response, const String:p
 /**
  * Notifies UMC that the current vote has completed.
  *
- * @param ...
+ * @param id Id of the Vote Manager which has completed.
+ * @param voteOptions adt_array of options in the vote
+ * @param callback Callback for processing the results of the vote.
  * 
  * @noreturn
  */
@@ -443,19 +446,24 @@ native UMC_VoteManagerVoteCompleted(const String:id[], Handle:voteOptions,
  * Notifies UMC that the current vote has been cancelled by the vote Handler. This will cause the
  * UMC_VoteCancelledHandler provided to UMC_RegisterVoteManager to be called as well.
  *
- * @param id
+ * @param id ID of the Vote Manager to cancel.
  */
 native UMC_VoteManagerVoteCancelled(const String:id[]);
                                     
 
 /**
- *
+ * Unregisters a Vote Manager from UMC.
+ * 
+ * @param id ID of the Vote Manager to unregister.
  */
 native UMC_UnregisterVoteManager(const String:id[]);
 
 
 /**
- *
+ * Called when UMC requests a Map Cycle to be displayed.
+ * 
+ * @param client Client to display the Map Cycle to.
+ * @param filtered If true, it is requested that mapcycle only shows maps which pass UMC exclusion.
  */
 forward UMC_DisplayMapCycle(client, bool:filtered);
 
@@ -487,13 +495,12 @@ native UMC_VoteManagerClientVoted(const String:id[], client, Handle:option);
 /**
  *
  */
-functag UMC_TemplateVariableHandler public(const String:varName[], String:buffer[], maxlen,
-                                           Handle:kv, const String:map[], const String:group[]);
+forward UMC_OnFormatTemplateString(String:template[], maxlen, Handle:kv, const String:map[], 
+                                   const String:group[]);
+
 
 /**
  *
  */
-native UMC_RegTemplateVariable(const String:varName[],
-                               UMC_TemplateVariableHandler:templateHandler);
-
-
+native UMC_FormatDisplayString(String:display[], maxlen, Handle:mapcycle, const String:map[],
+                               const String:group[]);

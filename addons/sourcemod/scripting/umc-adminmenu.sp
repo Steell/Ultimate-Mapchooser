@@ -2736,6 +2736,9 @@ Handle:CreateMapMenu(MenuHandler:handler, const String:group[], bool:limits, cli
     SetMenuExitBackButton(menu, true);
     
     KvRewind(map_kv);
+    
+    new Handle:dispKV = CreateKeyValues("umc_mapcycle");
+    KvCopySubkeys(umc_mapcycle, dispKV);
 
     //Get map array.
     new Handle:mapArray;
@@ -2761,7 +2764,7 @@ Handle:CreateMapMenu(MenuHandler:handler, const String:group[], bool:limits, cli
     new numCells = ByteCountToCells(MAP_LENGTH);
     new Handle:menuItems = CreateArray(numCells);
     new Handle:menuItemDisplay = CreateArray(numCells);
-    decl String:display[MAP_LENGTH+4], String:gDisp[MAP_LENGTH];
+    decl String:display[MAP_LENGTH+4]; //, String:gDisp[MAP_LENGTH];
     new Handle:mapTrie = INVALID_HANDLE;
     decl String:mapBuff[MAP_LENGTH], String:groupBuff[MAP_LENGTH];
     new bool:excluded;
@@ -2774,7 +2777,7 @@ Handle:CreateMapMenu(MenuHandler:handler, const String:group[], bool:limits, cli
         GetTrieValue(mapTrie, "excluded", excluded);
         
         KvJumpToKey(umc_mapcycle, groupBuff);
-        KvGetString(umc_mapcycle, "display-template", gDisp, sizeof(gDisp), "{MAP}");
+        //KvGetString(umc_mapcycle, "display-template", gDisp, sizeof(gDisp), "{MAP}");
         KvGetString(umc_mapcycle, ADMINMENU_ADMINFLAG_KEY, gAdminFlags, sizeof(gAdminFlags), "");
         KvJumpToKey(umc_mapcycle, mapBuff);
 
@@ -2785,13 +2788,15 @@ Handle:CreateMapMenu(MenuHandler:handler, const String:group[], bool:limits, cli
         
         if (!ClientHasAdminFlags(client, mAdminFlags))
             continue;
+            
+        UMC_FormatDisplayString(display, sizeof(display), dispKV, mapBuff, groupBuff);
         
-        KvGetString(umc_mapcycle, "display", display, sizeof(display), gDisp);
+        /* KvGetString(umc_mapcycle, "display", display, sizeof(display), gDisp);
                     
         if (strlen(display) == 0)
             display = mapBuff;
         else
-            ReplaceString(display, sizeof(display), "{MAP}", mapBuff, false);
+            ReplaceString(display, sizeof(display), "{MAP}", mapBuff, false); */
             
         if (UMC_IsMapNominated(mapBuff, groupBuff))
         {
@@ -2824,6 +2829,9 @@ Handle:CreateMapMenu(MenuHandler:handler, const String:group[], bool:limits, cli
     CloseHandle(menuItemDisplay);
     ClearHandleArray(mapArray);
     CloseHandle(mapArray);
+    
+    //Or the display KV
+    CloseHandle(dispKV);
     
     //Success!
     return menu;
