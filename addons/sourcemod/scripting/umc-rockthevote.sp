@@ -365,7 +365,7 @@ public OnConfigsExecuted()
         rtv_enabled = true;
     
         //Set RTV threshold.
-        UpdateRTVThreshold(GetRealClientCount());
+        UpdateRTVThreshold();
         
         //Make timer to activate RTV (player's cannot RTV before this timer finishes).
         MakeRTVTimer();
@@ -403,7 +403,7 @@ public OnClientPutInServer(client)
     //Update the RTV threshold if...
     //    ...RTV is enabled.
     if (GetConVarBool(cvar_rtv_enable))
-        UpdateRTVThreshold(GetRealClientCount());
+        UpdateRTVThreshold();
 }
 
 
@@ -446,7 +446,7 @@ public OnClientDisconnect_Post(client)
         RemoveFromArray(rtv_clients, index);
 
     //Recalculate the RTV threshold.
-    UpdateRTVThreshold(GetRealClientCount());
+    UpdateRTVThreshold();
     
     //Start RTV if...
     //    ...we haven't had an RTV already AND
@@ -560,7 +560,7 @@ public Handle_RTVChange(Handle:convar, const String:oldVal[], const String:newVa
     //Update (in this case set) the RTV threshold if...
     //    ...the new value of the changed cvar is 1.
     if (StringToInt(newVal) == 1)
-        UpdateRTVThreshold(GetRealClientCount());
+        UpdateRTVThreshold();
 }
 
 
@@ -578,7 +578,7 @@ public Handle_RTVMemoryChange(Handle:convar, const String:oldValue[], const Stri
 public Handle_ThresholdChange(Handle:cvar, const String:oldVal[], const String:newVal[])
 {
     //Recalculate the required threshold.
-    UpdateRTVThreshold(GetRealClientCount());
+    UpdateRTVThreshold();
     
     //Start an RTV if...
     //    ...the amount of clients who have RTVd is greater than the new RTV threshold.
@@ -780,8 +780,11 @@ public Action:Handle_RTVTimer(Handle:timer)
 
 
 //Recalculated the RTV threshold based off of the given playercount.
-UpdateRTVThreshold(count)
+UpdateRTVThreshold()
 {
+    decl String:flags[64];
+    GetConVarString(cvar_voteflags, flags, sizeof(flags));
+    new count = GetClientWithFlagsCount(flags);
     rtv_threshold = (count > 1)
                     ? RoundToNearest(float(count) * GetConVarFloat(cvar_rtv_needed))
                     : 1;

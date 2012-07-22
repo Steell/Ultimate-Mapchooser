@@ -1099,14 +1099,30 @@ stock GetClientsWithFlags(const String:flagstring[], clients[], maxlen, &amt)
     new count = 0;
     for (new i = 1; i <= limit; i++)
     {
-        if (IsClientInGame(i) && !IsFakeClient(i)
-            && (!checkFlags || (flags & GetUserFlagBits(i))))
+        if (IsClientInGame(i) && !IsFakeClient(i) && (!checkFlags || (flags & GetUserFlagBits(i))))
         {
             DEBUG_MESSAGE("Client has correct flags: %L (%i) [F: %s]", i, i, flagstring)
             clients[count++] = i;
         }
     }
     amt = count;
+}
+
+
+//
+stock GetClientWithFlagsCount(const String:flagstring[])
+{
+    new bool:checkFlags = strlen(flagstring) > 0;
+    new flags = ReadFlagString(flagstring);
+    new count = 0;
+    for (new i = 1; i <= MaxClients; i++)
+    {
+        if (IsClientInGame(i) && !IsFakeClient(i) && (!checkFlags || (flags & GetUserFlagBits(i))))
+        {
+            count++;
+        }
+    }
+    return count;
 }
 
 
