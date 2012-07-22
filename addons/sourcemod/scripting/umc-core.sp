@@ -40,7 +40,11 @@ public Plugin:myinfo =
 
 //Changelog:
 /*
-3.3.3 (3//2012)
+3.4 (7/22/2012)
+Modified Map Commands:
+-"pre_command" now fires at Map End
+-"postvote_command" fires when map is set as next map by UMC
+-"command" has not changed and still fires at the start of the map
 Added ability to specify different map change times for End of Map Votes
 -New cvar "sm_umc_endvote_changetime" to control this ability.
 Added advanced template system for map names.
