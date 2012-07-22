@@ -40,33 +40,34 @@ Added ability to view the current mapcycle of all modules
 */
 
         ////----CONVARS-----/////
-new Handle:cvar_filename             = INVALID_HANDLE;
-new Handle:cvar_scramble             = INVALID_HANDLE;
-new Handle:cvar_vote_time            = INVALID_HANDLE;
-new Handle:cvar_strict_noms          = INVALID_HANDLE;
-new Handle:cvar_runoff               = INVALID_HANDLE;
-new Handle:cvar_runoff_sound         = INVALID_HANDLE;
-new Handle:cvar_runoff_max           = INVALID_HANDLE;
-new Handle:cvar_vote_allowduplicates = INVALID_HANDLE;
-new Handle:cvar_vote_threshold       = INVALID_HANDLE;
-new Handle:cvar_fail_action          = INVALID_HANDLE;
-new Handle:cvar_runoff_fail_action   = INVALID_HANDLE;
-new Handle:cvar_endvote              = INVALID_HANDLE;
-new Handle:cvar_extend_rounds        = INVALID_HANDLE;
-new Handle:cvar_extend_frags         = INVALID_HANDLE;
-new Handle:cvar_extend_time          = INVALID_HANDLE;
-new Handle:cvar_extensions           = INVALID_HANDLE;
-new Handle:cvar_start_frags          = INVALID_HANDLE;
-new Handle:cvar_start_time           = INVALID_HANDLE;
-new Handle:cvar_start_rounds         = INVALID_HANDLE;
-new Handle:cvar_vote_mem             = INVALID_HANDLE;
-new Handle:cvar_vote_type            = INVALID_HANDLE;
-new Handle:cvar_vote_startsound      = INVALID_HANDLE;
-new Handle:cvar_vote_endsound        = INVALID_HANDLE;
-new Handle:cvar_vote_catmem          = INVALID_HANDLE;
-new Handle:cvar_vote_roundend        = INVALID_HANDLE;
-new Handle:cvar_flags                = INVALID_HANDLE;
-new Handle:cvar_delay                = INVALID_HANDLE;
+new Handle:cvar_filename                = INVALID_HANDLE;
+new Handle:cvar_scramble                = INVALID_HANDLE;
+new Handle:cvar_vote_time               = INVALID_HANDLE;
+new Handle:cvar_strict_noms             = INVALID_HANDLE;
+new Handle:cvar_runoff                  = INVALID_HANDLE;
+new Handle:cvar_runoff_sound            = INVALID_HANDLE;
+new Handle:cvar_runoff_max              = INVALID_HANDLE;
+new Handle:cvar_vote_allowduplicates    = INVALID_HANDLE;
+new Handle:cvar_vote_threshold          = INVALID_HANDLE;
+new Handle:cvar_fail_action             = INVALID_HANDLE;
+new Handle:cvar_runoff_fail_action      = INVALID_HANDLE;
+new Handle:cvar_endvote                 = INVALID_HANDLE;
+new Handle:cvar_extend_rounds           = INVALID_HANDLE;
+new Handle:cvar_extend_frags            = INVALID_HANDLE;
+new Handle:cvar_extend_time             = INVALID_HANDLE;
+new Handle:cvar_extensions              = INVALID_HANDLE;
+new Handle:cvar_start_frags             = INVALID_HANDLE;
+new Handle:cvar_start_time              = INVALID_HANDLE;
+new Handle:cvar_start_rounds            = INVALID_HANDLE;
+new Handle:cvar_vote_mem                = INVALID_HANDLE;
+new Handle:cvar_vote_type               = INVALID_HANDLE;
+new Handle:cvar_vote_startsound         = INVALID_HANDLE;
+new Handle:cvar_vote_endsound           = INVALID_HANDLE;
+new Handle:cvar_vote_catmem             = INVALID_HANDLE;
+new Handle:cvar_vote_roundend           = INVALID_HANDLE;
+new Handle:cvar_flags                   = INVALID_HANDLE;
+new Handle:cvar_delay                   = INVALID_HANDLE;
+new Handle:cvar_changetime              = INVALID_HANDLE;
         ////----/CONVARS-----/////
 
 //Mapcycle KV
@@ -153,6 +154,13 @@ public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
 //Called when the plugin is finished loading.
 public OnPluginStart()
 {
+    cvar_changetime = CreateConVar(
+        "sm_umc_endvote_changetime",
+        "2",
+        "When to change the map after a successful vote:\n 0 - Instant,\n 1 - Round End,\n 2 - Map End",
+        0, true, 0.0, true, 2.0
+    );
+
     cvar_delay = CreateConVar(
         "sm_umc_endvote_roundend_delaystart",
         "0",
@@ -1268,7 +1276,7 @@ public StartMapVote()
         GetConVarInt(cvar_extend_frags),                            //How much to extend the fraglimit by,
         false,                                                      //Don't Change option
         GetConVarFloat(cvar_vote_threshold),                        //Threshold
-        ChangeMapTime_MapEnd,                                       //Success Action (when to change the map)
+        UMC_ChangeMapTime:GetConVarInt(cvar_changetime),        //Success Action (when to change the map)
         UMC_VoteFailAction:GetConVarInt(cvar_fail_action),          //Fail Action (runoff / nothing)
         GetConVarInt(cvar_runoff),                                  //Max Runoffs
         GetConVarInt(cvar_runoff_max),                              //Max maps in the runoff
