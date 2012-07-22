@@ -29,8 +29,9 @@ public Plugin:myinfo =
     url = "http://forums.alliedmods.net/showthread.php?t=134190"
 }
 
-#define COMMAND_KEY     "command"
-#define PRE_COMMAND_KEY "pre-command"
+#define COMMAND_KEY          "command"
+#define PRE_COMMAND_KEY      "pre-command"
+#define POSTVOTE_COMMAND_KEY "postvote-command"
 
 //Changelog:
 /*
@@ -38,6 +39,9 @@ public Plugin:myinfo =
 
 new String:map_command[256];
 new String:group_command[256];
+
+new String:map_precommand[256];
+new String:group_precommand[256];
 
 
 #if AUTOUPDATE_ENABLE
@@ -65,10 +69,6 @@ public OnLibraryAdded(const String:name[])
 //Execute commands after all configs have been executed.
 public OnConfigsExecuted()
 {
-    decl String:map[MAP_LENGTH], String:group[MAP_LENGTH];
-    GetCurrentMap(map, sizeof(map));
-    UMC_GetCurrentMapGroup(group, sizeof(group));
-
     if (strlen(group_command) > 0)
     {
         LogUMCMessage("SETUP: Executing map group command: '%s'", group_command);
@@ -85,36 +85,59 @@ public OnConfigsExecuted()
 }
 
 
+//Execute pre-commands when map ends
+public OnMapEnd()
+{
+    if (strlen(group_precommand) > 0)
+    {
+        LogUMCMessage("SETUP: Executing map group pre-command: '%s'", group_precommand);
+        ServerCommand(group_precommand);
+        strcopy(group_precommand, sizeof(group_precommand), "");
+    }
+    
+    if (strlen(map_precommand) > 0)
+    {
+        LogUMCMessage("SETUP: Executing map pre-command: '%s'", map_precommand);
+        ServerCommand(map_precommand);
+        strcopy(map_precommand, sizeof(map_precommand), "");
+    }
+}
+
+
 //Called when UMC has set the next map.
 public UMC_OnNextmapSet(Handle:kv, const String:map[], const String:group[], const String:display[])
 {
     if (kv == INVALID_HANDLE)
         return;
     
-    decl String:gPreCommand[256], String:mPreCommand[256];
+    decl String:gPVCommand[256], String:mPVCommand[256];
 
-    KvRewind(kv);
-    KvJumpToKey(kv, group);
-    
-    KvGetString(kv, COMMAND_KEY, group_command, sizeof(group_command), "");
-    KvGetString(kv, PRE_COMMAND_KEY, gPreCommand, sizeof(gPreCommand), "");
-    
-    if (strlen(gPreCommand) > 0)
-    {
-        LogUMCMessage("SETUP: Executing map group pre-command: '%s'", gPreCommand);
-        ServerCommand(gPreCommand);
-    }
+    KvRewind(kv); //TODO: Remove
+    if (KvJumpToKey(kv, group))
+    {    
+        KvGetString(kv, COMMAND_KEY, group_command, sizeof(group_command), "");
+        KvGetString(kv, POSTVOTE_COMMAND_KEY, gPVCommand, sizeof(gPVCommand), "");
+        KvGetString(kv, PRE_COMMAND_KEY, group_precommand, sizeof(group_precommand), "");
         
-    KvJumpToKey(kv, map);
-    
-    KvGetString(kv, COMMAND_KEY, map_command, sizeof(map_command), "");
-    KvGetString(kv, PRE_COMMAND_KEY, mPreCommand, sizeof(mPreCommand), "");
-    
-    if (strlen(mPreCommand) > 0)
-    {
-        LogUMCMessage("SETUP: Executing map pre-command: '%s'", mPreCommand);
-        ServerCommand(mPreCommand);
+        if (strlen(gPVCommand) > 0)
+        {
+            LogUMCMessage("SETUP: Executing map group postvote-command: '%s'", gPVCommand);
+            ServerCommand(gPVCommand);
+        }
+            
+        if (KvJumpToKey(kv, map))
+        {
+            KvGetString(kv, COMMAND_KEY, map_command, sizeof(map_command), "");
+            KvGetString(kv, POSTVOTE_COMMAND_KEY, mPVCommand, sizeof(mPVCommand), "");
+            KvGetString(kv, PRE_COMMAND_KEY, map_precommand, sizeof(map_precommand), "");
+            
+            if (strlen(mPVCommand) > 0)
+            {
+                LogUMCMessage("SETUP: Executing map postvote-command: '%s'", mPVCommand);
+                ServerCommand(mPVCommand);
+            }
+            KvGoBack(kv);
+        }
+        KvGoBack(kv);
     }
-        
-    KvRewind(kv);
 }
