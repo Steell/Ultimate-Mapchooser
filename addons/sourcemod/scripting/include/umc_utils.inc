@@ -1322,3 +1322,20 @@ stock ConvertUserIDsToClients(const userIds[], clients[], amt)
         clients[i] = GetClientOfUserId(userIds[i]);
     }
 }
+
+
+//
+stock bool:GetTrieArray2(Handle:trie, const String:key[], any:arr[], max_size, &size=0) 
+{ 
+   new bool:result = GetTrieArray(trie, key, arr, max_size, size); 
+   if (!result) 
+   { 
+      result = GetTrieValue(trie, key, arr[0]); 
+      if (result) 
+      { 
+         size = 1;
+      } 
+   } 
+   return result; 
+}
+
