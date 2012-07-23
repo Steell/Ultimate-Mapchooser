@@ -4,7 +4,7 @@
  
 #pragma semicolon 1
 
-#define RUNTESTS 0
+#define RUNTESTS 1
 
 //Dependencies
 #include <umc-core>
@@ -621,7 +621,42 @@ RunTests()
 {
     LogUMCMessage("TEST: Running UMC tests.");
     
-    //TESTS GO HERE
+    new Handle:trie = CreateTrie();
+    new anArray[MAXPLAYERS+1];
+    anArray[0] = 1;
+    SetTrieArray(trie, "stored_users", anArray, 1);
+    
+    new newArray[MAXPLAYERS+1];
+    new count;
+    if (GetTrieArray(trie, "stored_users", newArray, sizeof(newArray), count))
+    {
+        LogMessage("Total: %i", count);
+        for (new i = 0; i < count; i++)
+            LogMessage("%i: %i", i, newArray[i]);
+    }
+    else
+    {
+        LogMessage("Test Failed: could not fetch array from trie.");
+        if (GetTrieValue(trie, "stored_users", newArray[0]))
+        {
+            LogMessage("Was able to get the value, just not as an array. (%i)", newArray[0]);
+        }
+    }
+    
+    
+    SetTrieArray(trie, "stored_users", anArray, 2);
+    if (GetTrieArray(trie, "stored_users", newArray, sizeof(newArray), count))
+    {
+        LogMessage("Total: %i", count);
+        for (new i = 0; i < count; i++)
+            LogMessage("%i: %i", i, newArray[i]);
+    }
+    else
+    {
+        LogMessage("Test Failed: could not fetch array from trie.");
+    }
+    
+    CloseHandle(trie);
     
     LogUMCMessage("TEST: Finished running UMC tests.");
 }
@@ -1594,7 +1629,25 @@ public Native_UMCStartVote(Handle:plugin, numParams)
     
     new users[MAXPLAYERS+1];
     ConvertClientsToUserIDs(voteClients, users, numClients);
-    SetTrieArray(voteManager, "stored_users", users, numClients);
+    SetTrieArray(voteManager, "stored_users", users, numClients > 1 ? numClients : 2);
+    
+#if UMC_DEBUG
+    DEBUG_MESSAGE("Storing %i Users:", numClients)
+    for (new i = 0; i < numClients; i++)
+    {
+        DEBUG_MESSAGE("%i: %i", i, users[i])
+    }
+    
+    new newUsers[MAXPLAYERS+1];
+    new nC;
+    new bool:s = GetTrieArray(voteManager, "stored_users", newUsers, sizeof(newUsers), nC);
+    if (s)
+        DEBUG_MESSAGE("Got Users")
+    for (new i = 0; i < nC; i++)
+    {
+        DEBUG_MESSAGE("%i: %i", i, newUsers[i])
+    }
+#endif
     
     SetTrieValue(voteManager, "stored_exclude", runExclusionCheck);
     
@@ -1953,7 +2006,7 @@ public Action:VM_MapVote(duration, Handle:vote_items, const clients[], numClient
     for (new i = 0; i < numClients; i++)
     {
         client = clients[i];
-        if (IsClientInGame(client))
+        if (client != 0 && IsClientInGame(client))
         {
             if (verboseLogs)
                 LogUMCMessage("%i: %N (%i)", i, client, client);
@@ -2004,7 +2057,7 @@ public Action:VM_GroupVote(duration, Handle:vote_items, const clients[], numClie
     for (new i = 0; i < numClients; i++)
     {
         client = clients[i];
-        if (IsClientInGame(client))
+        if (client != 0 && IsClientInGame(client))
         {
             if (verboseLogs)
                 LogUMCMessage("%i: %N (%i)", i, client, client);
@@ -4674,10 +4727,25 @@ public Action:Handle_TieredVoteTimer(Handle:timer, Handle:pack)
         
         new users[MAXPLAYERS+1];
         new numClients;
-        GetTrieArray(vM, "stored_users", users, sizeof(users), numClients);
+        new bool:success = GetTrieArray(vM, "stored_users", users, sizeof(users), numClients);
+#if UMC_DEBUG
+        if (success)
+            DEBUG_MESSAGE("Got Users")
+        DEBUG_MESSAGE("Stored Users: (%i : %i)", _:success, numClients)
+        for (new i = 0; i < numClients; i++)
+        {
+            DEBUG_MESSAGE("%i: %i", i, users[i])
+        }
+#endif
         new clients[MAXPLAYERS+1];
         ConvertUserIDsToClients(users, clients, numClients);
-        
+#if UMC_DEBUG
+        DEBUG_MESSAGE("Stored Clients:")
+        for (new i = 0; i < numClients; i++)
+        {
+            DEBUG_MESSAGE("%i: %i", i, clients[i])
+        }
+#endif
         SetTrieValue(vM, "stored_type", VoteType_Map);
         
         new stored_votetime;

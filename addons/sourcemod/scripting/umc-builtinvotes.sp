@@ -134,7 +134,7 @@ public Action:VM_MapVote(duration, Handle:vote_items, const clients[], numClient
     for (new i = 0; i < numClients; i++)
     {
         client = clients[i];
-        if (IsClientInGame(client))
+        if (client != 0 && IsClientInGame(client))
         {
             if (verboseLogs)
                 LogUMCMessage("%i: %N (%i)", i, client, client);
