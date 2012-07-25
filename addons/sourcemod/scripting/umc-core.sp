@@ -4,7 +4,7 @@
  
 #pragma semicolon 1
 
-#define RUNTESTS 1
+#define RUNTESTS 0
 
 //Dependencies
 #include <umc-core>

@@ -37,6 +37,7 @@ new Handle:cvar_nom_ignore = INVALID_HANDLE;
 new Handle:cvar_display_ignore = INVALID_HANDLE;
 
 new Handle:time_played_trie = INVALID_HANDLE;
+new Handle:time_played_groups_trie = INVALID_HANDLE;
 
 public OnPluginStart()
 {
@@ -57,6 +58,7 @@ public OnPluginStart()
     AutoExecConfig(true, "umc-postexclude");
     
     time_played_trie = CreateTrie();
+    time_played_groups_trie = CreateTrie();
 }
 
 
@@ -74,11 +76,12 @@ public OnMapStart()
         SetTrieValue(time_played_trie, group, groupMaps);
     }
     SetTrieValue(groupMaps, map, GetTime());
+    SetTrieValue(time_played_groups_trie, group, GetTime());
 }
 
 
 //
-bool:IsStillDelayed(const String:map[], const String:group[], minsDelayed)
+bool:IsMapStillDelayed(const String:map[], const String:group[], minsDelayed)
 {
     new Handle:groupMaps;
     if (!GetTrieValue(time_played_trie, group, groupMaps))
@@ -104,6 +107,19 @@ bool:IsStillDelayed(const String:map[], const String:group[], minsDelayed)
 }
 
 
+//
+bool:IsGroupStillDelayed(const String:group[], minsDelayed)
+{
+    new timePlayed;
+    if (!GetTrieValue(time_played_groups_trie, group, timePlayed))
+        return false;
+    
+    new Float:minsSincePlayed = GetTime() - timePlayed / 60.0;
+    
+    return minsSincePlayed <= minsDelayed;
+}
+
+
 //Called when UMC wants to know if this map is excluded
 public Action:UMC_OnDetermineMapExclude(Handle:kv, const String:map[], const String:group[],
                                         bool:isNom, bool:forMapChange)
@@ -119,6 +135,12 @@ public Action:UMC_OnDetermineMapExclude(Handle:kv, const String:map[], const Str
     KvRewind(kv);
     if (KvJumpToKey(kv, group))
     {
+        if (IsGroupStillDelayed(group, KvGetNum(kv, POSTEX_KEY_MAP, POSTEX_DEFAULT_VALUE)))
+        {
+            KvGoBack(kv);
+            return Plugin_Stop;
+        }
+    
         def = KvGetNum(kv, POSTEX_KEY_GROUP, POSTEX_DEFAULT_VALUE);
     
         if (KvJumpToKey(kv, map))
@@ -133,7 +155,7 @@ public Action:UMC_OnDetermineMapExclude(Handle:kv, const String:map[], const Str
         KvGoBack(kv);
     }
     
-    if (IsStillDelayed(map, group, val))
+    if (IsMapStillDelayed(map, group, val))
         return Plugin_Stop;
     
     return Plugin_Continue;
