@@ -4764,6 +4764,8 @@ DoMapChange(UMC_ChangeMapTime:when, Handle:kv, const String:map[], const String:
 {   
     //Set the next map group
     strcopy(next_cat, sizeof(next_cat), group);
+                        
+    SetTheNextMap(map);
 
     //
     switch (when)
@@ -4775,13 +4777,11 @@ DoMapChange(UMC_ChangeMapTime:when, Handle:kv, const String:map[], const String:
             LogUMCMessage("%s: Map will change to '%s' at the end of the round.", reason, map);
             
             change_map_round = true;
-                        
-            SetTheNextMap(map);
             
             //Print a message.
             PrintToChatAll("\x03[UMC]\x01 %t", "Map Change at Round End");
         }
-        case ChangeMapTime_MapEnd: //We set the map as the next map.
+        /* case ChangeMapTime_MapEnd: //We set the map as the next map.
         {
             //Get the currently set next map.
             decl String:curMap[MAP_LENGTH];
@@ -4791,7 +4791,7 @@ DoMapChange(UMC_ChangeMapTime:when, Handle:kv, const String:map[], const String:
             //    ...that map isn't already set as the next map.
             //if (!StrEqual(curMap, map))
             SetTheNextMap(map);
-        }
+        } */
     }
     
     new Handle:new_kv = INVALID_HANDLE;
