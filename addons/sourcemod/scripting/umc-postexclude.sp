@@ -30,7 +30,8 @@ public Plugin:myinfo =
 }
 
 #define POSTEX_KEY_MAP "allow_every"
-#define POSTEX_KEY_GROUP "default_allow_every"
+#define POSTEX_KEY_DEFAULT "default_allow_every"
+#define POSTEX_KEY_GROUP "group_allow_every"
 #define POSTEX_DEFAULT_VALUE 0
 
 new Handle:cvar_nom_ignore = INVALID_HANDLE;
@@ -38,6 +39,8 @@ new Handle:cvar_display_ignore = INVALID_HANDLE;
 
 new Handle:time_played_trie = INVALID_HANDLE;
 new Handle:time_played_groups_trie = INVALID_HANDLE;
+
+new time_penalty;
 
 public OnPluginStart()
 {
@@ -76,22 +79,43 @@ public OnMapStart()
         SetTrieValue(time_played_trie, group, groupMaps);
     }
     SetTrieValue(groupMaps, map, GetTime());
-    SetTrieValue(time_played_groups_trie, group, GetTime());
+    SetTrieValue(time_played_groups_trie, group, GetTime() - time_penalty);
+    
+    time_penalty = 0;
 }
 
 
 //
-bool:IsMapStillDelayed(const String:map[], const String:group[], minsDelayed)
+bool:IsMapStillDelayed(const String:map[], const String:group[], minsDelayedMap, minsDelayedGroup)
 {
     new Handle:groupMaps;
     if (!GetTrieValue(time_played_trie, group, groupMaps))
         return false;
-    new timePlayed;
-    if (!GetTrieValue(groupMaps, map, timePlayed))
+    new timePlayedMap;
+    if (!GetTrieValue(groupMaps, map, timePlayedMap))
         return false;
-    new Float:minsSincePlayed = GetTime() - timePlayed / 60.0;
+    new minsSinceMapPlayed = GetTime() - timePlayedMap / 60;
     
-#if UMC_DEBUG
+    //if (minsSinceMapPlayed <= minsDelayedMap)
+    //    return true;
+    
+    new timePlayedGroup;
+    if (!GetTrieValue(time_played_groups_trie, group, timePlayedGroup))
+        return false;
+    
+    new minsSinceGroupPlayed = GetTime() - timePlayedGroup / 60;
+    
+    if (timePlayedMap == timePlayedGroup)
+    {
+        if (minsDelayedMap < minsDelayedGroup)
+            return minsSinceMapPlayed <= minsDelayedMap;
+    }
+    return minsSinceMapPlayed <= minsDelayedMap
+        || minsSinceGroupPlayed <= minsDelayedGroup;
+    
+    //return minsSinceGroupPlayed <= minsDelayedGroup;
+    
+/* #if UMC_DEBUG
     new bool:result = minsSincePlayed <= minsDelayed;
     if (minsDelayed > 0)
     {
@@ -103,12 +127,12 @@ bool:IsMapStillDelayed(const String:map[], const String:group[], minsDelayed)
     return result;
 #else
     return minsSincePlayed <= minsDelayed;
-#endif
+#endif */
 }
 
 
 //
-bool:IsGroupStillDelayed(const String:group[], minsDelayed)
+/* bool:IsGroupStillDelayed(const String:group[], minsDelayed)
 {
     new timePlayed;
     if (!GetTrieValue(time_played_groups_trie, group, timePlayed))
@@ -117,7 +141,7 @@ bool:IsGroupStillDelayed(const String:group[], minsDelayed)
     new Float:minsSincePlayed = GetTime() - timePlayed / 60.0;
     
     return minsSincePlayed <= minsDelayed;
-}
+} */
 
 
 //Called when UMC wants to know if this map is excluded
@@ -131,17 +155,19 @@ public Action:UMC_OnDetermineMapExclude(Handle:kv, const String:map[], const Str
         return Plugin_Continue;
     
     new def, val;
+    new gDef;
     
     KvRewind(kv);
     if (KvJumpToKey(kv, group))
     {
-        if (IsGroupStillDelayed(group, KvGetNum(kv, POSTEX_KEY_MAP, POSTEX_DEFAULT_VALUE)))
+        /* if (IsGroupStillDelayed(group, KvGetNum(kv, POSTEX_KEY_MAP, POSTEX_DEFAULT_VALUE)))
         {
             KvGoBack(kv);
             return Plugin_Stop;
-        }
-    
-        def = KvGetNum(kv, POSTEX_KEY_GROUP, POSTEX_DEFAULT_VALUE);
+        } */
+        
+        gDef = KvGetNum(kv, POSTEX_KEY_GROUP, POSTEX_DEFAULT_VALUE);
+        def = KvGetNum(kv, POSTEX_KEY_DEFAULT, POSTEX_DEFAULT_VALUE);
     
         if (KvJumpToKey(kv, map))
         {    
@@ -155,9 +181,37 @@ public Action:UMC_OnDetermineMapExclude(Handle:kv, const String:map[], const Str
         KvGoBack(kv);
     }
     
-    if (IsMapStillDelayed(map, group, val))
+    if (IsMapStillDelayed(map, group, val, gDef))
         return Plugin_Stop;
     
     return Plugin_Continue;
+}
+
+
+//Called when UMC has set the next map
+public UMC_OnNextmapSet(Handle:kv, const String:map[], const String:group[], 
+                        const String:display[])
+{
+    new gDef, gVal;
+
+    KvRewind(kv);
+    if (KvJumpToKey(kv, group))
+    {
+        gDef = KvGetNum(kv, POSTEX_KEY_GROUP, POSTEX_DEFAULT_VALUE);
+        
+        if (KvJumpToKey(kv, map))
+        {
+            gVal = KvGetNum(kv, POSTEX_KEY_GROUP, gDef);
+            KvGoBack(kv);
+        }
+        else
+        {
+            gVal = gDef;
+        }
+        KvGoBack(kv);
+    }
+    
+    new penalty = (gDef - gVal) * 60;
+    timePenalty = penalty > 0 ? penalty : 0;
 }
 
