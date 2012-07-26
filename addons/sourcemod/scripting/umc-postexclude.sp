@@ -212,6 +212,6 @@ public UMC_OnNextmapSet(Handle:kv, const String:map[], const String:group[],
     }
     
     new penalty = (gDef - gVal) * 60;
-    timePenalty = penalty > 0 ? penalty : 0;
+    time_penalty = penalty > 0 ? penalty : 0;
 }
 
