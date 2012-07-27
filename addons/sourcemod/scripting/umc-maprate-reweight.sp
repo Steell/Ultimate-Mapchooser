@@ -54,7 +54,7 @@ new Handle:map_ratings = INVALID_HANDLE;
 //Flag stating if we're ready to reweight (do we have information in the cache?)
 new bool:reweight = false;
 
-/**************************/
+/* ********************** */
 
 
 //Initialize the cache.
