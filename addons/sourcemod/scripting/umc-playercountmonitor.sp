@@ -300,6 +300,8 @@ public OnLibraryAdded(const String:name[])
 //Called after all config files were executed.
 public OnConfigsExecuted()
 {
+    DEBUG_MESSAGE("Executing PlayerCountMonitor OnConfigsExecuted")
+    
     validity_enabled = false;
     
     //Set triggers for min and max number of players.

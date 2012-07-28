@@ -282,6 +282,8 @@ public OnLibraryAdded(const String:name[])
 //Called after all config files were executed.
 public OnConfigsExecuted()
 {
+    DEBUG_MESSAGE("Executing VoteCommand OnConfigsExecuted")
+    
     can_vote = ReloadMapcycle();
     
     SetupVoteSounds();

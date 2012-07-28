@@ -365,6 +365,8 @@ public OnLibraryAdded(const String:name[])
 //Called after all config files were executed.
 public OnConfigsExecuted()
 {
+    DEBUG_MESSAGE("Executing AdminMenu OnConfigsExecuted")
+    
     can_vote = ReloadMapcycle();
     
     //Grab the name of the current map.

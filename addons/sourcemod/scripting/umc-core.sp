@@ -894,6 +894,7 @@ public OnLibraryAdded(const String:name[])
 //Called before any configs are executed.
 public OnMapStart()
 {   
+    DEBUG_MESSAGE("Executing Core OnMapStart")
     decl String:map[MAP_LENGTH];
     GetCurrentMap(map, sizeof(map));
     
@@ -917,6 +918,7 @@ public Action:UpdateTrackingCvar(Handle:timer)
 //Called after all config files were executed.
 public OnConfigsExecuted()
 {
+    DEBUG_MESSAGE("Executing Core OnConfigsExecuted")
     //Have all plugins reload their mapcycles.
     //Call_StartForward(reload_forward);
     //Call_Finish();
@@ -1004,6 +1006,8 @@ public Event_RoundEnd(Handle:evnt, const String:name[], bool:dontBroadcast)
 //Called at the end of a map.
 public OnMapEnd()
 {
+    DEBUG_MESSAGE("Executing Core OnMapEnd")
+
     //Empty array of nominations (and close all handles).
     ClearNominations();
     

@@ -66,6 +66,8 @@ public OnPluginStart()
 //
 public OnConfigsExecuted()
 {
+    DEBUG_MESSAGE("Executing PostExclude OnConfigsExecuted")
+    
     decl String:map[MAP_LENGTH], String:group[MAP_LENGTH];
     GetCurrentMap(map, sizeof(map));
     UMC_GetCurrentMapGroup(group, sizeof(group));

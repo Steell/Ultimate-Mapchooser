@@ -134,6 +134,7 @@ public Action:Command_TestReweight(client, args)
 //Repopulate the cache on each map start.
 public OnConfigsExecuted()
 {
+    DEBUG_MESSAGE("Executing MapRateReweight OnConfigsExecuted")
     new Handle:cvarTable = FindConVar("maprate_table");
     if (cvarTable == INVALID_HANDLE)
         cvarTable = FindConVar("sm_maprate_table");

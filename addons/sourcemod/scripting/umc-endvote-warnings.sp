@@ -125,6 +125,8 @@ public OnLibraryAdded(const String:name[])
 
 public OnConfigsExecuted()
 {
+    DEBUG_MESSAGE("Executing Warnings OnConfigsExecuted")
+    
     //Clear warning arrays
     ClearHandleArray(time_array);
     ClearHandleArray(frag_array);

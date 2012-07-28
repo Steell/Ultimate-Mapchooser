@@ -176,6 +176,8 @@ public OnLibraryAdded(const String:name[])
 //Called after all config files were executed.
 public OnConfigsExecuted()
 {
+    DEBUG_MESSAGE("Executing RandomCycle OnConfigsExecuted")
+    
     intermission_called = false;
     setting_map = ReloadMapcycle();
     

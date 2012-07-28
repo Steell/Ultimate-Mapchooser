@@ -92,6 +92,8 @@ public OnLibraryAdded(const String:name[])
 
 public OnConfigsExecuted()
 {
+    DEBUG_MESSAGE("Executing PrefixExclude OnConfigsExecuted")
+
     decl String:prefix[MAP_LENGTH];
     GetCurrentMapPrefix(prefix, sizeof(prefix));
     AddToMemoryArray(prefix, prefix_array, GetConVarInt(cvar_prev));

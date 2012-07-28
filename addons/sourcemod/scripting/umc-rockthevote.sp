@@ -343,6 +343,8 @@ public OnLibraryAdded(const String:name[])
 //Called after all config files were executed.
 public OnConfigsExecuted()
 {
+    DEBUG_MESSAGE("Executing RTV OnConfigsExecuted")
+    
     //We have not completed an RTV.
     rtv_completed = false;
     rtv_enabled = false;
@@ -460,6 +462,8 @@ public OnClientDisconnect_Post(client)
 //Called at the end of a map.
 public OnMapEnd()
 {
+    DEBUG_MESSAGE("Executing RTV OnMapEnd")
+    
     //Empty array of clients who have entered RTV.
     ClearArray(rtv_clients);
 }

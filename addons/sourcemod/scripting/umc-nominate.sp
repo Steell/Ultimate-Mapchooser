@@ -181,6 +181,8 @@ public OnLibraryAdded(const String:name[])
 //Called after all config files were executed.
 public OnConfigsExecuted()
 {
+    DEBUG_MESSAGE("Executing Nominate OnConfigsExecuted")
+    
     can_nominate = ReloadMapcycle();
     vote_completed = false;
     

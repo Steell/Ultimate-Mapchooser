@@ -442,6 +442,8 @@ public OnLibraryAdded(const String:name[])
 //Called after all config files were executed.
 public OnConfigsExecuted()
 {
+    DEBUG_MESSAGE("Executing EndVote OnConfigsExecuted")
+    
     //Set initial values for cvar value storage.
     //maxrounds_mem = GetConVarInt(cvar_maxrounds);
     //fraglimit_mem = GetConVarInt(cvar_fraglimit);
@@ -638,6 +640,8 @@ public Event_TFRestartRound(Handle:evnt, const String:name[], bool:dontBroadcast
 //Called at the end of a map.
 public OnMapEnd()
 {
+    DEBUG_MESSAGE("Executing EndVote OnMapEnd")
+
     //Vote timer is not running
     timer_alive = false;
     vote_timer = INVALID_HANDLE;
@@ -1218,7 +1222,7 @@ StartMapVoteRoundEnd()
     if (delay == 0.0)
         StartMapVote();
     else
-        CreateTimer(delay, Handle_VoteDelayTimer);
+        CreateTimer(delay, Handle_VoteDelayTimer, INVALID_HANDLE, TIMER_FLAG_NO_MAPCHANGE);
 }
 
 

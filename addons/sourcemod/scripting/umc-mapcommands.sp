@@ -67,6 +67,7 @@ public OnLibraryAdded(const String:name[])
 //Execute commands after all configs have been executed.
 public OnConfigsExecuted()
 {
+    DEBUG_MESSAGE("Executing MapCommands OnConfigsExecuted")
     if (strlen(group_command) > 0)
     {
         LogUMCMessage("SETUP: Executing map group command: '%s'", group_command);
@@ -86,6 +87,7 @@ public OnConfigsExecuted()
 //Execute pre-commands when map ends
 public OnMapEnd()
 {
+    DEBUG_MESSAGE("Executing MapCommands OnMapEnd")
     if (strlen(group_precommand) > 0)
     {
         LogUMCMessage("SETUP: Executing map group pre-command: '%s'", group_precommand);
