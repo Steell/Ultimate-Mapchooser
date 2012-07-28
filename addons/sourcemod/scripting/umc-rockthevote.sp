@@ -18,8 +18,6 @@
     #define UPDATE_URL "http://www.ccs.neu.edu/home/steell/sourcemod/ultimate-mapchooser/updateinfo-umc-rockthevote.txt"
 #endif
 
-#define REQUIRE_PLUGIN
-
 //Plugin Information
 public Plugin:myinfo =
 {

@@ -19,8 +19,6 @@
     #define UPDATE_URL "http://www.ccs.neu.edu/home/steell/sourcemod/ultimate-mapchooser/updateinfo-umc-prefixexclude.txt"
 #endif
 
-#define REQUIRE_PLUGIN
-
 public Plugin:myinfo =
 {
     name = "[UMC] Prefix Exclusion",

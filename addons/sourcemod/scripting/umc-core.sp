@@ -22,8 +22,6 @@
     #define UPDATE_URL "http://www.ccs.neu.edu/home/steell/sourcemod/ultimate-mapchooser/updateinfo-umc-core.txt"
 #endif
 
-#define REQUIRE_PLUGIN
-
 //Some definitions
 #define NOTHING_OPTION "?nothing?"
 #define WEIGHT_KEY "##calculated-weight##"
@@ -70,6 +68,8 @@ Added ability for Random Mapcycle to select the next map at the start of the gam
 -New cvar "sm_umc_randcycle_start" to control this ability
 Added ability to view the current mapcycle of all modules
 -New admin command "sm_umc_displaymaplists" to control this ability
+Added ability to make the first slot in the vote a "No Vote" button. (thanks Azelphur!)
+-New cvar sm_umc_votemanager_core_novote to control this feature.
 Fixed issue where extend map wasn't working with BuiltinVotes
 Fixed issue where bots were being included in votes.
 Various other small fixes.
@@ -1052,10 +1052,11 @@ public Native_UMCFormatDisplay(Handle:plugin, numParams)
     KvGoBack(kv);
     
     GetMapDisplayString(kv, group, map, gDisp, display, sizeof(display));
-    SetNativeString(1, display, maxlen);
-    
     CloseHandle(kv);
+    
+    SetNativeString(1, display, maxlen);
 }
+
 
 //
 public Native_UMCVoteManagerVoted(Handle:plugin, numParams)
@@ -3996,7 +3997,6 @@ Handle:BuildRunoffOptions(Handle:vM, Handle:clientArray)
         {
             DEBUG_MESSAGE("*MEMLEAKTEST* Closing VoteOptionTrie for Runoff error (BuildRunoffOptions) {6}")
             CloseHandle(GetArrayCell(newMenu, i));
-
         }
         CloseHandle(newMenu);
         LogError(

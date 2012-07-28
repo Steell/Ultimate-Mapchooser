@@ -18,8 +18,6 @@
     #define UPDATE_URL "http://www.ccs.neu.edu/home/steell/sourcemod/ultimate-mapchooser/updateinfo-umc-randomcycle.txt"
 #endif
 
-#define REQUIRE_PLUGIN
-
 #define NEXT_MAPGROUP_KEY "next_mapgroup"
 
 //Plugin Information

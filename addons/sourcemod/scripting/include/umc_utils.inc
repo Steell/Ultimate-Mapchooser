@@ -377,8 +377,7 @@ stock DisplayServerMessage(const String:msg[], const String:type[])
         
         //Setup timer to keep the center message visible.
         new Handle:hCenterAd;
-        center_message_timer = CreateDataTimer(1.0, Timer_CenterAd, hCenterAd, 
-                                               TIMER_FLAG_NO_MAPCHANGE|TIMER_REPEAT);
+        center_message_timer = CreateDataTimer(1.0, Timer_CenterAd, hCenterAd, TIMER_REPEAT);
         WritePackString(hCenterAd, message);
         
         center_warning_active = center_message_timer != INVALID_HANDLE;

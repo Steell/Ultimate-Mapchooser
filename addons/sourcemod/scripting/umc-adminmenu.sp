@@ -20,8 +20,6 @@
     #define UPDATE_URL "http://www.ccs.neu.edu/home/steell/sourcemod/ultimate-mapchooser/updateinfo-umc-adminmenu.txt"
 #endif
 
-#define REQUIRE_PLUGIN
-
 #define AMMENU_ITEM_INDEX_AUTO 0
 #define AMMENU_ITEM_INDEX_MANUAL 1
 #define AMMENU_ITEM_INFO_AUTO "auto"
@@ -2761,6 +2759,7 @@ Handle:CreateMapMenu(MenuHandler:handler, const String:group[], bool:limits, cli
         LogError("No maps available to build menu.");
         CloseHandle(menu);
         CloseHandle(mapArray);
+        CloseHandle(dispKV);
         return INVALID_HANDLE;
     }
     

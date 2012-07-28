@@ -1,5 +1,4 @@
 //Header file for Ultimate Mapchooser v3.0 by Steell.
-
 #if defined _umc_endvote_included
     #endinput
 #endif

@@ -20,8 +20,6 @@
     #define UPDATE_URL "http://www.ccs.neu.edu/home/steell/sourcemod/ultimate-mapchooser/updateinfo-umc-builtinvotes.txt"
 #endif
 
-#define REQUIRE_PLUGIN
-
 new bool:vote_active;
 new Handle:g_menu;
 new Handle:cvar_logging;

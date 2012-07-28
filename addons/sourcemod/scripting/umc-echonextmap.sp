@@ -18,8 +18,6 @@
     #define UPDATE_URL "http://www.ccs.neu.edu/home/steell/sourcemod/ultimate-mapchooser/updateinfo-umc-echonextmap.txt"
 #endif
 
-#define REQUIRE_PLUGIN
-
 public Plugin:myinfo =
 {
     name = "[UMC] Echo Nextmap",

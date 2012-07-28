@@ -21,8 +21,6 @@
     #define UPDATE_URL "http://www.ccs.neu.edu/home/steell/sourcemod/ultimate-mapchooser/updateinfo-umc-endvote-warnings.txt"
 #endif
 
-#define REQUIRE_PLUGIN
-
 public Plugin:myinfo =
 {
     name = "[UMC] End of Map Vote Warnings",

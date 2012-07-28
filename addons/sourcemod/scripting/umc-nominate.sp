@@ -18,8 +18,6 @@
     #define UPDATE_URL "http://www.ccs.neu.edu/home/steell/sourcemod/ultimate-mapchooser/updateinfo-umc-nominate.txt"
 #endif
 
-#define REQUIRE_PLUGIN
-
 #define NOMINATE_ADMINFLAG_KEY "nominate_flags"
 
 //Plugin Information
@@ -544,6 +542,7 @@ Handle:BuildNominationMenu(client, const String:cat[]=INVALID_GROUP)
         LogError("No maps available to be nominated.");
         CloseHandle(menu);
         CloseHandle(mapArray);
+        CloseHandle(dispKV);
         return INVALID_HANDLE;
     }
     

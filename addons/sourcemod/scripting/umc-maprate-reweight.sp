@@ -18,8 +18,6 @@
     #define UPDATE_URL "http://www.ccs.neu.edu/home/steell/sourcemod/ultimate-mapchooser/updateinfo-umc-maprate-reweight.txt"
 #endif
 
-#define REQUIRE_PLUGIN
-
 //Welcome to UMC Map Rate Reweight by Steell!
 /**
  * This plugin is meant to serve as a functional and useful example of Ultimate Mapchooser's

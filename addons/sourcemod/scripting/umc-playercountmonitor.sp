@@ -20,8 +20,6 @@
     #define UPDATE_URL "http://www.ccs.neu.edu/home/steell/sourcemod/ultimate-mapchooser/updateinfo-umc-playercountmonitor.txt"
 #endif
 
-#define REQUIRE_PLUGIN
-
 #define NO_OPTION "?no?"
 
 enum PlayerLimit_Action

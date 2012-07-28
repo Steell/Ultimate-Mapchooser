@@ -18,8 +18,6 @@
     #define UPDATE_URL "http://www.ccs.neu.edu/home/steell/sourcemod/ultimate-mapchooser/updateinfo-umc-postexclude.txt"
 #endif
 
-#define REQUIRE_PLUGIN
-
 public Plugin:myinfo =
 {
     name = "[UMC] Post-Played Exclusion",
@@ -66,7 +64,7 @@ public OnPluginStart()
 
 
 //
-public OnMapStart()
+public OnConfigsExecuted()
 {
     decl String:map[MAP_LENGTH], String:group[MAP_LENGTH];
     GetCurrentMap(map, sizeof(map));
