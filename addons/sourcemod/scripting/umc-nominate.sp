@@ -32,9 +32,9 @@ public Plugin:myinfo =
 
 //Changelog:
 /*
-3.3.2 (3/4/2012)
-Updated UMC Logging functionality
-Added ability to view the current mapcycle of all modules
+ 3.3.2 (3/4/2012)
+ Updated UMC Logging functionality
+ Added ability to view the current mapcycle of all modules
 */
 
         ////----CONVARS-----/////

@@ -38,425 +38,425 @@ public Plugin:myinfo =
 
 //Changelog:
 /*
-3.4 (7/22/2012)
-Modified Map Commands:
--"pre_command" now fires at Map End
--"postvote_command" fires when map is set as next map by UMC
--"command" has not changed and still fires at the start of the map
-Added ability to specify different map change times for End of Map Votes
--New cvar "sm_umc_endvote_changetime" to control this ability.
-Added advanced template system for map names.
--New templates: {NOMINATED}, {MIN_PLAYERS}, {MAX_PLAYERS}, {MIN_TIME}, {MAX_TIME}, {RATING}
--New cvar "sm_umc_nomination_display" in ultimate-mapchooser.cfg
-Added Map Start indicator to UMC logs.
-Fixed RTV entrance threshold so that admin flags are taken into account.
-Fixed Non-Selective runoff votes so that admin flags are taken into account.
-Fixed issue where Extend Map and Don't Change options would not appear in Group votes.
-Fixed issue where nominating a map via chat with an argument would display incorrect information.
-Fixed rare issue where clients connecting could get recently-disconnected clients' votes.
-Fixed memory leak with nominations
-Moved source code repository to GitHub.
+ 3.4 (7/22/2012)
+  Modified Map Commands:
+  -"pre_command" now fires at Map End
+  -"postvote_command" fires when map is set as next map by UMC
+  -"command" has not changed and still fires at the start of the map
+  Added ability to specify different map change times for End of Map Votes
+  -New cvar "sm_umc_endvote_changetime" to control this ability.
+  Added advanced template system for map names.
+  -New templates: {NOMINATED}, {MIN_PLAYERS}, {MAX_PLAYERS}, {MIN_TIME}, {MAX_TIME}, {RATING}
+  -New cvar "sm_umc_nomination_display" in ultimate-mapchooser.cfg
+  Added Map Start indicator to UMC logs.
+  Fixed RTV entrance threshold so that admin flags are taken into account.
+  Fixed Non-Selective runoff votes so that admin flags are taken into account.
+  Fixed issue where Extend Map and Don't Change options would not appear in Group votes.
+  Fixed issue where nominating a map via chat with an argument would display incorrect information.
+  Fixed rare issue where clients connecting could get recently-disconnected clients' votes.
+  Fixed memory leak with nominations
+  Moved source code repository to GitHub.
 
-3.3.2 (3/4/2012)
-Updated UMC Logging functionality
--All UMC logging is placed in it's own log files (prepended with UMC)
--Verbose logs now also log:
---The layout of the vote menu
---All clients in the vote
---What each client voted for, at the time they voted
-Added ability for Random Mapcycle to select the next map at the start of the game.
--New cvar "sm_umc_randcycle_start" to control this ability
-Added ability to view the current mapcycle of all modules
--New admin command "sm_umc_displaymaplists" to control this ability
-Added ability to make the first slot in the vote a "No Vote" button. (thanks Azelphur!)
--New cvar sm_umc_votemanager_core_novote to control this feature.
-Fixed issue where extend map wasn't working with BuiltinVotes
-Fixed issue where bots were being included in votes.
-Various other small fixes.
+ 3.3.2 (3/4/2012)
+  Updated UMC Logging functionality
+  -All UMC logging is placed in it's own log files (prepended with UMC)
+  -Verbose logs now also log:
+  --The layout of the vote menu
+  --All clients in the vote
+  --What each client voted for, at the time they voted
+  Added ability for Random Mapcycle to select the next map at the start of the game.
+  -New cvar "sm_umc_randcycle_start" to control this ability
+  Added ability to view the current mapcycle of all modules
+  -New admin command "sm_umc_displaymaplists" to control this ability
+  Added ability to make the first slot in the vote a "No Vote" button. (thanks Azelphur!)
+  -New cvar sm_umc_votemanager_core_novote to control this feature.
+  Fixed issue where extend map wasn't working with BuiltinVotes
+  Fixed issue where bots were being included in votes.
+  Various other small fixes.
 
-3.3.1 (12/13/2011)
-Updated sm_umc_rtv_postvoteaction cvar to allow for normal RTV votes after a vote has taken place.
-Fixed issue where errors were being logged accidentally.
-Fixed issue where cancelling a vote could cause errors (and in some cases cause voting to stop working).
-Fixed issue where Selective Runoff was always enabled.
-Fixed issue where channging the map when the round ends could cause it to change instantly.
+ 3.3.1 (12/13/2011)
+  Updated sm_umc_rtv_postvoteaction cvar to allow for normal RTV votes after a vote has taken place.
+  Fixed issue where errors were being logged accidentally.
+  Fixed issue where cancelling a vote could cause errors (and in some cases cause voting to stop working).
+  Fixed issue where Selective Runoff was always enabled.
+  Fixed issue where channging the map when the round ends could cause it to change instantly.
 
-3.3 (11/17/11)
-Slot blocking functionality has been changed. Modules now cannot specify how many slots they want blocked. All slot blocking is not controlled by core.
--New cvar "votemanager_core_blockslots" has been added to control this feature in Core.
--All "blockslots" cvars in various UMC modules have been removed.
-Vote Manager support placeholder has been added. Next version will allow modules to specify their own VM IDs.
-New cvar "sm_umc_votemanager_core_blockslots" has been added. With this update, the ability to specify how many slots to be blocked on a per-module basis has been removed. This cvar will be used for all cases where block slots are added to votes. (This means that the blockslots cvars in the various module .cfgs are now meaningless, and can be removed if you so desire).
-Removed "runoff_blockslots" cvar. Runoff votes will always use the same BlockSlot setting as is used normally.
-Added new Extend Command cvar, used to specify a command to be executed when a map is extended.
--New cvar "extend_command" in ultimate-mapchooser.cfg to control this feature.
-Fixed issue with Random Mapcycle module which caused "next_mapgroup" option to be ignored.
-Fixed rare memory leaks.
+ 3.3 (11/17/11)
+  Slot blocking functionality has been changed. Modules now cannot specify how many slots they want blocked. All slot blocking is not controlled by core.
+  -New cvar "votemanager_core_blockslots" has been added to control this feature in Core.
+  -All "blockslots" cvars in various UMC modules have been removed.
+  Vote Manager support placeholder has been added. Next version will allow modules to specify their own VM IDs.
+  New cvar "sm_umc_votemanager_core_blockslots" has been added. With this update, the ability to specify how many slots to be blocked on a per-module basis has been removed. This cvar will be used for all cases where block slots are added to votes. (This means that the blockslots cvars in the various module .cfgs are now meaningless, and can be removed if you so desire).
+  Removed "runoff_blockslots" cvar. Runoff votes will always use the same BlockSlot setting as is used normally.
+  Added new Extend Command cvar, used to specify a command to be executed when a map is extended.
+  -New cvar "extend_command" in ultimate-mapchooser.cfg to control this feature.
+  Fixed issue with Random Mapcycle module which caused "next_mapgroup" option to be ignored.
+  Fixed rare memory leaks.
 
-3.2.4 (10/12/11)
-Added Auto Updating support.
-Added new feature to the End of Map Vote module that delays a vote for a certain amount of time after it is triggered due to a round ending.
--New cvar "roundend_delaystart" to control this feature.
-Fixed bug in Player Count Monitoring where an incorrect translation phrase was breaking Yes/No votes.
+ 3.2.4 (10/12/11)
+  Added Auto Updating support.
+  Added new feature to the End of Map Vote module that delays a vote for a certain amount of time after it is triggered due to a round ending.
+  -New cvar "roundend_delaystart" to control this feature.
+  Fixed bug in Player Count Monitoring where an incorrect translation phrase was breaking Yes/No votes.
 
-3.2.3 (9/17/11)
-Updated Map Rate Map-Reweighting module to conform with the new Map Rate RELOADED cvars.
-Fixed issue in TF2 where maps ending due to the mp_winlimit cvar would not trigger Random Mapcycle map selection.
-Fixed issue with Tiered Votes where "Extend" and "Don't Change" options were not properly handled.
+ 3.2.3 (9/17/11)
+  Updated Map Rate Map-Reweighting module to conform with the new Map Rate RELOADED cvars.
+  Fixed issue in TF2 where maps ending due to the mp_winlimit cvar would not trigger Random Mapcycle map selection.
+  Fixed issue with Tiered Votes where "Extend" and "Don't Change" options were not properly handled.
 
-3.2.2 (8/11/11)
-Added new Post-Played Exclusion module, giving the ability to specify a period of time after a map is played that it should be excluded. (Thanks Sazpaimon!)
-Fixed bug which caused runoff votes to fail immediately when maximum amount of runoffs is set to 0 (infinite).
-Fixed issue with invalid translation phrase in the ADMINMENU module.
-Fixed issue with portugese translation.
-Fixed issue where the option to change the map immediately was not working in Player Count Monitor.
-Fixed issue with translation phrase which caused max player threshold to not trigger. PLAYERCOUNTMONITOR
+ 3.2.2 (8/11/11)
+  Added new Post-Played Exclusion module, giving the ability to specify a period of time after a map is played that it should be excluded. (Thanks Sazpaimon!)
+  Fixed bug which caused runoff votes to fail immediately when maximum amount of runoffs is set to 0 (infinite).
+  Fixed issue with invalid translation phrase in the ADMINMENU module.
+  Fixed issue with portugese translation.
+  Fixed issue where the option to change the map immediately was not working in Player Count Monitor.
+  Fixed issue with translation phrase which caused max player threshold to not trigger. PLAYERCOUNTMONITOR
 
-3.2.1 (7/4/11)
-Fixed issue where previously played groups were not being removed from the mapcycle.
-Optimized vote menu population.
+ 3.2.1 (7/4/11)
+  Fixed issue where previously played groups were not being removed from the mapcycle.
+  Optimized vote menu population.
 
-3.2 (7/2/11)
-Modified previous exclusion so that it is performed at the start of the map.
-Fixed issue where tiered votes would not work correctly when started via the admin menu and exlusion is ignored.
-Changed previous-map exclusion so it doesn't automatically exclude the current map. If cvar is set to 0, the current map will not be excluded.
+ 3.2 (7/2/11)
+  Modified previous exclusion so that it is performed at the start of the map.
+  Fixed issue where tiered votes would not work correctly when started via the admin menu and exlusion is ignored.
+  Changed previous-map exclusion so it doesn't automatically exclude the current map. If cvar is set to 0, the current map will not be excluded.
 
-3.1.2 (6/24/11)
-Disabled Prefix Exclusion by default.
-Fixed issue with Map Votes not starting when there are no nominations.
-Fixed issues where cancelled votes could cause memory leaks.
+ 3.1.2 (6/24/11)
+  Disabled Prefix Exclusion by default.
+  Fixed issue with Map Votes not starting when there are no nominations.
+  Fixed issues where cancelled votes could cause memory leaks.
 
-3.1.1 (6/23/11)
-Fixed translation typo in Admin Menu
-Fixed translation bug in Admin Menu
-Fixed issue where admin flags would sometimes cause votes not to appear.
-Fixed bug in the Admin Menu where Stopping an active vote would do nothing.
+ 3.1.1 (6/23/11)
+  Fixed translation typo in Admin Menu
+  Fixed translation bug in Admin Menu
+  Fixed issue where admin flags would sometimes cause votes not to appear.
+  Fixed bug in the Admin Menu where Stopping an active vote would do nothing.
 
-3.1 (6/22/11)
-Added new map option to associate a nomination with a different group.
--New "nominate_group" option at the map-level of the mapcycle definition.
-Added admin flag for ability to see vote menu.
--New "adminflags" cvar in ADMINMENU, ENDVOTE, PLAYERCOUNTMONITOR, ROCKTHEVOTE, and VOTECOMMAND.
-Added admin flag for ability to enter rtv. [RTV]
--New "enteradminflags" cvar in RTV.
-Added ability to specify flags for maps, limiting which players can nominate them.
--New group and map option in mapcycle "nominate_flags" to specify flags.
--New cvar "adminflags" in NOMINATE to set default.
-Added ability to specify flags for maps, limiting which admins can select them in the admin menu.
--New group and map option in mapcycle "adminmenu_flags" to specify flags.
-Added admin flags for admins who can ignore map exclusion in the admin menu.
--New cvar "sm_umc_am_adminflags_exclude" to control this feature.
-Added admin flags for admins who can override default settings in the admin menu.
--New cvar "sm_umc_am_adminflags_defaults" to control this feature.
-Added mp_winlimit-based vote warnings. [ENDVOTE-WARNINGS]
-Turned basic time-based vote warnings on by default.
-Added ability for sound to be played during countdown between Runoff/Tiered votes. [CORE]
--New "sm_umc_countdown_sound" cvar to specify the sound.
-Added ability to specify a default weight for maps that do not have enough Map Rate ratings. [MAPRATE-REWEIGHT]
--New "sm_umc_maprate_default" cvar to control this feature.
-Fixed bug with nominations not using group exclusion settings.
-Fixed bug with nominations not passing their own mapcycle to forwards.
-Fixed bug with tiered nomination menu excluding groups unnecessarily.
-Fixed memory leak when parsing nominations for map group vote menus.
-Fixed bug which could cause groups with no valid maps to be added to group votes.
-Fixed bug in Prefix Exclusion which caused prefixes to be excluded even when the memory cvar was set to 0.
+ 3.1 (6/22/11)
+  Added new map option to associate a nomination with a different group.
+  -New "nominate_group" option at the map-level of the mapcycle definition.
+  Added admin flag for ability to see vote menu.
+  -New "adminflags" cvar in ADMINMENU, ENDVOTE, PLAYERCOUNTMONITOR, ROCKTHEVOTE, and VOTECOMMAND.
+  Added admin flag for ability to enter rtv. [RTV]
+  -New "enteradminflags" cvar in RTV.
+  Added ability to specify flags for maps, limiting which players can nominate them.
+  -New group and map option in mapcycle "nominate_flags" to specify flags.
+  -New cvar "adminflags" in NOMINATE to set default.
+  Added ability to specify flags for maps, limiting which admins can select them in the admin menu.
+  -New group and map option in mapcycle "adminmenu_flags" to specify flags.
+  Added admin flags for admins who can ignore map exclusion in the admin menu.
+  -New cvar "sm_umc_am_adminflags_exclude" to control this feature.
+  Added admin flags for admins who can override default settings in the admin menu.
+  -New cvar "sm_umc_am_adminflags_defaults" to control this feature.
+  Added mp_winlimit-based vote warnings. [ENDVOTE-WARNINGS]
+  Turned basic time-based vote warnings on by default.
+  Added ability for sound to be played during countdown between Runoff/Tiered votes. [CORE]
+  -New "sm_umc_countdown_sound" cvar to specify the sound.
+  Added ability to specify a default weight for maps that do not have enough Map Rate ratings. [MAPRATE-REWEIGHT]
+  -New "sm_umc_maprate_default" cvar to control this feature.
+  Fixed bug with nominations not using group exclusion settings.
+  Fixed bug with nominations not passing their own mapcycle to forwards.
+  Fixed bug with tiered nomination menu excluding groups unnecessarily.
+  Fixed memory leak when parsing nominations for map group vote menus.
+  Fixed bug which could cause groups with no valid maps to be added to group votes.
+  Fixed bug in Prefix Exclusion which caused prefixes to be excluded even when the memory cvar was set to 0.
 
-3.0.8 (6/11/11)
-Fixed bug where sometimes only the first map group would be processed for map exclusions.
+ 3.0.8 (6/11/11)
+  Fixed bug where sometimes only the first map group would be processed for map exclusions.
 
-3.0.7 (6/10/11)
-Changed default value for all threshold cvars to 0.
-Added standard mapcycle feature; if given a special header, regular one-map-per-line mapcycles can be used with UMC.
-Fixed bug that was causing "handle is invalid" error messages when runoff votes fail and thair failaction is set to consider the vote a success.
-Fixed issues with Polish translation.
-Modified exclusion algorithm when generating vote menus, should allow for nominations to be added to empty groups.
-Heavily modified internal nomination system.
-Fixed memory leak when mapcycle files can not be found.
+ 3.0.7 (6/10/11)
+  Changed default value for all threshold cvars to 0.
+  Added standard mapcycle feature; if given a special header, regular one-map-per-line mapcycles can be used with UMC.
+  Fixed bug that was causing "handle is invalid" error messages when runoff votes fail and thair failaction is set to consider the vote a success.
+  Fixed issues with Polish translation.
+  Modified exclusion algorithm when generating vote menus, should allow for nominations to be added to empty groups.
+  Heavily modified internal nomination system.
+  Fixed memory leak when mapcycle files can not be found.
 
-3.0.6 (6/7/11)
-Changed minimum value of the sm_umc_maprate_expscale cvar to 0. [MAPRATE-REWEIGHT]
-Fixed bug in Player Count Monitoring where it couldn't auto-detect the current group. [PLAYERCOUNTMONITOR]
-Fixed bug where errors could be caused by group exclusion code.
-Heavily optimized debugging system, should result in execution speedup.
-Optimized umc-maprate-reweight to fetch map weights in O(1) as opposed to O(n)
-Added more debug messages.
+ 3.0.6 (6/7/11)
+  Changed minimum value of the sm_umc_maprate_expscale cvar to 0. [MAPRATE-REWEIGHT]
+  Fixed bug in Player Count Monitoring where it couldn't auto-detect the current group. [PLAYERCOUNTMONITOR]
+  Fixed bug where errors could be caused by group exclusion code.
+  Heavily optimized debugging system, should result in execution speedup.
+  Optimized umc-maprate-reweight to fetch map weights in O(1) as opposed to O(n)
+  Added more debug messages.
 
-3.0.5 (5/29/11)
-Fixed bug where individual clients cancelling a vote menu could break tiered and group votes.
+ 3.0.5 (5/29/11)
+  Fixed bug where individual clients cancelling a vote menu could break tiered and group votes.
 
-3.0.4 (5/28/11)
-Added experimental admin menu module. [ADMINMENU]
-Fixed rare bug with tiered nomination menus displaying groups with no maps in it. [NOMINATIONS]
-Fixed bug where error log would be spammed with KillTimer errors (finally). [ENDVOTE]
-Fixed bug where endvotes would not work in games without certain cvars. [ENDVOTE]
-Made map weights of 0 automatically exclude maps from selection. [WEIGHT]
-Updated various documentation.
-Minor Optimizations.
+ 3.0.4 (5/28/11)
+  Added experimental admin menu module. [ADMINMENU]
+  Fixed rare bug with tiered nomination menus displaying groups with no maps in it. [NOMINATIONS]
+  Fixed bug where error log would be spammed with KillTimer errors (finally). [ENDVOTE]
+  Fixed bug where endvotes would not work in games without certain cvars. [ENDVOTE]
+  Made map weights of 0 automatically exclude maps from selection. [WEIGHT]
+  Updated various documentation.
+  Minor Optimizations.
 
-3.0.3 (5/23/11)
-Added ability to specify amount of times a prefix can be in the previously played prefixes before it is excluded.
--New cvar "sm_umc_prefixexclude_amount" in umc-prefixexclude to control this feature.
-Fixed bug where endvotes would not appear after a map was extended. [ENDVOTE]
+ 3.0.3 (5/23/11)
+  Added ability to specify amount of times a prefix can be in the previously played prefixes before it is excluded.
+  -New cvar "sm_umc_prefixexclude_amount" in umc-prefixexclude to control this feature.
+  Fixed bug where endvotes would not appear after a map was extended. [ENDVOTE]
 
-3.0.2 (5/22/11)
-Fixed bug with previously played map exclusion in second stage tiered vote.
-Fixed bug where nominated maps were not being excluded from votes properly.
-Fixed bug where group votes would pick a random map group to be the next map.
-Optimized map weight system so each map is only weighted once.
-Made modules with previous map exclusions search for the current group if core reports it as INVALID_GROUP.
-Added ability to specify a scale for umc-maprate-reweight
--New cvar "sm_umc_maprate_expscale" in umc-maprate-reweight to control this feature.
-Added ability to make all votes use valve-syle menus (users press ESC to vote).
--New cvar "sm_umc_menu_esc" in umc-core to control this feature.
-Made center message in umc-echonextmap last for at least 3 seconds.
-Sequences of warnings can now be defined using a dash (-) as well as an elipses (...).
-Added new Map Prefix Exclusion module (umc-prefixexclude).
+ 3.0.2 (5/22/11)
+  Fixed bug with previously played map exclusion in second stage tiered vote.
+  Fixed bug where nominated maps were not being excluded from votes properly.
+  Fixed bug where group votes would pick a random map group to be the next map.
+  Optimized map weight system so each map is only weighted once.
+  Made modules with previous map exclusions search for the current group if core reports it as INVALID_GROUP.
+  Added ability to specify a scale for umc-maprate-reweight
+  -New cvar "sm_umc_maprate_expscale" in umc-maprate-reweight to control this feature.
+  Added ability to make all votes use valve-syle menus (users press ESC to vote).
+  -New cvar "sm_umc_menu_esc" in umc-core to control this feature.
+  Made center message in umc-echonextmap last for at least 3 seconds.
+  Sequences of warnings can now be defined using a dash (-) as well as an elipses (...).
+  Added new Map Prefix Exclusion module (umc-prefixexclude).
 
-3.0.1 (5/18/11)
-Added extra argument to sm_setnextmap that specifies when the map will be changed.
-Added response to the reload mapcycles command.
-Fixed bug with map exclusion in tiered votes.
+ 3.0.1 (5/18/11)
+  Added extra argument to sm_setnextmap that specifies when the map will be changed.
+  Added response to the reload mapcycles command.
+  Fixed bug with map exclusion in tiered votes.
 
-3.0 (5/16/11)
-Near-complete rewrite of UMC. Divided up plugin into separate modules which operate independently. These modules are linked together through UMC's Core (this file).
-Fixed many, many bugs with the rewrite. I will only be listing the ones I know have been fixed.
-Fixed bug with Tiered Votes sometimes not displaying the second vote due to an invalid mapcycle.
-Fixed bug with Map Group Exclusion not working correctly.
-Fixed bug with Map Exclusion sometimes not working correctly.
-Implemented support for "mp_winlimit" triggered end of map votes.
-When UMC sets the next map, it can now be displayed in Center and Hint messages.
--New "sm_umc_echonextmap_hint" and "sm_umc_echonextmap_center" cvars to control this ability.
-Added "next_mapgroup" to maps in the definitions, not just the groups anymore.
-Added ability to delay end of map votes so they will only appear at the end of rounds.
--New "sm_umc_endvote_delayroundend" cvar to control this ability.
-Added command to display how maprate-reweight will be reweighting maps.
-Implemented developer's API, but it is not yet fully supported (in case I decide I need to make changes).
-Probably more, I really should have kept track.
+ 3.0 (5/16/11)
+  Near-complete rewrite of UMC. Divided up plugin into separate modules which operate independently. These modules are linked together through UMC's Core (this file).
+  Fixed many, many bugs with the rewrite. I will only be listing the ones I know have been fixed.
+  Fixed bug with Tiered Votes sometimes not displaying the second vote due to an invalid mapcycle.
+  Fixed bug with Map Group Exclusion not working correctly.
+  Fixed bug with Map Exclusion sometimes not working correctly.
+  Implemented support for "mp_winlimit" triggered end of map votes.
+  When UMC sets the next map, it can now be displayed in Center and Hint messages.
+  -New "sm_umc_echonextmap_hint" and "sm_umc_echonextmap_center" cvars to control this ability.
+  Added "next_mapgroup" to maps in the definitions, not just the groups anymore.
+  Added ability to delay end of map votes so they will only appear at the end of rounds.
+  -New "sm_umc_endvote_delayroundend" cvar to control this ability.
+  Added command to display how maprate-reweight will be reweighting maps.
+  Implemented developer's API, but it is not yet fully supported (in case I decide I need to make changes).
+  Probably more, I really should have kept track.
 
-2.5.1 (5/5/11)
-Added color to the [UMC] prefix in say messages.
-Added German translation (thanks Leitwolf!)
-Added Polish translation (thanks Arcy!)
-Fixed minor issue with Random Selection of the Next Map not excluding maps correctly.
-Fixed minor issue with Player Limits that was generating errors.
-Fixed issue with "next_mapgroup" where it didn't properly check for excluded maps.
-Fixed bug with max runoff votes not working as intended.
-Implemented pre-command.
+ 2.5.1 (5/5/11)
+  Added color to the [UMC] prefix in say messages.
+  Added German translation (thanks Leitwolf!)
+  Added Polish translation (thanks Arcy!)
+  Fixed minor issue with Random Selection of the Next Map not excluding maps correctly.
+  Fixed minor issue with Player Limits that was generating errors.
+  Fixed issue with "next_mapgroup" where it didn't properly check for excluded maps.
+  Fixed bug with max runoff votes not working as intended.
+  Implemented pre-command.
 
-2.5 (4/3/11)
-Added new feature: you can specify a maximum number of maps to appear in runoff votes.
--New "sm_umc_runoff_max" cvar to control this ability.
-Players are now allowed to change their nomination.
-Fixed bug where the map group configuration is not set properly.
-Fixed tiered nomination menu where groups with no maps were still displayed.
-Fixed bug where the sm_umc_mapvote command would change to an invalid map if nobody voted.
-Added prevention code for various errors, not sure if it will fix them since I can't reproduce them.
-Optimized memory usage in adt_arrays with Strings.
-Added placeholders for "pre-command" support.
+ 2.5 (4/3/11)
+  Added new feature: you can specify a maximum number of maps to appear in runoff votes.
+  -New "sm_umc_runoff_max" cvar to control this ability.
+  Players are now allowed to change their nomination.
+  Fixed bug where the map group configuration is not set properly.
+  Fixed tiered nomination menu where groups with no maps were still displayed.
+  Fixed bug where the sm_umc_mapvote command would change to an invalid map if nobody voted.
+  Added prevention code for various errors, not sure if it will fix them since I can't reproduce them.
+  Optimized memory usage in adt_arrays with Strings.
+  Added placeholders for "pre-command" support.
 
-2.4.6 (3/25/11)
-Fixed bug where having the same map in one group could cause a crash.
-Fixed errors where delays between votes (runoff and tiered) could cause errors if the map ends during them.
-Added dynamic reweight system, allowing other plugins to affect the weight of maps in UMC.
+ 2.4.6 (3/25/11)
+  Fixed bug where having the same map in one group could cause a crash.
+  Fixed errors where delays between votes (runoff and tiered) could cause errors if the map ends during them.
+  Added dynamic reweight system, allowing other plugins to affect the weight of maps in UMC.
 
-2.4.5 (3/20/11)
-Disabled exit button on runoff votes.
-Made runoff votes use proper pagination (< 9 options = no pagination [Radio Style Menus only])
+ 2.4.5 (3/20/11)
+  Disabled exit button on runoff votes.
+  Made runoff votes use proper pagination (< 9 options = no pagination [Radio Style Menus only])
 
-2.4.4 (3/18/11)
-Fixed issue where an extension could cause multiple votes.
+ 2.4.4 (3/18/11)
+  Fixed issue where an extension could cause multiple votes.
 
-2.4.3 (3/16/11)
-Fixed issue with second stage tiered votes not limiting maps to the winning map group.
+ 2.4.3 (3/16/11)
+  Fixed issue with second stage tiered votes not limiting maps to the winning map group.
 
-2.4.2 (3/9/11)
-Modified sm_umc_mapvote command to take an argument specifying when to change the map after the vote.
-Fixed issue with excluding previously played maps.
-Fixed issue with random selection of the next map excluding previously played maps.
+ 2.4.2 (3/9/11)
+  Modified sm_umc_mapvote command to take an argument specifying when to change the map after the vote.
+  Fixed issue with excluding previously played maps.
+  Fixed issue with random selection of the next map excluding previously played maps.
 
-2.4.1 (3/7/11)
-Fixed bug that caused runoff votes to never have a maximum.
-Fixed bug that prevented some runoff votes from working correctly.
+ 2.4.1 (3/7/11)
+  Fixed bug that caused runoff votes to never have a maximum.
+  Fixed bug that prevented some runoff votes from working correctly.
 
-2.4 (3/7/11)
-Made delay between votes (tiered and runoff) countdown to zero as opposed to one.
-Fixed bug that disabled RTVs and Random Selection of the Next Map if a vote occurs and there are no votes.
-Fixed bug with auto-pagination that broke votes with 8 or 9 items in HL2DM (and other mods that don't support Radio menus).
+ 2.4 (3/7/11)
+  Made delay between votes (tiered and runoff) countdown to zero as opposed to one.
+  Fixed bug that disabled RTVs and Random Selection of the Next Map if a vote occurs and there are no votes.
+  Fixed bug with auto-pagination that broke votes with 8 or 9 items in HL2DM (and other mods that don't support Radio menus).
 
-2.3.4-beta3 (3/6/11)
-Made nomination menu not display maps from a map group if the strict cvar is on and enough maps have already been nominated to satisfy the maps_invote setting.
-Fixed selective runoff votes so they take into account previous votes (from before the runoff).
+ 2.3.4-beta3 (3/6/11)
+  Made nomination menu not display maps from a map group if the strict cvar is on and enough maps have already been nominated to satisfy the maps_invote setting.
+  Fixed selective runoff votes so they take into account previous votes (from before the runoff).
 
-2.3.4-beta2 (3/3/11)
-Added ability for map votes to allow duplicate maps. This is useful for people running votes where the same map may appear for different mods.
--New sm_umc_vote_allowduplicates cvar to control this ability
-Added ability to filter the nomination menu based off of what maps should be excluded at the time it's displayed.
--Removed sm_umc_nominate_timelimits cvar
--New sm_umc_nominate_displaylimits cvar to control this ability
-Fixed cases where ignorelimits was not working.
-Code refactoring
+ 2.3.4-beta2 (3/3/11)
+  Added ability for map votes to allow duplicate maps. This is useful for people running votes where the same map may appear for different mods.
+  -New sm_umc_vote_allowduplicates cvar to control this ability
+  Added ability to filter the nomination menu based off of what maps should be excluded at the time it's displayed.
+  -Removed sm_umc_nominate_timelimits cvar
+  -New sm_umc_nominate_displaylimits cvar to control this ability
+  Fixed cases where ignorelimits was not working.
+  Code refactoring
 
-2.3.4-beta1 (3/2/11)
-Fixed bug with Yes/No Playerlimit vote where a tie would result in garbage display.
-Fixed bug where two RTVs could happen, one right after another, if enough people enter RTV during an RTV.
-Made nomination menu not close automatically.
-Fixed behavior of ignorelimits cvars and nominations.
+ 2.3.4-beta1 (3/2/11)
+  Fixed bug with Yes/No Playerlimit vote where a tie would result in garbage display.
+  Fixed bug where two RTVs could happen, one right after another, if enough people enter RTV during an RTV.
+  Made nomination menu not close automatically.
+  Fixed behavior of ignorelimits cvars and nominations.
 
-2.3 (2/24/11)
-Added client-side translations to all menus.
-Added optional "display" option to map definitions, and "display-template" option to map group definitions.
-Added ability to display nomination menu in tiers -- first select a group, then select a map.
--New cvar to control this feature.
-Added ability to disable Map Exclusion for end-of-map votes, RTVs, random next map, and nominations.
--Four new cvars to control this feature.
-Made all votes attempt to retry to initiate in the event they are blocked by a vote that is already running.
-Added call to OnNominationRemoved forward in all appropriate places.
-Modified nomination code in map group votes to not exclude the group if there were nominations for maps in it.
-Fixed odd bug where a vote would display garbage if there was a map group with a cumulative weight of 0.
+ 2.3 (2/24/11)
+  Added client-side translations to all menus.
+  Added optional "display" option to map definitions, and "display-template" option to map group definitions.
+  Added ability to display nomination menu in tiers -- first select a group, then select a map.
+  -New cvar to control this feature.
+  Added ability to disable Map Exclusion for end-of-map votes, RTVs, random next map, and nominations.
+  -Four new cvars to control this feature.
+  Made all votes attempt to retry to initiate in the event they are blocked by a vote that is already running.
+  Added call to OnNominationRemoved forward in all appropriate places.
+  Modified nomination code in map group votes to not exclude the group if there were nominations for maps in it.
+  Fixed odd bug where a vote would display garbage if there was a map group with a cumulative weight of 0.
 
-2.2.4 (2/21/11)
-Fixed bug with center message warnings.
-Fixed bug with runoff votes being populated with the wrong maps.
-Fixed bug with runoff votes not paying attention to the threshold cvar.
-Fixed bug with end of map vote timer that caused errors when the timelimit was changed.
+ 2.2.4 (2/21/11)
+  Fixed bug with center message warnings.
+  Fixed bug with runoff votes being populated with the wrong maps.
+  Fixed bug with runoff votes not paying attention to the threshold cvar.
+  Fixed bug with end of map vote timer that caused errors when the timelimit was changed.
 
-2.2.3 (2/19/11)
-Fixed bug that completely screwed up vote warnings.
+ 2.2.3 (2/19/11)
+  Fixed bug that completely screwed up vote warnings.
 
-2.2.2 (2/19/11)
-Fixed bug that caused all time-based vote warnings to appear at 0 seconds.
+ 2.2.2 (2/19/11)
+  Fixed bug that caused all time-based vote warnings to appear at 0 seconds.
 
-2.2.1 (2/18/11)
-Fixed problem with default min and max players for groups not being read correctly.
+ 2.2.1 (2/18/11)
+  Fixed problem with default min and max players for groups not being read correctly.
 
-2.2 (2/18/11)
-Added vote warnings support for frag and round limits.
--Removed sm_umc_endvote_warnings cvar
--Added three new cvars to control the feature: 1 each for time, frag, and round warnings.
-Added mapchooser's "sm_setnextmap" command.
-Changed required admin flag for commands from ADMFLAG_RCON to ADMFLAG_CHANGEMAP.
-Added prevention measures from starting RTVs during delay between runoff and tiered votes.
-Changed event hooks to act more like original mapchooser (may fix weird round_end bugs).
-Fixed "nextmap" chat command functionality.
-Fixed bug with end of map vote that prevented frag limit from triggering it.
-Fixed bug that required mapchooser to be enabled.
-Fixed rare memory leak with map exclusion algorithm for map groups with no maps defined.
+ 2.2 (2/18/11)
+  Added vote warnings support for frag and round limits.
+  -Removed sm_umc_endvote_warnings cvar
+  -Added three new cvars to control the feature: 1 each for time, frag, and round warnings.
+  Added mapchooser's "sm_setnextmap" command.
+  Changed required admin flag for commands from ADMFLAG_RCON to ADMFLAG_CHANGEMAP.
+  Added prevention measures from starting RTVs during delay between runoff and tiered votes.
+  Changed event hooks to act more like original mapchooser (may fix weird round_end bugs).
+  Fixed "nextmap" chat command functionality.
+  Fixed bug with end of map vote that prevented frag limit from triggering it.
+  Fixed bug that required mapchooser to be enabled.
+  Fixed rare memory leak with map exclusion algorithm for map groups with no maps defined.
 
-2.1 (2/17/11)
-Added support for mapchooser's natives.
-Added customization for how runoff and tiered vote messages are displayed.
-Fixed memory leak with nominations that are not added to votes.
-Fixed memory leak with map exclusion algorithm.
+ 2.1 (2/17/11)
+  Added support for mapchooser's natives.
+  Added customization for how runoff and tiered vote messages are displayed.
+  Fixed memory leak with nominations that are not added to votes.
+  Fixed memory leak with map exclusion algorithm.
 
-2.0.2 (2/15/11)
-Fied (another) obscure bug with Runoff Votes, this time preventing map change.
+ 2.0.2 (2/15/11)
+  Fixed (another) obscure bug with Runoff Votes, this time preventing map change.
 
-2.0.1 (2/14/11)
-Fixed obscure bug with Runoff Votes that prevents a vote from starting.
+ 2.0.1 (2/14/11)
+  Fixed obscure bug with Runoff Votes that prevents a vote from starting.
 
-2.0 (2/13/11)
-Added new "command" option to map groups and maps defined in the mapcycle. The strings supplied will be executed at the start of the map.
-Added some code optimizations.
-Improved logging.
-Added ability for plugin to search for a map's player limits if the map wasn't changed by the plugin.
-Fixed bug with Tiered Votes where votes would fail if the winning group had only one available map.
-Fixed bug with data not being cleared when a vote menu fails to be created.
-Fixed bug with "rockthevote" chat triggers not working.
-Fixed bug with vote warnings where mp_timelimit was 0.
-Fixed bug where strict nominations would sometimes cause duplicate vote entries.
-Fixed bug where player limits would stop working.
-Fixed bug with group voting where if a nominated map won the winning map wasn't set correctly.
-Fixed memory leak with checking for maps with proper time and player counts.
-Organized code
+ 2.0 (2/13/11)
+  Added new "command" option to map groups and maps defined in the mapcycle. The strings supplied will be executed at the start of the map.
+  Added some code optimizations.
+  Improved logging.
+  Added ability for plugin to search for a map's player limits if the map wasn't changed by the plugin.
+  Fixed bug with Tiered Votes where votes would fail if the winning group had only one available map.
+  Fixed bug with data not being cleared when a vote menu fails to be created.
+  Fixed bug with "rockthevote" chat triggers not working.
+  Fixed bug with vote warnings where mp_timelimit was 0.
+  Fixed bug where strict nominations would sometimes cause duplicate vote entries.
+  Fixed bug where player limits would stop working.
+  Fixed bug with group voting where if a nominated map won the winning map wasn't set correctly.
+  Fixed memory leak with checking for maps with proper time and player counts.
+  Organized code
 
-2.0-beta (2/5/11)
-Added Runoff Vote feature. If a vote end and the winning option is less than a specified threshold, another vote will be run with losing options eliminated.
--Added cvar to control max amount runoffs to run (> 0 enables the feature)
--Added cvar to control the threshold required to prevent a runoff
--Added cvar to control which sound is played at the start of a runoff
--Added cvar to specify whether runoffs are shown to everyone or just players who need to (re)vote.
-Added Tiered Votes. If enabled, first players will vote for a category, and then they will vote for a map from that category.
--Modified type cvars to allow for this kind of vote.
--Added cvar to control how many maps are displayed in the vote (after a category is already selected).
-Added ability to exclude previously played categories.
--Three new cvars to control this ability.
-Added ability to specify how many slots to block (up to 5)
--Modified blocking cvar to allow for this customization.
-Internationalisation - Translations are now supported.
-Votes will now only paginate when there are more than 9 slots required in the menu.
-Added optional auto-updating.
-Fixed memory leak with Random Selection of the Next Map.
-Fixed memory leak with Vote Warnings.
-Fixed bug with Vote Warnings not working after a map change.
+ 2.0-beta (2/5/11)
+  Added Runoff Vote feature. If a vote end and the winning option is less than a specified threshold, another vote will be run with losing options eliminated.
+  -Added cvar to control max amount runoffs to run (> 0 enables the feature)
+  -Added cvar to control the threshold required to prevent a runoff
+  -Added cvar to control which sound is played at the start of a runoff
+  -Added cvar to specify whether runoffs are shown to everyone or just players who need to (re)vote.
+  Added Tiered Votes. If enabled, first players will vote for a category, and then they will vote for a map from that category.
+  -Modified type cvars to allow for this kind of vote.
+  -Added cvar to control how many maps are displayed in the vote (after a category is already selected).
+  Added ability to exclude previously played categories.
+  -Three new cvars to control this ability.
+  Added ability to specify how many slots to block (up to 5)
+  -Modified blocking cvar to allow for this customization.
+  Internationalisation - Translations are now supported.
+  Votes will now only paginate when there are more than 9 slots required in the menu.
+  Added optional auto-updating.
+  Fixed memory leak with Random Selection of the Next Map.
+  Fixed memory leak with Vote Warnings.
+  Fixed bug with Vote Warnings not working after a map change.
 
-1.5.1 (1/26/11)
-Added shortcut to vote warnings that allows users to specify a sequence of warnings with one definition.
-Fixed issue with time restrictions that prevented max_time from being larger than min_time (necessary for, as an example, 11:00PM - 6:00AM, which would be min_time: 2300  max_time: 0600)
-Changed name of plugin from Improved Map Randomizer (IMR) to Ultimate Mapchooser (UMC)
+ 1.5.1 (1/26/11)
+  Added shortcut to vote warnings that allows users to specify a sequence of warnings with one definition.
+  Fixed issue with time restrictions that prevented max_time from being larger than min_time (necessary for, as an example, 11:00PM - 6:00AM, which would be min_time: 2300  max_time: 0600)
+  Changed name of plugin from Improved Map Randomizer (IMR) to Ultimate Mapchooser (UMC)
 
-1.5 (1/24/11)
-Added vote warning feature. You can now specify warnings which appear to players before an end-of-map vote. Warnings are fully customizeable.
--New cvar to enable/disable this feature.
-Added vote sounds. Cvars specify sounds to be played when a vote starts and completed.
--Four new cvars, 2 for end-of-map votes and 2 for RTVs
-Added time-based map selection. New "min_time" and "max_time" options added to maps in "random_mapcycle.txt".
-Made votes with less than 10 items not have a paginated menu.
-Added more chat triggers for RTV. Now accepts: rtv, !rtv, rockthevote, and !rockthevote.
-Fixed memory bug with tracking min/max players for a map.
-Fixed bug with nominations where some categories stopped appearing in the menu.
-Fixed bug with strict nomination cvar and populating votes.
-Fixed bug with random group selections where groups with all their maps having been played recently and still excluded would still appear in votes.
-Literally commented the entire plugin source code thoroughly. Happy reading!
+ 1.5 (1/24/11)
+  Added vote warning feature. You can now specify warnings which appear to players before an end-of-map vote. Warnings are fully customizeable.
+  -New cvar to enable/disable this feature.
+  Added vote sounds. Cvars specify sounds to be played when a vote starts and completed.
+  -Four new cvars, 2 for end-of-map votes and 2 for RTVs
+  Added time-based map selection. New "min_time" and "max_time" options added to maps in "random_mapcycle.txt".
+  Made votes with less than 10 items not have a paginated menu.
+  Added more chat triggers for RTV. Now accepts: rtv, !rtv, rockthevote, and !rockthevote.
+  Fixed memory bug with tracking min/max players for a map.
+  Fixed bug with nominations where some categories stopped appearing in the menu.
+  Fixed bug with strict nomination cvar and populating votes.
+  Fixed bug with random group selections where groups with all their maps having been played recently and still excluded would still appear in votes.
+  Literally commented the entire plugin source code thoroughly. Happy reading!
 
-1.4.1 (8/27/10)
-Fixed bug in some mods where random selection of the next map was not being triggered.
+ 1.4.1 (8/27/10)
+  Fixed bug in some mods where random selection of the next map was not being triggered.
 
-1.4 (8/13/10)
-Added separate options for when the max player limit and min player limit of the current map is broken.
--Two new cvars to control this feature.
--Old cvar removed.
-Added a delay before the plugin checks to see if the current map has a valid number of players.
--New cvar to control this feature.
-Added the ability to limit the number of nominations appearing in a vote to the number specified by that group's "maps_invote" setting.
--New cvar to control this feature.
+ 1.4 (8/13/10)
+  Added separate options for when the max player limit and min player limit of the current map is broken.
+  -Two new cvars to control this feature.
+  -Old cvar removed.
+  Added a delay before the plugin checks to see if the current map has a valid number of players.
+  -New cvar to control this feature.
+  Added the ability to limit the number of nominations appearing in a vote to the number specified by that group's "maps_invote" setting.
+  -New cvar to control this feature.
 
-1.3 (8/10/10)
-Added vote slot blocking feature. When enabled, the first four vote slots are disabled to prevent accidental votes.
--New cvar to control this feature.
-Fixed issues with displaying certain text to clients.
-Improved error handling when rotation file is invalid.
+ 1.3 (8/10/10)
+  Added vote slot blocking feature. When enabled, the first four vote slots are disabled to prevent accidental votes.
+  -New cvar to control this feature.
+  Fixed issues with displaying certain text to clients.
+  Improved error handling when rotation file is invalid.
 
-1.2 (8/8/10)
-Fixed bug where "next_mapgroup" was not working properly with votes.
-Fixed bug where current map was appearing in nomination menu.
-Added feature where if the current players on the server is not within the range defined by the current map's "min_players" and "max_players", the map can be changed.
--Two new cvars to control this feature.
-Nominations now work with group votes.
--When a group wins the vote, it selects a random map from the nominations for that group, taking into account the weights of the maps.
+ 1.2 (8/8/10)
+  Fixed bug where "next_mapgroup" was not working properly with votes.
+  Fixed bug where current map was appearing in nomination menu.
+  Added feature where if the current players on the server is not within the range defined by the current map's "min_players" and "max_players", the map can be changed.
+  -Two new cvars to control this feature.
+  Nominations now work with group votes.
+  -When a group wins the vote, it selects a random map from the nominations for that group, taking into account the weights of the maps.
 
-1.1.3 (8/5/10)
-Fixed memory bug with nominations.
-Fixed (another) bug where random selection of the next map would not work properly.
-Added ability to include a "Don't Change" option in RTVs.
--New cvar to enable/disable this ability.
--New cvar to control the delay between an RTV where "Don't Change" wins and the ability for players to RTV again.
+ 1.1.3 (8/5/10)
+  Fixed memory bug with nominations.
+  Fixed (another) bug where random selection of the next map would not work properly.
+  Added ability to include a "Don't Change" option in RTVs.
+  -New cvar to enable/disable this ability.
+  -New cvar to control the delay between an RTV where "Don't Change" wins and the ability for players to RTV again.
 
-1.1.2 (8/4/10)
-Fixed bug in DOD:S where plugin could not start due to missing "mp_maxrounds" cvar.
+ 1.1.2 (8/4/10)
+  Fixed bug in DOD:S where plugin could not start due to missing "mp_maxrounds" cvar.
 
-1.1.1 (8/3/10)
-Fixed bug where rounds ending would trigger end of map votes even after one was already triggered.
-Fixed bug where frags would trigger end of map votes even after one was already triggered.
-Fixed bug where current map would appear in votes.
-Fixed bug where random selection of the next map would not work properly.
+ 1.1.1 (8/3/10)
+  Fixed bug where rounds ending would trigger end of map votes even after one was already triggered.
+  Fixed bug where frags would trigger end of map votes even after one was already triggered.
+  Fixed bug where current map would appear in votes.
+  Fixed bug where random selection of the next map would not work properly.
 
-1.1 (8/2/10)
-Added public cvar for tracking.
-Modified nominations
--Nominations menu now contains all maps in rotation. Nominated maps will now be rejected when considered for inclusion in the vote. This way, players can nominate maps which may be valid when it's time to vote, even if they aren't valid at time of nomination.
+ 1.1 (8/2/10)
+  Added public cvar for tracking.
+  Modified nominations
+  -Nominations menu now contains all maps in rotation. Nominated maps will now be rejected when considered for inclusion in the vote. This way, players can nominate maps which may be valid when it's time to vote, even if they aren't valid at time of nomination.
 
-1.0 (8/1/10)
-Initial Release
+ 1.0 (8/1/10)
+  Initial Release
 */
 
 //TODO / IDEAS:
@@ -510,66 +510,20 @@ new Handle:cvar_block_slots         = INVALID_HANDLE;
 new Handle:cvar_novote              = INVALID_HANDLE;
 new Handle:cvar_nomdisp             = INVALID_HANDLE;
 
-//Stores the number of runoffs available.
-//new remaining_runoffs;
-
 //Stores the current category.
 new String:current_cat[MAP_LENGTH];
 
 //Stores the category of the next map.
 new String:next_cat[MAP_LENGTH];
 
-//Stores the maps and map groups in a vote.
-//new Handle:map_vote = INVALID_HANDLE;
-
 //Array of nomination tries.
 new Handle:nominations_arr = INVALID_HANDLE;
-
-//Variable to store the delay between stages of a tiered vote.
-//new tiered_delay;
-
-//Variable to store the delay before a runoff vote starts.
-//new runoff_delay;
-
-//Variable to hold the array of clients the runoff will be displayed to.
-//new Handle:runoff_clients = INVALID_HANDLE;
-
-//
-//new Handle:runoff_options = INVALID_HANDLE;
 
 //Forward for when a nomination is removed.
 new Handle:nomination_reset_forward = INVALID_HANDLE;
 
-//Stores when the map should be changed at the end of an end-of-map vote.
-//new UMC_ChangeMapTime:change_map_when;
-
-//Stores the winning map from a native-induced vote.
-//new String:normal_winning_map[MAP_LENGTH];
-
 //
 new String:countdown_sound[PLATFORM_MAX_PATH];
-
-/* VOTE PARAMETERS 
-new String:stored_start_sound[PLATFORM_MAX_PATH], String:stored_end_sound[PLATFORM_MAX_PATH],
-    String:stored_runoff_sound[PLATFORM_MAX_PATH];
-new Handle:stored_kv = INVALID_HANDLE;
-new Handle:stored_mapcycle = INVALID_HANDLE;
-//new stored_numexgroups;
-new bool:stored_scramble;
-new stored_blockslots;
-new bool:stored_ignoredupes;
-new bool:stored_strictnoms;
-new UMC_RunoffFailAction:stored_fail_action;
-new Float:extend_timestep;
-new extend_roundstep;
-new extend_fragstep;
-new Float:stored_threshold;
-new stored_runoffmaps_max;
-new stored_votetime;
-new String:stored_reason[PLATFORM_MAX_PATH];
-new String:stored_adminflags[64];
-new bool:stored_exclude;
-new UMC_VoteType:stored_type;*/
 
 /* Reweight System */
 new Handle:reweight_forward = INVALID_HANDLE;
@@ -579,7 +533,6 @@ new Float:current_weight;
 
 /* Exclusion System */
 new Handle:exclude_forward = INVALID_HANDLE;
-//new bool:exclude_active = false;
 
 /* Reload System */
 new Handle:reload_forward = INVALID_HANDLE;
@@ -609,11 +562,7 @@ new Handle:maplistdisplay_forward = INVALID_HANDLE;
 new Handle:template_forward = INVALID_HANDLE;
 
 //Flags
-//new bool:vote_completed;   //Has a vote been completed?
 new bool:change_map_round; //Change map when the round ends?
-//new bool:vote_active;      //Is there an active vote menu?
-
-//new votes_inprogress; //Amount of votes in progress? (Includes delays between tiered + runoff)
 
 
 #if RUNTESTS

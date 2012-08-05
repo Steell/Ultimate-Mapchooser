@@ -65,6 +65,8 @@ new Handle:cvar_rtv_startsound       = INVALID_HANDLE;
 new Handle:cvar_rtv_endsound         = INVALID_HANDLE;
 new Handle:cvar_voteflags            = INVALID_HANDLE;
 new Handle:cvar_enterflags           = INVALID_HANDLE;
+new Handle:cvar_enterbonusflags      = INVALID_HANDLE;
+new Handle:cvar_enterbonusamt        = INVALID_HANDLE;
         ////----/CONVARS-----/////
 
 //Mapcycle KV
@@ -105,6 +107,19 @@ new String:vote_start_sound[PLATFORM_MAX_PATH], String:vote_end_sound[PLATFORM_M
 //Called when the plugin is finished loading.
 public OnPluginStart()
 {
+    cvar_enterbonusflags = CreateConVar(
+        "sm_umc_rtv_enteradminflags_bonusflags",
+        "",
+        "If specified, players with any of these admin flags will be given bonus RTV entrance votes, of the amount determined by \"sm_umc_rtv_enteradminflags_bonusamt\"."
+    );
+
+    cvar_enterbonusamt = CreateConVar(
+        "sm_umc_rtv_enteradminflags_bonusamt",
+        "2",
+        "The amount of entrance votes to be given to players who have at least one of the admin flags specified by \"sm_umc_rtv_enteradminflags_bonusflags\".",
+        0, true, 1.0
+    );
+
     cvar_voteflags = CreateConVar(
         "sm_umc_rtv_voteadminflags",
         "",
@@ -137,12 +152,6 @@ public OnPluginStart()
         "Specifies the maximum number of maps to appear in a runoff vote.\n 1 or 0 sets no maximum.",
         0, true, 0.0
     );
-
-    /*cvar_rtv_flags = CreateConVar(
-        "sm_umc_rtv_adminflags",
-        "",
-        "String of admin flags required for players to be able to enter and vote in\nRock The Vote. If no flags are specified, all players can vote."
-    );*/
 
     cvar_vote_allowduplicates = CreateConVar(
         "sm_umc_rtv_allowduplicates",
@@ -437,12 +446,10 @@ public OnClientDisconnect_Post(client)
     //Remove this client from people who have seen the extended RTV message.
     rtv_message[client] = false;
     
-    //Find this client in the array of clients who have entered RTV.
-    new index = FindValueInArray(rtv_clients, client);
-    
+    new index;
     //Remove the client from the RTV array if...
     //    ...the client is in the array to begin with.
-    if (index != -1)
+    while ((index = FindValueInArray(rtv_clients, client)) != -1)
         RemoveFromArray(rtv_clients, index);
 
     //Recalculate the RTV threshold.
@@ -655,15 +662,25 @@ AttemptRTV(client)
     //    ...the client hasn't already RTV'd.
     else if (FindValueInArray(rtv_clients, client) == -1)
     {
-        //Add client to RTV array.
-        PushArrayCell(rtv_clients, client);
+        //Get the flags for bonus RTV entrance points
+        GetConVarString(cvar_enterbonusflags, flags, sizeof(flags));
+        
+        //Calc the amount of entrance points for this user
+        new amt = ClientHasAdminFlags(client, flags)
+            ? GetConVarInt(cvar_enterbonusamt)
+            : 1;
+
+        //Apply entrance points
+        size += amt;
+        while (amt-- > 0)
+        {
+            //Add client to RTV array.
+            PushArrayCell(rtv_clients, client);
+        }
         
         //Get the name of the client.
         decl String:name[MAX_NAME_LENGTH];
         GetClientName(client, name, sizeof(name));
-        
-        //Increase the tracked size to account for the new addition.
-        size++;
         
         //Display an RTV message to a client for...
         //    ...each client on the server.

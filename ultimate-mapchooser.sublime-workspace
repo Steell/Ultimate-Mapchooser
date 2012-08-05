@@ -1,0 +1,364 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"s",
+				"sourcemod"
+			],
+			[
+				"clien",
+				"clients"
+			],
+			[
+				"cvar_enter",
+				"cvar_enterbonusamt"
+			],
+			[
+				"sm_umc_rtv_enteradminflags_",
+				"sm_umc_rtv_enteradminflags_bonusflags"
+			],
+			[
+				"sm_umc_rtv",
+				"sm_umc_rtv_enteradminflags_bonusamt"
+			],
+			[
+				"enterb",
+				"cvar_enterbonusamt"
+			],
+			[
+				"sm_umc_rtv_enter",
+				"sm_umc_rtv_enteradminflags_bonusflags"
+			],
+			[
+				"vote_",
+				"vote_failed"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "addons/sourcemod/scripting/umc-rockthevote.sp",
+			"settings":
+			{
+				"buffer_size": 32221,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "addons/sourcemod/scripting/include/umc_utils.inc",
+			"settings":
+			{
+				"buffer_size": 36287,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "addons/sourcemod/scripting/umc-core.sp",
+			"settings":
+			{
+				"buffer_size": 191303,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "addons/sourcemod/scripting/umc-endvote.sp",
+			"settings":
+			{
+				"buffer_size": 43284,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "addons/sourcemod/scripting/include/umc-core.inc",
+			"settings":
+			{
+				"buffer_size": 16479,
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "Build UMC",
+	"command_palette":
+	{
+		"height": 392.0,
+		"selected_items":
+		[
+		],
+		"width": 392.0
+	},
+	"console":
+	{
+		"height": 125.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/C/Users/Stephen/AppData/Roaming/Sublime Text 2/Packages/User/Preferences.sublime-settings",
+		"/C/Users/Stephen/AppData/Roaming/Sublime Text 2/Packages/Default/Preferences.sublime-settings",
+		"/C/Users/Stephen/Documents/GitHub/Ultimate-Mapchooser/ultimate-mapchooser.sublime-project",
+		"/C/Users/Stephen/AppData/Roaming/Sublime Text 2/Packages/User/Pawn.sublime-build",
+		"/C/Users/Stephen/Documents/GitHub/Ultimate-Mapchooser/addons/sourcemod/scripting/umc-endvote.sp",
+		"/E/SM/addons/sourcemod/scripting/include/umc_utils.inc",
+		"/C/Users/Stephen/AppData/Roaming/Sublime Text 2/Packages/C++/C.tmLanguage",
+		"/C/Users/Stephen/Documents/GitHub/Ultimate-Mapchooser/addons/sourcemod/scripting/umc-nominate.sp",
+		"/C/Users/Stephen/Documents/GitHub/Ultimate-Mapchooser/addons/sourcemod/scripting/umc-core.sp",
+		"/C/Users/Stephen/Documents/GitHub/Ultimate-Mapchooser/addons/sourcemod/scripting/umc-adminmenu.sp",
+		"/C/Users/Stephen/Documents/GitHub/Ultimate-Mapchooser/addons/sourcemod/scripting/include/umc-core.inc"
+	],
+	"find":
+	{
+		"height": 34.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"PerformVote",
+			"GetClientUser",
+			"rtv_clients",
+			"UpdateOtherTimers"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 2,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "addons/sourcemod/scripting/umc-rockthevote.sp",
+					"settings":
+					{
+						"buffer_size": 32221,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								14854,
+								14854
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 7972.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "addons/sourcemod/scripting/include/umc_utils.inc",
+					"settings":
+					{
+						"buffer_size": 36287,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								30117,
+								30131
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 16245.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "addons/sourcemod/scripting/umc-core.sp",
+					"settings":
+					{
+						"buffer_size": 191303,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								65306,
+								65307
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 25174.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "addons/sourcemod/scripting/umc-endvote.sp",
+					"settings":
+					{
+						"buffer_size": 43284,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								39591,
+								39591
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 18908.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "addons/sourcemod/scripting/include/umc-core.inc",
+					"settings":
+					{
+						"buffer_size": 16479,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								233,
+								233
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 0.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 100.0
+	},
+	"replace":
+	{
+		"height": 0.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 169.0,
+	"status_bar_visible": true
+}

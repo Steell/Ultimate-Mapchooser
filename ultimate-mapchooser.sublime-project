@@ -1,0 +1,18 @@
+{
+	"folders":
+	[
+		{
+			"path": "/C/Users/Stephen/Documents/GitHub/Ultimate-Mapchooser"
+		}
+	],
+    
+    "build_systems":
+    [
+        {
+            "name": "Build UMC",
+            "cmd": ["python", "-u", "E:/SM/addons/sourcemod/scripting/compile.py", "$project_path/addons/sourcemod/scripting/*.sp", "$file_path/include/"],
+            "file_regex": "^\\s*([A-Z]:\\\\[\\w\\\\/\\-\\._ ]*)\\(([0-9]+)\\) : ()(.*)$",
+            "shell": true
+        }
+    ]
+}
