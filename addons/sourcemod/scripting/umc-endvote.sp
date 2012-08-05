@@ -96,6 +96,7 @@ new bool:timer_alive;      //Is the time-based vote timer ticking?
 new bool:vote_enabled;     //Are we able to run a vote? Means that the timer is running.
 new bool:vote_roundend;    //Are we going to start a vote when this round is over?
 new bool:vote_completed;   //Has an end of map vote been completed?
+new bool:vote_failed;      //Did the vote fail due to no players?
 
 //Keeps track of the time before the end-of-map vote starts.
 new Float:vote_delaystart;
@@ -452,6 +453,7 @@ public OnConfigsExecuted()
     vote_enabled = false;
     vote_roundend = false;
     vote_completed = false;
+    vote_failed = false;
     
     //No timer is setup so delay is undefined
     vote_delaystart = -1.0;
@@ -535,12 +537,22 @@ public Event_PlayerDeath(Handle:evnt, String:name[], bool:dontBroadcast)
 //Needed to update our vote timer.
 public OnMapTimeLeftChanged()
 {
+    DEBUG_MESSAGE("Timeleft Changed")
+
     //Update the end-of-map vote timer if...
     //    ...we haven't already completed an RTV.
     if (vote_enabled)
     {
-        DEBUG_MESSAGE("Timeleft Changed")
         UpdateTimers();
+    }
+
+    if (vote_failed)
+    {
+        UpdateTimers();
+        UpdateOtherTimers();
+        vote_completed = false;
+        vote_enabled = true;
+        vote_failed = false;
     }
 }
 
@@ -1259,12 +1271,17 @@ public StartMapVote()
     
     vote_completed = true;
     
-    decl String:flags[64];
+    new String:flags[64];
     GetConVarString(cvar_flags, flags, sizeof(flags));
     
     new clients[MAXPLAYERS+1];
     new numClients;
     GetClientsWithFlags(flags, clients, sizeof(clients), numClients);
+
+#if UMC_DEBUG
+    for (new i = 0; i < numClients; i++)
+        DEBUG_MESSAGE("Sending EndVote to client: %i", clients[i])
+#endif
     
     //Start the UMC vote.
     new bool:result = UMC_StartVote(
@@ -1293,6 +1310,8 @@ public StartMapVote()
         clients,
         numClients
     );
+
+    vote_failed = !result;
     
     if (!result)
     {
@@ -1314,6 +1333,7 @@ public UMC_OnMapExtended()
     extend_counter++;
     vote_completed = false;
     vote_enabled = true;
+    vote_failed = false;
 }
 
 
@@ -1323,6 +1343,7 @@ public UMC_OnNextmapSet(Handle:kv, const String:map[], const String:group[], con
     DestroyTimers();
     vote_enabled = false;
     vote_roundend = false;
+    vote_failed = false;
 }
 
 
