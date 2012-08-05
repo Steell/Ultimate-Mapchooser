@@ -38,6 +38,18 @@ public Plugin:myinfo =
 
 //Changelog:
 /*
+ 3.4.1 (8/4/2012)
+  Added ability for admins to count extra towards entering an RTV.
+  -New cvars "sm_umc_rtv_enteradminflags_bonusflags" and "sm_umc_rtv_enteradminflags_bonusamt" to control this feature
+  Updated End of Map Vote so that changes in mp_timelimit after a vote has failed will restart the timer.
+  Added group-wide exclusion to Post-Played Exclusion
+  -New "group_allow_every" option for Map Groups specifies how long before the group can be played again.
+  -"default_allow_every" still assigns "allow_every" for each map
+  -Maps can override a group's "group_allow_every" setting, which will affect the entire group
+  -If a map has an "allow_every" setting, it overrides the "group_allow_every" setting, but just for the map.
+  Fixed issue with second stage of multistage votes sometimes not working.
+  Fixed odd crashing issue (I think).
+
  3.4 (7/22/2012)
   Modified Map Commands:
   -"pre_command" now fires at Map End
