@@ -24,7 +24,7 @@
 
 //Some definitions
 #define NOTHING_OPTION "?nothing?"
-#define WEIGHT_KEY "##calculated-weight##"
+#define WEIGHT_KEY "___calculated-weight"
 
 //Plugin Information
 public Plugin:myinfo =
