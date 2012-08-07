@@ -195,12 +195,12 @@
         "maps_invote"   "5"
         //...other settings...
         
-        //Place maps here
-        //-------------
-        //"MAPNAME"
-        //{
-        //    ...settings...
-        //}
-        //...
+        //Place maps here using the following format://
+        //-------------------------------------------//
+        //"MAPNAME"                                  //
+        //{                                          //
+        //    ...settings...                         //
+        //}                                          //
+        //-------------------------------------------//
     }
 }
