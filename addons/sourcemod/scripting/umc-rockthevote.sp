@@ -666,7 +666,7 @@ AttemptRTV(client)
         GetConVarString(cvar_enterbonusflags, flags, sizeof(flags));
         
         //Calc the amount of entrance points for this user
-        new amt = ClientHasAdminFlags(client, flags)
+        new amt = strlen(flags) > 0 && ClientHasAdminFlags(client, flags)
             ? GetConVarInt(cvar_enterbonusamt)
             : 1;
 
