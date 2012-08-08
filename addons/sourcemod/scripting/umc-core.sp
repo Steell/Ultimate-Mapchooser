@@ -576,6 +576,12 @@ new Handle:template_forward = INVALID_HANDLE;
 //Flags
 new bool:change_map_round; //Change map when the round ends?
 
+//Misc ConVars
+new Handle:cvar_maxrounds = INVALID_HANDLE;
+new Handle:cvar_fraglimit = INVALID_HANDLE;
+new Handle:cvar_winlimit  = INVALID_HANDLE;
+new Handle:cvar_nextlevel = INVALID_HANDLE; //GE:S
+
 
 #if RUNTESTS
 RunTests()
@@ -764,6 +770,12 @@ public OnPluginStart()
     AddCommandListener(OnPlayerChat, "say");
     AddCommandListener(OnPlayerChat, "say2"); //Insurgency Only
     AddCommandListener(OnPlayerChat, "say_team");
+    
+    //Fetch Cvars
+    cvar_maxrounds = FindConVar("mp_maxrounds");
+    cvar_fraglimit = FindConVar("mp_fraglimit");
+    cvar_winlimit  = FindConVar("mp_winlimit");
+    cvar_nextlevel = FindConVar("nextlevel"); //GE:S Only
     
     //Load the translations file
     LoadTranslations("ultimate-mapchooser.phrases");
@@ -4683,11 +4695,6 @@ ExtendMap(Handle:vM)
     GetTrieValue(vM, "extend_roundstep", extend_roundstep);
     GetTrieValue(vM, "extend_fragstep", extend_fragstep);
     
-    //Set new limit cvar values if they are enabled to begin with (> 0).
-    new Handle:cvar_maxrounds = FindConVar("mp_maxrounds");
-    new Handle:cvar_fraglimit = FindConVar("mp_fraglimit");
-    new Handle:cvar_winlimit  = FindConVar("mp_winlimit");
-    
     if (cvar_maxrounds != INVALID_HANDLE && GetConVarInt(cvar_maxrounds) > 0)
         SetConVarInt(cvar_maxrounds, GetConVarInt(cvar_maxrounds) + extend_roundstep);
     if (cvar_winlimit != INVALID_HANDLE && GetConVarInt(cvar_winlimit) > 0)
@@ -4731,6 +4738,10 @@ DoMapChange(UMC_ChangeMapTime:when, Handle:kv, const String:map[], const String:
     strcopy(next_cat, sizeof(next_cat), group);
                         
     SetTheNextMap(map);
+    
+    //GE:S Fix
+    if (cvar_nextlevel != INVALID_HANDLE)
+        SetConVarString(cvar_nextlevel, map);
 
     //
     switch (when)
