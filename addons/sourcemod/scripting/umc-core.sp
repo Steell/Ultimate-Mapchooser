@@ -969,9 +969,19 @@ public Event_RoundEnd(Handle:evnt, const String:name[], bool:dontBroadcast)
     if (change_map_round)
     {
         change_map_round = false;
+
+        // //Routine by Tsunami to end the map
+        // new iGameEnd = FindEntityByClassname(-1, "game_end");
+        // if (iGameEnd == -1 && (iGameEnd = CreateEntityByName("game_end")) == -1)
+        // {
         decl String:map[MAP_LENGTH];
-        GetNextMap(map, sizeof(map));    
+        GetNextMap(map, sizeof(map));
         ForceChangeInFive(map, "CORE");
+        // } 
+        // else 
+        // {     
+        //     AcceptEntityInput(iGameEnd, "EndGame");
+        // }
     }
 }
 
@@ -4747,7 +4757,18 @@ DoMapChange(UMC_ChangeMapTime:when, Handle:kv, const String:map[], const String:
     switch (when)
     {
         case ChangeMapTime_Now: //We change the map in 5 seconds.
-            ForceChangeInFive(map, reason);
+        {
+            //Routine by Tsunami to end the map
+            new iGameEnd = FindEntityByClassname(-1, "game_end");
+            if (iGameEnd == -1 && (iGameEnd = CreateEntityByName("game_end")) == -1)
+            {
+                ForceChangeInFive(map, reason);
+            } 
+            else 
+            {     
+                AcceptEntityInput(iGameEnd, "EndGame");
+            }
+        }
         case ChangeMapTime_RoundEnd: //We change the map at the end of the round.
         {
             LogUMCMessage("%s: Map will change to '%s' at the end of the round.", reason, map);
