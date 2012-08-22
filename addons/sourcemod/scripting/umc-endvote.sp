@@ -1178,24 +1178,28 @@ UpdateTimers()
     //    ...the cvar to run an end-of-round vote is enabled.
     if (timer_alive)
     {
-        if (SetTimerTriggerTime())
-        {
-            LogUMCMessage("Map vote timer successfully updated.");
-        }
-        else
+        if (!SetTimerTriggerTime())
         {
             DEBUG_MESSAGE("Killing Timer (UpdateTimers)")
             timer_alive = false;
             KillTimer(vote_timer);
             vote_timer = INVALID_HANDLE;
         }
+#if UMC_DEBUG
+        else
+        {
+            LogUMCMessage("Map vote timer successfully updated.");
+        }
+#endif
     }
     else //Make a new timer.
     {
         vote_timer = MakeTimer();
     
+#if UMC_DEBUG
         if (timer_alive)
-            LogUMCMessage("Map vote timer successfully updated.");
+            DEBUG_MESSAGE("Map vote timer successfully updated.")
+#endif
     }
 }
 
