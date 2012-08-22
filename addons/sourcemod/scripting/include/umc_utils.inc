@@ -671,42 +671,6 @@ public Action:Handle_MapChangeTimer(Handle:timer, Handle:pack)
 }
 
 
-//Changes the map based off of the given action.
-/*stock SetupMapChange(UMC_ChangeMapTime:action, const String:map[], const String:reason[]="")
-{
-    switch (action)
-    {
-        case ChangeMapTime_Now: //We change the map in 5 seconds.
-            ForceChangeInFive(map, reason);
-        case ChangeMapTime_RoundEnd: //We change the map at the end of the round.
-        {
-            LogUMCMessage("%s: Map will change to '%s' at the end of the round.", reason, map);
-            
-            new Handle:cvarMaxRounds = FindConVar("mp_maxrounds");
-            
-            //Limit the remaining rounds to 1.
-            SetConVarInt(cvarMaxRounds, 1);
-            
-            SetTheNextMap(map);
-            
-            //Print a message.
-            PrintToChatAll("\x03[UMC]\x01 %t", "Map Change at Round End");
-        }
-        case ChangeMapTime_MapEnd: //We set the map as the next map.
-        {
-            //Get the currently set next map.
-            decl String:curMap[MAP_LENGTH];
-            GetNextMap(curMap, sizeof(curMap));
-            
-            //Set the voted map as the next map if...
-            //    ...that map isn't already set as the next map.
-            //if (!StrEqual(curMap, map))
-            SetTheNextMap(map);
-        }
-    }
-}*/
-
-
 //Determines if the current server time is between the given min and max.
 stock bool:IsTimeBetween(min, max)
 {
@@ -726,7 +690,6 @@ stock bool:IsTimeBetween(min, max)
         }
     }
     return min <= theTime && theTime <= max;
-    
 }
 
 
@@ -735,7 +698,6 @@ stock bool:IsPlayerCountBetween(min, max)
 {
     //Get the current number of players.
     new numplayers = GetRealClientCount();
-    
     return min <= numplayers && numplayers <= max;
 }
 
@@ -831,14 +793,6 @@ stock Float:ArraySum(const Float:floats[], size)
     for (new i = 0; i < size; i++)
         result += floats[i];
     return result;
-}
-
-
-//Utility function to set the next map.
-stock SetTheNextMap(const String:mapName[])
-{
-    LogUMCMessage("Setting nextmap to: %s", mapName);
-    SetNextMap(mapName);
 }
 
 

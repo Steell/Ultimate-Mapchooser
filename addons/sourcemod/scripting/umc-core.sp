@@ -580,6 +580,7 @@ new bool:change_map_round; //Change map when the round ends?
 new Handle:cvar_maxrounds = INVALID_HANDLE;
 new Handle:cvar_fraglimit = INVALID_HANDLE;
 new Handle:cvar_winlimit  = INVALID_HANDLE;
+new Handle:cvar_nextmap   = INVALID_HANDLE;
 new Handle:cvar_nextlevel = INVALID_HANDLE; //GE:S
 
 
@@ -763,7 +764,6 @@ public OnPluginStart()
     HookEventEx("round_win",          Event_RoundEnd); //Nuclear Dawn
     
     //Initialize our vote arrays
-    //map_vote        = CreateArray();
     nominations_arr = CreateArray();
     
     //Make listeners for player chat. Needed to recognize chat commands ("rtv", etc.)
@@ -775,6 +775,7 @@ public OnPluginStart()
     cvar_maxrounds = FindConVar("mp_maxrounds");
     cvar_fraglimit = FindConVar("mp_fraglimit");
     cvar_winlimit  = FindConVar("mp_winlimit");
+    cvar_nextmap   = FindConVar("nextmap");
     cvar_nextlevel = FindConVar("nextlevel"); //GE:S Only
     
     //Load the translations file
@@ -4730,7 +4731,13 @@ DoMapChange(UMC_ChangeMapTime:when, Handle:kv, const String:map[], const String:
     //Set the next map group
     strcopy(next_cat, sizeof(next_cat), group);
                         
-    SetTheNextMap(map);
+    //Set the next map in SM
+    LogUMCMessage("Setting nextmap to: %s", mapName);
+    SetNextMap(mapName);
+    
+    //Set the built in nextmap cvar
+    if (cvar_nextmap != INVALID_HANDLE)
+        SetConVarString(cvar_nextmap, mapName);
     
     //GE:S Fix
     if (cvar_nextlevel != INVALID_HANDLE)
@@ -4761,17 +4768,6 @@ DoMapChange(UMC_ChangeMapTime:when, Handle:kv, const String:map[], const String:
             //Print a message.
             PrintToChatAll("\x03[UMC]\x01 %t", "Map Change at Round End");
         }
-        /* case ChangeMapTime_MapEnd: //We set the map as the next map.
-        {
-            //Get the currently set next map.
-            decl String:curMap[MAP_LENGTH];
-            GetNextMap(curMap, sizeof(curMap));
-            
-            //Set the voted map as the next map if...
-            //    ...that map isn't already set as the next map.
-            //if (!StrEqual(curMap, map))
-            SetTheNextMap(map);
-        } */
     }
     
     new Handle:new_kv = INVALID_HANDLE;
