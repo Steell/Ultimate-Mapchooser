@@ -1585,8 +1585,9 @@ public Native_UMCStartVote(Handle:plugin, numParams)
     SetTrieValue(voteManager, "stored_exclude", runExclusionCheck);
     
     //Make the vote menu.
-    new Handle:options = BuildVoteItems(voteManager, kv, mapcycle, type, scramble, allowDuplicates,
-                                       nominationStrictness, runExclusionCheck, extend, dontChange);
+    new Handle:options = BuildVoteItems(voteManager, stored_kv, stored_mapcycle, type, scramble,
+                                        allowDuplicates, nominationStrictness, runExclusionCheck,
+                                        extend, dontChange);
     
     //Run the vote if...
     //    ...the menu was created successfully.
@@ -4213,15 +4214,6 @@ public Handle_MapVoteWinner(Handle:vM, const String:info[], const String:disp[],
 }
 
 
-/* //Handles the results of an end-of-map category vote.
-public Handle_CatVoteResults(Handle:menu, num_votes, num_clients, const client_info[][2], num_items,
-                             const item_info[][2])
-{
-    ProcessVoteResults(menu, num_votes, num_clients, client_info, num_items, item_info,
-                       Handle_CatVoteResults, Handle_CatVoteWinner);
-} */
-
-
 //Handles the winner of an end-of-map category vote.
 public Handle_CatVoteWinner(Handle:vM, const String:cat[], const String:disp[],
                             Float:percentage)
@@ -4422,15 +4414,6 @@ public Handle_CatVoteWinner(Handle:vM, const String:cat[], const String:disp[],
         
     DeleteVoteParams(vM);
 }
-
-
-/* //Handles the results of an end-of-map tiered vote.
-public Handle_TierVoteResults(Handle:menu, num_votes, num_clients, const client_info[][2],
-                              num_items, const item_info[][2])
-{        
-    ProcessVoteResults(menu, num_votes, num_clients, client_info, num_items, item_info,
-                       Handle_TierVoteResults, Handle_TierVoteWinner);
-} */
 
 
 //Handles the winner of an end-of-map tiered vote.
