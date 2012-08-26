@@ -8,7 +8,7 @@
 //                                                                           //
 // "umc_mapcycle"                                                            //
 // {                                                                         //
-//      "GROUPNAME1" //Name of the group, used by group votes.               //
+//      "GROUPNAME-1" //Name of the group, used by group votes.              //
 //      {                                                                    //
 //          //Text to display for maps from this group in the vote. If left  //
 //          //blank or omitted, the map's name will be used as the default.  //
@@ -87,7 +87,7 @@
 //          "adminmenu_flags"   "sequence of admin flags"                    //
 //            //Defined in "umc-adminmenu.smx"                               //
 //                                                                           //
-//          "MAP1" //Name of a map, must be a valid map.                     //
+//          "MAP-1" //Name of a map, must be a valid map.                    //
 //          {                                                                //
 //              //Text to display for this map in the vote. If left blank    //
 //              //or omitted, the map's name will be used instead.           //
@@ -159,27 +159,27 @@
 //                //Defined in "umc-core.smx"                                //
 //          }                                                                //
 //                                                                           //
-//          "MAP2"                                                           //
+//          "MAP-2"                                                          //
 //          {                                                                //
 //              ...                                                          //
 //          }                                                                //
 //                                                                           //
 //          ...                                                              //
 //                                                                           //
-//          "MAPN"                                                           //
+//          "MAP-N"                                                          //
 //          {                                                                //
 //              ...                                                          //
 //          }                                                                //
 //      }                                                                    //
 //                                                                           //
-//      "GROUPNAME2"                                                         //
+//      "GROUPNAME-2"                                                        //
 //      {                                                                    //
 //          ...                                                              //
 //      }                                                                    //
 //                                                                           //
 //      ...                                                                  //
 //                                                                           //
-//      "GROUPNAMEN"                                                         //
+//      "GROUPNAME-N"                                                        //
 //      {                                                                    //
 //          ...                                                              //
 //      }                                                                    //
