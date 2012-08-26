@@ -6,7 +6,7 @@
 
 #pragma semicolon 1
 
-#define PL_VERSION "3.4.1"
+#define PL_VERSION "3.4.2"
 #define UMC_DEBUG 0
 #define AUTOUPDATE_ENABLE 1
 #define AUTOUPDATE_DEV 0
