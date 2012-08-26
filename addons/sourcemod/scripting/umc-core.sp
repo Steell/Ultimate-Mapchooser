@@ -38,6 +38,14 @@ public Plugin:myinfo =
 
 //Changelog:
 /*
+ 3.4.2 (8/26/2012)
+  Fixed issue where all RTV votes would count as bonus votes if no bonus flags were set.
+  Added support for changes in GoldenEye: Source
+  Immediate map changes will now attempt to end the round immediately instead of just changing the map.
+  Cleaned up some log statements.
+  Fixed potential crashing issue.
+  When the next map is set, the "nextmap" cvar is now also updated.
+
  3.4.1 (8/4/2012)
   Added ability for admins to count extra towards entering an RTV.
   -New cvars "sm_umc_rtv_enteradminflags_bonusflags" and "sm_umc_rtv_enteradminflags_bonusamt" to control this feature
