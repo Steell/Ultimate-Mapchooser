@@ -4740,12 +4740,12 @@ DoMapChange(UMC_ChangeMapTime:when, Handle:kv, const String:map[], const String:
     strcopy(next_cat, sizeof(next_cat), group);
                         
     //Set the next map in SM
-    LogUMCMessage("Setting nextmap to: %s", mapName);
-    SetNextMap(mapName);
+    LogUMCMessage("Setting nextmap to: %s", map);
+    SetNextMap(map);
     
     //Set the built in nextmap cvar
     if (cvar_nextmap != INVALID_HANDLE)
-        SetConVarString(cvar_nextmap, mapName);
+        SetConVarString(cvar_nextmap, map);
     
     //GE:S Fix
     if (cvar_nextlevel != INVALID_HANDLE)
