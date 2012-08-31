@@ -365,7 +365,7 @@ public OnPluginStart()
         HookEventEx("teamplay_win_panel",     Event_RoundEndTF2); //TF2
         HookEventEx("arena_win_panel",        Event_RoundEndTF2); //TF2
         HookEventEx("teamplay_restart_round", Event_TFRestartRound); //TF2    
-        HookEventEx("round_win",                Event_RoundEnd); //Nuclear Dawn
+        HookEventEx("round_win",              Event_RoundEnd); //Nuclear Dawn
     }
     
     //Hook score.

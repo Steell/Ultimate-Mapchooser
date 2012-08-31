@@ -588,7 +588,7 @@ new bool:change_map_round; //Change map when the round ends?
 new Handle:cvar_maxrounds = INVALID_HANDLE;
 new Handle:cvar_fraglimit = INVALID_HANDLE;
 new Handle:cvar_winlimit  = INVALID_HANDLE;
-new Handle:cvar_nextmap   = INVALID_HANDLE;
+//new Handle:cvar_nextmap   = INVALID_HANDLE;
 new Handle:cvar_nextlevel = INVALID_HANDLE; //GE:S
 
 
@@ -783,8 +783,13 @@ public OnPluginStart()
     cvar_maxrounds = FindConVar("mp_maxrounds");
     cvar_fraglimit = FindConVar("mp_fraglimit");
     cvar_winlimit  = FindConVar("mp_winlimit");
-    cvar_nextmap   = FindConVar("nextmap");
-    cvar_nextlevel = FindConVar("nextlevel"); //GE:S Only
+    //cvar_nextmap   = FindConVar("nextmap");
+    
+    //GE:S Fix
+    new String:game[20];
+    GetGameFolderName(game, sizeof(game));
+    if (StrEqual(game, "gesource", false))
+        cvar_nextlevel = FindConVar("nextlevel");
     
     //Load the translations file
     LoadTranslations("ultimate-mapchooser.phrases");
@@ -4744,8 +4749,8 @@ DoMapChange(UMC_ChangeMapTime:when, Handle:kv, const String:map[], const String:
     SetNextMap(map);
     
     //Set the built in nextmap cvar
-    if (cvar_nextmap != INVALID_HANDLE)
-        SetConVarString(cvar_nextmap, map);
+    //if (cvar_nextmap != INVALID_HANDLE)
+    //    SetConVarString(cvar_nextmap, map);
     
     //GE:S Fix
     if (cvar_nextlevel != INVALID_HANDLE)
