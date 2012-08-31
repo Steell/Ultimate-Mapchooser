@@ -1,3 +1,5 @@
+//German translation by elninjo
+
 "Phrases"
 {
     "AM Stop Vote"
@@ -32,7 +34,7 @@
     
     "AM Populate Vote"
     {
-        "de"    "Karte zur Wahl hinzuf¸gen"
+        "de"    "Karte zur Wahl hinzufügen"
     }
     
     "AM Vote Settings"
@@ -52,7 +54,7 @@
     
     "AM Scramble Menu"
     {
-        "de"    "Mischen-Option hinzuf¸gen?"
+        "de"    "Mischen-Option hinzufügen?"
     }
     
     "Default Yes"
@@ -67,12 +69,12 @@
     
     "AM Threshold Menu"
     {
-        "de"    "Grenzwert f¸r eine erfolgreiche Wahl"
+        "de"    "Grenzwert für eine erfolgreiche Wahl"
     }
     
     "AM Threshold Menu Message 1"
     {
-        "de"    "Gebe den Grenzwert f¸r die Wahl ein"
+        "de"    "Gebe den Grenzwert für die Wahl ein"
     }
     
     "AM Threshold Menu Message 2"
@@ -102,7 +104,7 @@
     
     "Perform Runoff Vote"
     {
-        "de"    "F¸hre Stichwahl durch"
+        "de"    "Führe Stichwahl durch"
     }
     
     "Default Do Nothing"
@@ -112,7 +114,7 @@
     
     "Default Perform Runoff Vote"
     {
-        "de"    "F¸hre Stichwahl durch (Standard)"
+        "de"    "Führe Stichwahl durch (Standard)"
     }
     
     "AM Max Runoff Menu"
@@ -122,7 +124,7 @@
     
     "AM Max Runoff Menu Message 1"
     {
-        "de"    "Schreibe im Chat die gew¸nschte Maximalanzahl"
+        "de"    "Schreibe im Chat die gewünschte Maximalanzahl"
     }
     
     "AM Max Runoff Menu Message 2"
@@ -153,17 +155,17 @@
     
     "AM Extend Menu"
     {
-        "de"    "F¸ge die Option 'Karte verl‰ngern' hinzu"
+        "de"    "Füge die Option 'Karte verlängern' hinzu"
     }
     
     "AM Don't Change Menu"
     {
-        "de"    "F¸ge die Option 'Nichts ‰ndern' hinzu"
+        "de"    "Füge die Option 'Nichts ändern' hinzu"
     }
     
     "AM Admin Flag Menu"
     {
-        "de"    "Karte ausw‰hlen ermˆglichen f¸r..."
+        "de"    "Karte auswählen ermöglichen für..."
     }
     
     "Everyone"
@@ -178,7 +180,7 @@
     
     "AM Change When Menu"
     {
-        "de"    "Karte soll wann ge‰ndert werden?"
+        "de"    "Karte soll wann geändert werden?"
     }
     
     "Now"
@@ -198,12 +200,12 @@
     
     "Select A Map"
     {
-        "de"    "W‰hle eine Karte aus"
+        "de"    "Wähle eine Karte aus"
     }
     
     "Select A Group"
     {
-        "de"    "W‰hle eine Gruppe aus"
+        "de"    "Wähle eine Gruppe aus"
     }
     
     "Auto Select"
@@ -223,6 +225,6 @@
     
     "AM Set Next Map"
     {
-        "de"    "Gesetzt Nächsten Karte"
+        "de"    "Nächsten Karte festsetzen"
     }
 }
