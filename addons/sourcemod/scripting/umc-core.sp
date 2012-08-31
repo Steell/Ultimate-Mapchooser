@@ -38,6 +38,11 @@ public Plugin:myinfo =
 
 //Changelog:
 /*
+ 3.4.3 (8/31/2012)
+  Fixed issue where map changes were happening too early.
+  Added support for CS:GO mp_match_can_clinch convar.
+  Improved German language translation. (Thanks elninjo!)
+
  3.4.2 (8/26/2012)
   Fixed issue where all RTV votes would count as bonus votes if no bonus flags were set.
   Added support for changes in GoldenEye: Source
