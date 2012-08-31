@@ -85,6 +85,9 @@ new Handle:cvar_maxrounds = INVALID_HANDLE; //Round limit cvar
 new Handle:cvar_fraglimit = INVALID_HANDLE; //Frag limit cvar
 new Handle:cvar_winlimit  = INVALID_HANDLE; //Win limit cvar
 
+//CS:GO mp_match_can_clinch cvar
+new Handle:cvar_clinch = INVALID_HANDLE;
+
 //Used to hold original values for the limit cvars, in order to reset them to the correct value when
 //the map changes.
 //new maxrounds_mem;
@@ -357,6 +360,9 @@ public OnPluginStart()
     cvar_maxrounds = FindConVar("mp_maxrounds");
     cvar_fraglimit = FindConVar("mp_fraglimit");
     cvar_winlimit  = FindConVar("mp_winlimit");
+    
+    //See if there is a clinch cvar
+    cvar_clinch = FindConVar("mp_match_can_clinch");
     
     if (cvar_maxrounds != INVALID_HANDLE || cvar_winlimit != INVALID_HANDLE)
     {
@@ -1003,14 +1009,15 @@ GetTopFragger(&score)
 
 
 //Starts a vote if the given score is high enough.
-CheckWinLimit(winner_score, winning_team)
+CheckWinLimit(winner_score, winning_team, loser_score)
 {
+    new startRounds = GetConVarInt(cvar_start_rounds);
     if (cvar_winlimit != INVALID_HANDLE)
     {
         new winlimit = GetConVarInt(cvar_winlimit);
         if (winlimit > 0)
         {
-            if (winner_score >= (winlimit - GetConVarInt(cvar_start_rounds)))
+            if (winner_score >= (winlimit - startRounds))
             {
                 LogUMCMessage("Win limit triggered end of map vote.");
                 DestroyTimers();
@@ -1019,9 +1026,19 @@ CheckWinLimit(winner_score, winning_team)
             
             //Call the forward
             Call_StartForward(win_tick_forward);
-            Call_PushCell(winlimit - GetConVarInt(cvar_start_rounds) - winner_score);
+            Call_PushCell(winlimit - startRounds - winner_score);
             Call_PushCell(winning_team);
             Call_Finish();
+        }
+    }
+    
+    if (cvar_clinch != INVALID_HANDLE)
+    {
+        if ((winner_score - loser_score) + startRounds > (GetConVarInt(cvar_maxrounds) / 2))
+        {
+            LogUMCMessage("Round limit triggered end of map vote due to potential clinch.");
+            DestroyTimers();
+            StartMapVoteRoundEnd();
         }
     }
 }
