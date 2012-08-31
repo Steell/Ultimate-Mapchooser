@@ -1009,7 +1009,7 @@ GetTopFragger(&score)
 
 
 //Starts a vote if the given score is high enough.
-CheckWinLimit(winner_score, winning_team, loser_score)
+CheckWinLimit(winner_score, winning_team)
 {
     new startRounds = GetConVarInt(cvar_start_rounds);
     if (cvar_winlimit != INVALID_HANDLE)
@@ -1031,16 +1031,6 @@ CheckWinLimit(winner_score, winning_team, loser_score)
             Call_Finish();
         }
     }
-    
-    if (cvar_clinch != INVALID_HANDLE)
-    {
-        if ((winner_score - loser_score) + startRounds > (GetConVarInt(cvar_maxrounds) / 2))
-        {
-            LogUMCMessage("Round limit triggered end of map vote due to potential clinch.");
-            DestroyTimers();
-            StartMapVoteRoundEnd();
-        }
-    }
 }
 
 
@@ -1058,12 +1048,45 @@ CheckMaxRounds(round_count)
             {
                 LogUMCMessage("Round limit triggered end of map vote.");
                 DestroyTimers();
-                StartMapVoteRoundEnd();
+            }
+            else if (cvar_clinch != INVALID_HANDLE)
+            {
+                new winnerScore;
+                new loserScore;
+                GetTopTwoTeamScores(winnerScore, loserScore);
+                if ((winnerScore - loserScore) + startRounds > (GetConVarInt(cvar_maxrounds) / 2))
+                {
+                    LogUMCMessage("Round limit triggered end of map vote due to potential clinch.");
+                    DestroyTimers();
+                    StartMapVoteRoundEnd();
+                }
             }
             
             Call_StartForward(round_tick_forward);
             Call_PushCell(maxrounds - GetConVarInt(cvar_start_rounds) - round_counter);
             Call_Finish();
+        }
+    }
+}
+
+
+GetTopTwoTeamScores(&first, &second)
+{
+    new teamCount = GetTeamCount();
+    first = 0;
+    second = 0;
+    new score;
+    for (new i = 2; i < teamCount; i++)
+    {
+        score = GetTeamScore(i);
+        if (score > first)
+        {
+            second = first;
+            first = score;
+        }
+        else if (score > second)
+        {
+            second = score;
         }
     }
 }

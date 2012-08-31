@@ -1292,3 +1292,46 @@ stock bool:GetTrieArray2(Handle:trie, const String:key[], any:arr[], max_size, &
    return result; 
 }
 
+
+//
+stock ArrayMin(const arr[], maxlen, &idx=0)
+{
+    if (maxlen <= 0)
+        return 0;
+
+    new minIdx = 0;
+    new min = arr[0];
+    new tmp;
+    for (new i = 1; i < maxlen; i++)
+    {
+        tmp = arr[i];
+        if (tmp < min)
+        {
+            min = tmp;
+            minIdx = i;
+        }
+    }
+    return min;
+}
+
+
+//
+stock ArrayMax(const arr[], maxlen, &idx=0)
+{
+    if (maxlen <= 0)
+        return 0;
+
+    new maxIdx = 0;
+    new max = arr[0];
+    new tmp;
+    for (new i = 1; i < maxlen; i++)
+    {
+        tmp = arr[i];
+        if (tmp > max)
+        {
+            max = tmp;
+            maxIdx = i;
+        }
+    }
+    return max;
+}
