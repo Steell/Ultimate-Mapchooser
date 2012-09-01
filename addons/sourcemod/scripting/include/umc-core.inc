@@ -6,9 +6,9 @@
 
 #pragma semicolon 1
 
-#define PL_VERSION "3.4.4"
+#define PL_VERSION "3.4.5-dev"
 #define UMC_DEBUG 0
-#define AUTOUPDATE_ENABLE 1
+#define AUTOUPDATE_ENABLE 0
 #define AUTOUPDATE_DEV 0
 
 //SourceMod Malarky

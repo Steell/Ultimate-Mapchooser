@@ -4769,16 +4769,23 @@ DoMapChange(UMC_ChangeMapTime:when, Handle:kv, const String:map[], const String:
     {
         case ChangeMapTime_Now: //We change the map in 5 seconds.
         {
-            //Routine by Tsunami to end the map
-            new iGameEnd = FindEntityByClassname(-1, "game_end");
-            if (iGameEnd == -1 && (iGameEnd = CreateEntityByName("game_end")) == -1)
+            decl String:game[20];
+            GetGameFolderName(game, sizeof(game));
+            if (!StrEqual(game, "gesource", false))
             {
-                ForceChangeInFive(map, reason);
-            } 
-            else 
-            {     
-                AcceptEntityInput(iGameEnd, "EndGame");
+                //Routine by Tsunami to end the map
+                new iGameEnd = FindEntityByClassname(-1, "game_end");
+                if (iGameEnd == -1 && (iGameEnd = CreateEntityByName("game_end")) == -1)
+                {
+                    ForceChangeInFive(map, reason);
+                } 
+                else 
+                {     
+                    AcceptEntityInput(iGameEnd, "EndGame");
+                }
             }
+            else
+                ForceChangeInFive(map, reason);
         }
         case ChangeMapTime_RoundEnd: //We change the map at the end of the round.
         {
