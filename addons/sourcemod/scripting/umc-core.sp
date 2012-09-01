@@ -38,6 +38,9 @@ public Plugin:myinfo =
 
 //Changelog:
 /*
+ 3.4.4 (9/1/2012)
+  Fixed issue where End of Map Votes determined by mp_maxrounds would not start.
+
  3.4.3 (8/31/2012)
   Fixed issue where map changes were happening too early.
   Added support for CS:GO mp_match_can_clinch convar.
