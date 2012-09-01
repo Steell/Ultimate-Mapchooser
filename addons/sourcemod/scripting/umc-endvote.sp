@@ -1048,13 +1048,14 @@ CheckMaxRounds(round_count)
             {
                 LogUMCMessage("Round limit triggered end of map vote.");
                 DestroyTimers();
+                StartMapVoteRoundEnd();
             }
             else if (cvar_clinch != INVALID_HANDLE)
             {
                 new winnerScore;
                 new loserScore;
                 GetTopTwoTeamScores(winnerScore, loserScore);
-                if ((winnerScore - loserScore) + startRounds > (GetConVarInt(cvar_maxrounds) / 2))
+                if ((winnerScore - loserScore) + startRounds > (maxrounds / 2))
                 {
                     LogUMCMessage("Round limit triggered end of map vote due to potential clinch.");
                     DestroyTimers();
@@ -1063,7 +1064,7 @@ CheckMaxRounds(round_count)
             }
             
             Call_StartForward(round_tick_forward);
-            Call_PushCell(maxrounds - GetConVarInt(cvar_start_rounds) - round_counter);
+            Call_PushCell(maxrounds - startRounds - round_counter);
             Call_Finish();
         }
     }
