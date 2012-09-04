@@ -370,7 +370,8 @@ public OnPluginStart()
         HookEventEx("game_round_end",         Event_RoundEnd); //Hidden: Source, Neotokyo
         HookEventEx("teamplay_win_panel",     Event_RoundEndTF2); //TF2
         HookEventEx("arena_win_panel",        Event_RoundEndTF2); //TF2
-        HookEventEx("teamplay_restart_round", Event_TFRestartRound); //TF2    
+        HookEventEx("teamplay_restart_round", Event_RestartRound); //TF2  
+        HookEventEx("cs_match_end_restart",   Event_RestartRound); //CS:GO
         HookEventEx("round_win",              Event_RoundEnd); //Nuclear Dawn
     }
     
@@ -588,7 +589,7 @@ public Event_RoundEnd(Handle:evnt, const String:name[], bool:dontBroadcast)
     if (vote_enabled) 
     {
         CheckWinLimit(team_wincounts[winner], winner);
-        CheckMaxRounds(round_counter);
+        CheckMaxRounds();
     }
 }
 
@@ -611,7 +612,7 @@ public Event_RoundEndTF2(Handle:evnt, const String:name[], bool:dontBroadcast)
         
         if (vote_enabled)
         {
-            CheckMaxRounds(round_counter);
+            CheckMaxRounds();
             
             new winningTeam = GetEventInt(evnt, "winning_team");
             
@@ -629,8 +630,8 @@ public Event_RoundEndTF2(Handle:evnt, const String:name[], bool:dontBroadcast)
 }
 
 
-//Called when the game is restarted in tf2.
-public Event_TFRestartRound(Handle:evnt, const String:name[], bool:dontBroadcast)
+//Called when the map is restarted.
+public Event_RestartRound(Handle:evnt, const String:name[], bool:dontBroadcast)
 {
     round_counter = 0;
     
@@ -1035,7 +1036,7 @@ CheckWinLimit(winner_score, winning_team)
 
 
 //Starts a vote if the given round count is high enough
-CheckMaxRounds(round_count)
+CheckMaxRounds()
 {
     if (cvar_maxrounds != INVALID_HANDLE)
     {
@@ -1043,19 +1044,19 @@ CheckMaxRounds(round_count)
         if (maxrounds > 0)
         {
             new startRounds = GetConVarInt(cvar_start_rounds);
-            DEBUG_MESSAGE("Determining if mp_maxrounds trigger has been reached. MR: %i, T: %i, C: %i", maxrounds, startRounds, round_count)
-            if (round_count >= (maxrounds - startRounds))
+            DEBUG_MESSAGE("Determining if mp_maxrounds trigger has been reached. MR: %i, T: %i, C: %i", maxrounds, startRounds, round_counter)
+            if (round_counter >= (maxrounds - startRounds))
             {
                 LogUMCMessage("Round limit triggered end of map vote.");
                 DestroyTimers();
                 StartMapVoteRoundEnd();
             }
-            else if (cvar_clinch != INVALID_HANDLE)
+            else if (cvar_clinch != INVALID_HANDLE && GetConVarBool(cvar_clinch))
             {
-                new winnerScore;
-                new loserScore;
+                new winnerScore, loserScore;
                 GetTopTwoTeamScores(winnerScore, loserScore);
-                if ((winnerScore - loserScore) + startRounds > (maxrounds / 2))
+                DEBUG_MESSAGE("Checking clinch. W: %i  L: %i  Th: %i  Te: %i  MR/2: %f", winnerScore, loserScore, startRounds, ((winnerScore - loserScore) + startRounds), (maxrounds / 2.0))
+                if ((winnerScore - loserScore) + startRounds > (maxrounds / 2.0))
                 {
                     LogUMCMessage("Round limit triggered end of map vote due to potential clinch.");
                     DestroyTimers();
@@ -1074,12 +1075,14 @@ CheckMaxRounds(round_count)
 GetTopTwoTeamScores(&first, &second)
 {
     new teamCount = GetTeamCount();
+    DEBUG_MESSAGEI("Fetching Scores. TC: %i", teamCount)
     first = 0;
     second = 0;
     new score;
     for (new i = 2; i < teamCount; i++)
     {
         score = GetTeamScore(i);
+        DEBUG_MESSAGE("Team: %i  Score: %i", i, score)
         if (score > first)
         {
             second = first;
