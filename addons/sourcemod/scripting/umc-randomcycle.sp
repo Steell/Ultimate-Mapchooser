@@ -127,6 +127,7 @@ public OnPluginStart()
     HookEventEx("teamplay_game_over", Event_GameEnd); //TF2
     HookEventEx("tf_game_over",       Event_GameEnd); //TF2 (mp_winlimit)
     HookEventEx("game_newmap",        Event_GameEnd); //Insurgency
+    HookEventEx("cs_intermission",    Event_GameEnd); //CS:GO
     
     //Hook intermission
     new String:game[20];
