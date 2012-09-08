@@ -1075,7 +1075,7 @@ CheckMaxRounds()
 GetTopTwoTeamScores(&first, &second)
 {
     new teamCount = GetTeamCount();
-    DEBUG_MESSAGEI("Fetching Scores. TC: %i", teamCount)
+    DEBUG_MESSAGE("Fetching Scores. TC: %i", teamCount)
     first = 0;
     second = 0;
     new score;
