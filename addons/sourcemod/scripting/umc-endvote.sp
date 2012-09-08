@@ -1056,7 +1056,7 @@ CheckMaxRounds()
                 new winnerScore, loserScore;
                 GetTopTwoTeamScores(winnerScore, loserScore);
                 DEBUG_MESSAGE("Checking clinch. W: %i  L: %i  Th: %i  Te: %i  MR/2: %f", winnerScore, loserScore, startRounds, ((winnerScore - loserScore) + startRounds), (maxrounds / 2.0))
-                if ((winnerScore - loserScore) + startRounds > (maxrounds / 2.0))
+                if ((winnerScore - loserScore) + startRounds >= (maxrounds / 2.0))
                 {
                     LogUMCMessage("Round limit triggered end of map vote due to potential clinch.");
                     DestroyTimers();
