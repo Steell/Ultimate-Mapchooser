@@ -1950,6 +1950,12 @@ new bool:core_vote_active;
 public Action:VM_MapVote(duration, Handle:vote_items, const clients[], numClients,
                          const String:startSound[])
 {
+    if (IsVoteInProgress())
+    {
+        LogUMCMessage("Could not start core vote, another SM vote is already in progress.");
+        return Plugin_Stop;
+    }
+
     new bool:verboseLogs = GetConVarBool(cvar_logging);
 
     if (verboseLogs)
@@ -1978,23 +1984,23 @@ public Action:VM_MapVote(duration, Handle:vote_items, const clients[], numClient
     
     new Handle:menu = BuildVoteMenu(vote_items, "Map Vote Menu Title", Handle_MapVoteResults);
     
-    DEBUG_MESSAGE("Setting CVA True")
-    core_vote_active = true;
+    core_vote_active = menu != INVALID_HANDLE && VoteMenu(menu, clientArr, count, duration);
     
-    if (menu != INVALID_HANDLE && VoteMenu(menu, clientArr, count, duration))
+    if (core_vote_active)
     {
+        DEBUG_MESSAGE("Setting CVA True")
+        
         if (strlen(startSound) > 0)
             EmitSoundToAll(startSound);
         
         return Plugin_Continue;
     }
-    
-    DEBUG_MESSAGE("Setting CVA False -- Couldn't start vote")
-    core_vote_active = false;
-    
-    //ClearVoteArrays();
-    LogError("Could not start core vote.");
-    return Plugin_Stop;
+    else
+    {    
+        DEBUG_MESSAGE("Setting CVA False -- Couldn't start vote")
+        LogError("Could not start core vote.");
+        return Plugin_Stop;
+    }
 }
 
 
