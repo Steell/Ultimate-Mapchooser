@@ -1053,10 +1053,10 @@ CheckMaxRounds()
             }
             else if (cvar_clinch != INVALID_HANDLE && GetConVarBool(cvar_clinch))
             {
-                new winnerScore, loserScore;
-                GetTopTwoTeamScores(winnerScore, loserScore);
-                DEBUG_MESSAGE("Checking clinch. W: %i  L: %i  Th: %i  Te: %i  MR/2: %f", winnerScore, loserScore, startRounds, ((winnerScore - loserScore) + startRounds), (maxrounds / 2.0))
-                if ((winnerScore - loserScore) + startRounds >= (maxrounds / 2.0))
+                new winnerScore;
+                GetTopTwoTeamScores(winnerScore);
+                DEBUG_MESSAGE("Checking clinch. W: %i  Th: %i  Te: %i  MR/2: %f", winnerScore, startRounds, (winnerScore + startRounds), (maxrounds / 2.0))
+                if (winnerScore >= (maxrounds / 2.0 - startRounds))
                 {
                     LogUMCMessage("Round limit triggered end of map vote due to potential clinch.");
                     DestroyTimers();
@@ -1072,7 +1072,7 @@ CheckMaxRounds()
 }
 
 
-GetTopTwoTeamScores(&first, &second)
+GetTopTwoTeamScores(&first, &second=0)
 {
     new teamCount = GetTeamCount();
     DEBUG_MESSAGE("Fetching Scores. TC: %i", teamCount)
