@@ -604,7 +604,7 @@ new Handle:cvar_nextlevel = INVALID_HANDLE; //GE:S
 RunTests()
 {
     LogUMCMessage("TEST: Running UMC tests.");
-    
+
     LogUMCMessage("TEST: Finished running UMC tests.");
 }
 #endif
@@ -1989,7 +1989,7 @@ public Action:VM_MapVote(duration, Handle:vote_items, const clients[], numClient
     if (core_vote_active)
     {
         DEBUG_MESSAGE("Setting CVA True")
-        
+
         if (strlen(startSound) > 0)
             EmitSoundToAll(startSound);
         
@@ -2100,7 +2100,7 @@ Handle:BuildVoteMenu(Handle:vote_items, const String:title[], VoteHandler:callba
     if (size <= 1)
     {
         DEBUG_MESSAGE("Not enough items in the vote. Aborting.")
-        LogError("VOTING: Not enough maps to run a map vote. %i maps available.", size);
+        LogError("VOTING: Not enough options to run a vote. %i options available.", size);
         CloseHandle(menu);
         return INVALID_HANDLE;
     }
@@ -3171,6 +3171,17 @@ Handle:BuildCatVoteItems(Handle:vM, Handle:okv, Handle:mapcycle, bool:scramble,
     
     //No longer need the copied mapcycle
     CloseHandle(kv);
+
+    //Fall back to a map vote if only one group is available.
+    if (GetArraySize(catArray) == 1)
+    {
+        CloseHandle(catArray);
+        LogUMCMessage("Not enough groups available for group vote, performing map vote with only group available.");
+        new bool:allowDupes;
+        GetTrieValue(vM, "stored_ignoredupes", allowDupes);
+        return BuildMapVoteItems(vM, kv, mapcycle, scramble, extend, dontChange, allowDupes,
+                                 strictNoms, .exclude=exclude);
+    }
     
     new Handle:result = CreateArray();
     new Handle:voteItem = INVALID_HANDLE;
@@ -3221,69 +3232,6 @@ Handle:BuildCatVoteItems(Handle:vM, Handle:okv, Handle:mapcycle, bool:scramble,
     }
 
     return result;
-    
-    // Begin creating menu
-//     new Handle:menu = (GetConVarBool(cvar_valvemenu))
-//         ? CreateMenuEx(GetMenuStyleHandle(MenuStyle_Valve), Handle_VoteMenu,
-//                        MenuAction_DisplayItem|MenuAction_Display)
-//         : CreateMenu(Handle_VoteMenu, MenuAction_DisplayItem|MenuAction_Display);
-//     
-//     SetVoteResultCallback(menu, callback);    //Set callback
-//     SetMenuExitButton(menu, false); //Disable exit button
-//     
-//     //Set the title
-//     SetMenuTitle(menu, "Group Vote Menu Title");
-//     
-//     //Keep track of slots taken up in the vote.
-//     new voteSlots = blockSlots;
-// 
-//     //Add slot blocking
-//     AddSlotBlockingToMenu(menu, blockSlots);
-//     
-//     //Add array of votes to the menu.
-//     AddArrayToMenu(menu, catArray);
-//     voteSlots += GetArraySize(catArray);
-// 
-//     //We no longer need the vote array, so we close the handle.
-//     CloseHandle(catArray);
-// 
-//     //Add an extend item if...
-//     //    ...the extend flag is true.
-//     if (extend)
-//     {
-//         if (GetConVarBool(cvar_extend_display))
-//             InsertMenuItem(menu, blockSlots, EXTEND_MAP_OPTION, "Extend Map");
-//         else
-//             AddMenuItem(menu, EXTEND_MAP_OPTION, "Extend Map");
-//         voteCounter++;
-//         voteSlots++;
-//     }
-//     //Add a don't change item if...
-//     //    ...the don't change flag is true.
-//     if (dontChange)
-//     {
-//         if (GetConVarBool(cvar_dontchange_display))
-//             InsertMenuItem(menu, blockSlots, DONT_CHANGE_OPTION, "Don't Change");
-//         else
-//             AddMenuItem(menu, DONT_CHANGE_OPTION, "Don't Change");
-//         voteCounter++;
-//         voteSlots++;
-//     }
-//     //Throw an error and return nothing if...
-//     //    ...the number of items in the vote is less than 2 (hence no point in voting).
-//     if (voteCounter <= 1)
-//     {
-//         LogError("VOTING: Not enough map groups to run a group vote. %i groups available.",
-//             voteCounter);
-//         CloseHandle(menu);
-//         ClearVoteArrays();
-//         return INVALID_HANDLE;
-//     }
-//     else //Otherwise, finish making the menu.
-//     {
-//         SetCorrectMenuPagination(menu, voteSlots);
-//         return menu; //Return our finished menu!
-//     }
 }
 
 
