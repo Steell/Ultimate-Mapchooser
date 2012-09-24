@@ -4765,6 +4765,9 @@ DoMapChange(UMC_ChangeMapTime:when, Handle:kv, const String:map[], const String:
     Call_PushString(group);
     Call_PushString(display);
     Call_Finish();
+
+    if (new_kv != INVALID_HANDLE)
+        CloseHandle(new_kv);
 }
 
 
