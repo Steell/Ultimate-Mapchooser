@@ -3857,7 +3857,7 @@ Handle:BuildRunoffOptions(Handle:vM, Handle:clientArray)
     new num_items = GetArraySize(vote_storage);
     
     //Array determining which clients have voted
-    new bool:clientVotes[MAXPLAYERS];
+    new bool:clientVotes[MAXPLAYERS + 1];
     for (new i = 0; i < num_items; i++)
     {
         voteItem = GetArrayCell(vote_storage, i);
@@ -3867,7 +3867,7 @@ Handle:BuildRunoffOptions(Handle:vM, Handle:clientArray)
         for (new j = 0; j < voteNumVotes; j++)
             clientVotes[GetArrayCell(voteClients, j)] = true;
     }
-    for (new i = 0; i < sizeof(clientVotes); i++)
+    for (new i = 1; i <= MaxClients; i++)
     {
         if (!clientVotes[i])
             PushArrayCell(clientArray, i);
