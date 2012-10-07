@@ -45,6 +45,7 @@ public Plugin:myinfo =
   Fixed bug with selective runoff votes trying to send the vote menu to invalid clients.
   Fixed bug where Random Mapcycle would select a map after the map has been selected and ended due to instant mapchange from a vote.
   Fixed memory leak in certain error cases.
+  Improved error handling in situations with an invalid mapcycle handle.
 
  3.4.4 (9/1/2012)
   Fixed issue where End of Map Votes determined by mp_maxrounds would not start.
