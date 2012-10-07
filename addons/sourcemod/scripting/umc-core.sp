@@ -4718,7 +4718,25 @@ DoMapChange(UMC_ChangeMapTime:when, Handle:kv, const String:map[], const String:
     if (cvar_nextlevel != INVALID_HANDLE)
         SetConVarString(cvar_nextlevel, map);
 
-    //
+    //Call UMC forward for next map being set
+    new Handle:new_kv = INVALID_HANDLE;
+    if (kv != INVALID_HANDLE)
+    {
+        new_kv = CreateKeyValues("umc_rotation");
+        KvCopySubkeys(kv, new_kv);
+    }
+    
+    Call_StartForward(nextmap_forward);
+    Call_PushCell(new_kv);
+    Call_PushString(map);
+    Call_PushString(group);
+    Call_PushString(display);
+    Call_Finish();
+
+    if (new_kv != INVALID_HANDLE)
+        CloseHandle(new_kv);
+
+    //Perform the map change setup
     switch (when)
     {
         case ChangeMapTime_Now: //We change the map in 5 seconds.
@@ -4751,23 +4769,6 @@ DoMapChange(UMC_ChangeMapTime:when, Handle:kv, const String:map[], const String:
             PrintToChatAll("\x03[UMC]\x01 %t", "Map Change at Round End");
         }
     }
-    
-    new Handle:new_kv = INVALID_HANDLE;
-    if (kv != INVALID_HANDLE)
-    {
-        new_kv = CreateKeyValues("umc_rotation");
-        KvCopySubkeys(kv, new_kv);
-    }
-    
-    Call_StartForward(nextmap_forward);
-    Call_PushCell(new_kv);
-    Call_PushString(map);
-    Call_PushString(group);
-    Call_PushString(display);
-    Call_Finish();
-
-    if (new_kv != INVALID_HANDLE)
-        CloseHandle(new_kv);
 }
 
 
