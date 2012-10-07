@@ -158,7 +158,7 @@ public UMC_OnNextmapSet(Handle:kv, const String:map[], const String:group[],
                         const String:display[])
 {
     if (kv == INVALID_HANDLE)
-        return Plugin_Continue;
+        return;
     
     new gDef, gVal;
 
