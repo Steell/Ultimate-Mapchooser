@@ -88,9 +88,6 @@ public OnLibraryAdded(const String:name[])
 public UMC_OnNextmapSet(Handle:kv, const String:map[], const String:group[], const String:display[])
 {
     DEBUG_MESSAGE("Map changed, displaying message...")
-        
-    if (kv == INVALID_HANDLE)
-        return;
 
     new bool:disp = !GetConVarBool(cvar_display);
 
