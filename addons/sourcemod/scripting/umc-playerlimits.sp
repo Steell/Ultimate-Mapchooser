@@ -85,6 +85,9 @@ public Action:UMC_OnDetermineMapExclude(Handle:kv, const String:map[], const Str
         DEBUG_MESSAGE("Skipping displayed map %s due to cvar.", map)
         return Plugin_Continue;
     }
+
+    if (kv == INVALID_HANDLE)
+        return Plugin_Continue;
     
     new defaultMin, defaultMax;
     new min, max;

@@ -223,6 +223,7 @@ Float:FetchMapWeight(const String:map[])
 //Reweights a map when UMC requests,
 public UMC_OnReweightMap(Handle:kv, const String:map[], const String:group[])
 {
+    if (kv == INVALID_HANDLE) return;
     if (!reweight) return;
     
     new Float:weight = FetchMapWeight(map);

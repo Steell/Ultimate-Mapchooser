@@ -38,6 +38,14 @@ public Plugin:myinfo =
 
 //Changelog:
 /*
+ 3.4.5 (10/7/2010)
+  Added initial support for CS:GO.
+  Improved error handling with overlapping votes.
+  Group votes with only one group available will now trigger a map vote, containing maps from the group.
+  Fixed bug with selective runoff votes trying to send the vote menu to invalid clients.
+  Fixed bug where Random Mapcycle would select a map after the map has been selected and ended due to instant mapchange from a vote.
+  Fixed memory leak in certain error cases.
+
  3.4.4 (9/1/2012)
   Fixed issue where End of Map Votes determined by mp_maxrounds would not start.
 
@@ -4725,6 +4733,8 @@ DoMapChange(UMC_ChangeMapTime:when, Handle:kv, const String:map[], const String:
         new_kv = CreateKeyValues("umc_rotation");
         KvCopySubkeys(kv, new_kv);
     }
+    else
+        LogUMCMessage("Mapcycle handle is invalid. Map change reason: %s", reason);
     
     Call_StartForward(nextmap_forward);
     Call_PushCell(new_kv);

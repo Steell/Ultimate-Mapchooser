@@ -136,6 +136,9 @@ public Action:UMC_OnDetermineMapExclude(Handle:kv, const String:map[], const Str
         
     if (!forMapChange && GetConVarBool(cvar_display_ignore))
         return Plugin_Continue;
+        
+    if (kv == INVALID_HANDLE)
+        return Plugin_Continue;
     
     decl String:mapPrefix[MAP_LENGTH];
     GetMapPrefix(map, mapPrefix, sizeof(mapPrefix));

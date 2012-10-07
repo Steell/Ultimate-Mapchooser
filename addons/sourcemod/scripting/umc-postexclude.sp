@@ -96,9 +96,6 @@ bool:IsMapStillDelayed(const String:map[], const String:group[], minsDelayedMap,
         return false;
     new minsSinceMapPlayed = GetTime() - timePlayedMap / 60;
     
-    //if (minsSinceMapPlayed <= minsDelayedMap)
-    //    return true;
-    
     new timePlayedGroup;
     if (!GetTrieValue(time_played_groups_trie, group, timePlayedGroup))
         return false;
@@ -112,36 +109,7 @@ bool:IsMapStillDelayed(const String:map[], const String:group[], minsDelayedMap,
     }
     return minsSinceMapPlayed <= minsDelayedMap
         || minsSinceGroupPlayed <= minsDelayedGroup;
-    
-    //return minsSinceGroupPlayed <= minsDelayedGroup;
-    
-/* #if UMC_DEBUG
-    new bool:result = minsSincePlayed <= minsDelayed;
-    if (minsDelayed > 0)
-    {
-        if (result)
-            DEBUG_MESSAGE("Map %s Excluded: Played %.f mins ago, delayed for %i mins after playing. (%.f remaining).", map, minsSincePlayed, minsDelayed, minsDelayed-minsSincePlayed)
-        else
-            DEBUG_MESSAGE("Map %s Allowed: Played %.f mins ago, delayed for %i mins after playing. (Allowed for the past %.f mins).", map, minsSincePlayed, minsDelayed, minsSincePlayed-minsDelayed)
-    }
-    return result;
-#else
-    return minsSincePlayed <= minsDelayed;
-#endif */
 }
-
-
-//
-/* bool:IsGroupStillDelayed(const String:group[], minsDelayed)
-{
-    new timePlayed;
-    if (!GetTrieValue(time_played_groups_trie, group, timePlayed))
-        return false;
-    
-    new Float:minsSincePlayed = GetTime() - timePlayed / 60.0;
-    
-    return minsSincePlayed <= minsDelayed;
-} */
 
 
 //Called when UMC wants to know if this map is excluded
@@ -153,6 +121,9 @@ public Action:UMC_OnDetermineMapExclude(Handle:kv, const String:map[], const Str
         
     if (!forMapChange && GetConVarBool(cvar_display_ignore))
         return Plugin_Continue;
+
+    if (kv == INVALID_HANDLE)
+        return Plugin_Continue;
     
     new def, val;
     new gDef;
@@ -160,12 +131,6 @@ public Action:UMC_OnDetermineMapExclude(Handle:kv, const String:map[], const Str
     KvRewind(kv);
     if (KvJumpToKey(kv, group))
     {
-        /* if (IsGroupStillDelayed(group, KvGetNum(kv, POSTEX_KEY_MAP, POSTEX_DEFAULT_VALUE)))
-        {
-            KvGoBack(kv);
-            return Plugin_Stop;
-        } */
-        
         gDef = KvGetNum(kv, POSTEX_KEY_GROUP, POSTEX_DEFAULT_VALUE);
         def = KvGetNum(kv, POSTEX_KEY_DEFAULT, POSTEX_DEFAULT_VALUE);
     
@@ -192,6 +157,9 @@ public Action:UMC_OnDetermineMapExclude(Handle:kv, const String:map[], const Str
 public UMC_OnNextmapSet(Handle:kv, const String:map[], const String:group[], 
                         const String:display[])
 {
+    if (kv == INVALID_HANDLE)
+        return Plugin_Continue;
+    
     new gDef, gVal;
 
     KvRewind(kv);

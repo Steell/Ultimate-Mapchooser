@@ -55,6 +55,9 @@ public OnLibraryAdded(const String:name[])
 //Excludes maps with a set weight of 0
 public Action:UMC_OnDetermineMapExclude(Handle:kv, const String:map[], const String:group[], bool:isNom, bool:forMapChange)
 {
+    if (kv == INVALID_HANDLE)
+        return Plugin_Continue;
+
     KvRewind(kv);
     
     if (KvJumpToKey(kv, group))
@@ -79,6 +82,9 @@ public Action:UMC_OnDetermineMapExclude(Handle:kv, const String:map[], const Str
 //Reweights a map when UMC requests.
 public UMC_OnReweightMap(Handle:kv, const String:map[], const String:group[])
 {
+    if (kv == INVALID_HANDLE)
+        return;
+
     KvRewind(kv);
     if (KvJumpToKey(kv, group))
     {
@@ -95,6 +101,9 @@ public UMC_OnReweightMap(Handle:kv, const String:map[], const String:group[])
 //Reweights a group when UMC requests.
 public UMC_OnReweightGroup(Handle:kv, const String:group[])
 {
+    if (kv == INVALID_HANDLE)
+        return;
+
     KvRewind(kv);
     if (KvJumpToKey(kv, group))
     {
