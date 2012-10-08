@@ -209,6 +209,7 @@ public OnConfigsExecuted()
         
     if (!GetConVarBool(cvar_start))
     {
+        LogUMCMessage("Selecting random next map due to map starting.")
         DoRandomNextMap();
     }
 }
@@ -244,7 +245,10 @@ public Event_GameEnd(Handle:evnt, const String:name[], bool:dontBroadcast)
     //    ...we haven't completed an end-of-map vote AND
     //    ...we haven't completed an RTV.
     if (GetConVarBool(cvar_start) && GetConVarBool(cvar_randnext) && setting_map)
+    {
+        LogUMCMessage("Selecting random next map due to map ending.");
         DoRandomNextMap();
+    }
 }
 
 
@@ -374,7 +378,6 @@ public Action:Command_Random(client, args)
 //Sets a random next map. Returns true on success.
 DoRandomNextMap() 
 {    
-    LogUMCMessage("Attempting to set the next map to a random selection.");
     DEBUG_MESSAGE("next_rand_cat: %s", next_rand_cat)
     decl String:nextMap[MAP_LENGTH], String:nextGroup[MAP_LENGTH];
     if (UMC_GetRandomMap(map_kv, umc_mapcycle, next_rand_cat, nextMap, sizeof(nextMap), nextGroup,
@@ -397,6 +400,7 @@ DoRandomNextMap()
 //Called when UMC has set a next map.
 public UMC_OnNextmapSet(Handle:kv, const String:map[], const String:group[], const String:display[])
 {
+    LogUMCMessage("Disabling random nextmap selection.");
     setting_map = false;
 }
 
