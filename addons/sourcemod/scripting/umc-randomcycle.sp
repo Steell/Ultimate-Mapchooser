@@ -209,7 +209,7 @@ public OnConfigsExecuted()
         
     if (!GetConVarBool(cvar_start))
     {
-        LogUMCMessage("Selecting random next map due to map starting.")
+        LogUMCMessage("Selecting random next map due to map starting.");
         DoRandomNextMap();
     }
 }

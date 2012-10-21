@@ -805,7 +805,7 @@ UpdateRTVThreshold()
     GetConVarString(cvar_voteflags, flags, sizeof(flags));
     new count = GetClientWithFlagsCount(flags);
     rtv_threshold = (count > 1)
-                    ? RoundToNearest(float(count) * GetConVarFloat(cvar_rtv_needed))
+                    ? RoundToCeil(float(count) * GetConVarFloat(cvar_rtv_needed))
                     : 1;
 }
 

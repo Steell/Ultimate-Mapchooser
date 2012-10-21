@@ -4,6 +4,34 @@
 		"selected_items":
 		[
 			[
+				"Selecti",
+				"selecting"
+			],
+			[
+				"GetArray",
+				"GetArraySize"
+			],
+			[
+				"Log",
+				"LogUMCMessage"
+			],
+			[
+				"KvGet",
+				"KvGetNum"
+			],
+			[
+				"KvGetSect",
+				"KvGetSectionName"
+			],
+			[
+				"gr",
+				"groupSymbol"
+			],
+			[
+				"plugin_",
+				"Plugin_Stop"
+			],
+			[
 				"s",
 				"sourcemod"
 			],
@@ -40,34 +68,36 @@
 	"buffers":
 	[
 		{
-			"file": "addons/sourcemod/scripting/umc-rockthevote.sp",
-			"settings":
-			{
-				"buffer_size": 32221,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "addons/sourcemod/scripting/include/umc_utils.inc",
-			"settings":
-			{
-				"buffer_size": 36287,
-				"line_ending": "Windows"
-			}
-		},
-		{
 			"file": "addons/sourcemod/scripting/umc-core.sp",
 			"settings":
 			{
-				"buffer_size": 191303,
+				"buffer_size": 192430,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "addons/sourcemod/scripting/umc-endvote.sp",
+			"file": "addons/sourcemod/scripting/umc-randomcycle.sp",
 			"settings":
 			{
-				"buffer_size": 43284,
+				"buffer_size": 14337,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "Searching 77 files for \"OnPluginEnd\"\n\nC:\\Users\\Stephen\\Documents\\GitHub\\Ultimate-Mapchooser\\addons\\sourcemod\\scripting\\umc-builtinvotes.sp:\n  111  \n  112  //\n  113: public OnPluginEnd()\n  114  {\n  115      UMC_UnregisterVoteManager(\"core\");\n\n1 match in 1 file\n",
+			"settings":
+			{
+				"buffer_size": 260,
+				"line_ending": "Windows",
+				"name": "Find Results",
+				"scratch": true
+			}
+		},
+		{
+			"file": "addons/sourcemod/scripting/umc-builtinvotes.sp",
+			"settings":
+			{
+				"buffer_size": 9505,
 				"line_ending": "Windows"
 			}
 		},
@@ -75,12 +105,12 @@
 			"file": "addons/sourcemod/scripting/include/umc-core.inc",
 			"settings":
 			{
-				"buffer_size": 16479,
+				"buffer_size": 16480,
 				"line_ending": "Windows"
 			}
 		}
 	],
-	"build_system": "Build UMC",
+	"build_system": "Packages/User/Pawn.sublime-build",
 	"command_palette":
 	{
 		"height": 392.0,
@@ -104,17 +134,34 @@
 	},
 	"file_history":
 	[
+		"/C/Users/Stephen/Documents/GitHub/Ultimate-Mapchooser/addons/sourcemod/scripting/umc-postexclude.sp",
+		"/C/Users/Stephen/Documents/GitHub/Ultimate-Mapchooser/addons/sourcemod/scripting/umc-rockthevote.sp",
+		"/C/Users/Stephen/Documents/GitHub/Ultimate-Mapchooser/addons/sourcemod/scripting/umc-randomcycle.sp",
+		"/C/Users/Stephen/Documents/GitHub/Ultimate-Mapchooser/addons/sourcemod/scripting/umc-playercountmonitor.sp",
+		"/C/Users/Stephen/Documents/GitHub/Ultimate-Mapchooser/addons/sourcemod/scripting/umc-nominate.sp",
+		"/C/Users/Stephen/Documents/GitHub/Ultimate-Mapchooser/addons/sourcemod/scripting/umc-mapcommands.sp",
+		"/C/Users/Stephen/Documents/GitHub/Ultimate-Mapchooser/addons/sourcemod/scripting/umc-endvote.sp",
+		"/C/Users/Stephen/Documents/GitHub/Ultimate-Mapchooser/addons/sourcemod/scripting/umc-endvote-warnings.sp",
+		"/C/Users/Stephen/Documents/GitHub/Ultimate-Mapchooser/addons/sourcemod/scripting/umc-echonextmap.sp",
+		"/C/Users/Stephen/Documents/GitHub/Ultimate-Mapchooser/addons/sourcemod/scripting/include/umc-core.inc",
+		"/E/Downloads/sm_forcetimelimit.sp",
+		"/C/Users/Stephen/Documents/GitHub/Ultimate-Mapchooser/addons/sourcemod/scripting/umc-weight.sp",
+		"/C/Users/Stephen/Documents/GitHub/Ultimate-Mapchooser/addons/sourcemod/scripting/umc-maprate-reweight.sp",
+		"/C/Users/Stephen/Documents/GitHub/Ultimate-Mapchooser/addons/sourcemod/scripting/umc-timelimits.sp",
+		"/C/Users/Stephen/Documents/GitHub/Ultimate-Mapchooser/addons/sourcemod/scripting/umc-prefixexclude.sp",
+		"/C/Users/Stephen/Documents/GitHub/Ultimate-Mapchooser/addons/sourcemod/scripting/umc-playerlimits.sp",
+		"/C/Users/Stephen/Documents/GitHub/Ultimate-Mapchooser/addons/sourcemod/scripting/include/umc_utils.inc",
+		"/C/Users/Stephen/Documents/GitHub/Ultimate-Mapchooser/umc_mapcycle.txt",
+		"/C/Users/Stephen/Documents/GitHub/Ultimate-Mapchooser/ultimate-mapchooser.sublime-workspace",
+		"/C/Users/Stephen/Documents/GitHub/Ultimate-Mapchooser/cfg/sourcemod/umc-rockthevote.cfg",
 		"/C/Users/Stephen/AppData/Roaming/Sublime Text 2/Packages/User/Preferences.sublime-settings",
 		"/C/Users/Stephen/AppData/Roaming/Sublime Text 2/Packages/Default/Preferences.sublime-settings",
 		"/C/Users/Stephen/Documents/GitHub/Ultimate-Mapchooser/ultimate-mapchooser.sublime-project",
 		"/C/Users/Stephen/AppData/Roaming/Sublime Text 2/Packages/User/Pawn.sublime-build",
-		"/C/Users/Stephen/Documents/GitHub/Ultimate-Mapchooser/addons/sourcemod/scripting/umc-endvote.sp",
 		"/E/SM/addons/sourcemod/scripting/include/umc_utils.inc",
 		"/C/Users/Stephen/AppData/Roaming/Sublime Text 2/Packages/C++/C.tmLanguage",
-		"/C/Users/Stephen/Documents/GitHub/Ultimate-Mapchooser/addons/sourcemod/scripting/umc-nominate.sp",
 		"/C/Users/Stephen/Documents/GitHub/Ultimate-Mapchooser/addons/sourcemod/scripting/umc-core.sp",
-		"/C/Users/Stephen/Documents/GitHub/Ultimate-Mapchooser/addons/sourcemod/scripting/umc-adminmenu.sp",
-		"/C/Users/Stephen/Documents/GitHub/Ultimate-Mapchooser/addons/sourcemod/scripting/include/umc-core.inc"
+		"/C/Users/Stephen/Documents/GitHub/Ultimate-Mapchooser/addons/sourcemod/scripting/umc-adminmenu.sp"
 	],
 	"find":
 	{
@@ -125,6 +172,7 @@
 		"height": 0.0,
 		"where_history":
 		[
+			""
 		]
 	},
 	"find_state":
@@ -132,6 +180,25 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"OnPluginEnd",
+			"DoRandomNextMap",
+			"OnNextmapSet",
+			"domapchange",
+			"UMC_OnNextmapSet",
+			"UMC_OnDetermineMapExclude",
+			"DoMapChange",
+			"clientVotes",
+			"clientArray",
+			"BuildRunoffOptions",
+			"Perform",
+			"PerformRunoff",
+			"Runoff",
+			"VM_MapVote",
+			"DoRandomNextMap",
+			"cvar_randnext",
+			"tab",
+			"public",
+			"change_map_round",
 			"PerformVote",
 			"GetClientUser",
 			"rtv_clients",
@@ -153,51 +220,51 @@
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 3,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "addons/sourcemod/scripting/umc-rockthevote.sp",
+					"file": "addons/sourcemod/scripting/umc-core.sp",
 					"settings":
 					{
-						"buffer_size": 32221,
+						"buffer_size": 192430,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								14854,
-								14854
+								443,
+								443
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/C++/C.tmLanguage",
-							"tab_size": 4,
+							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 7972.0,
+						"translation.y": 90.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "addons/sourcemod/scripting/include/umc_utils.inc",
+					"file": "addons/sourcemod/scripting/umc-randomcycle.sp",
 					"settings":
 					{
-						"buffer_size": 36287,
+						"buffer_size": 14337,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								30117,
-								30131
+								7394,
+								7394
 							]
 						],
 						"settings":
@@ -207,53 +274,69 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 16245.0,
+						"translation.y": 2782.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 2,
-					"file": "addons/sourcemod/scripting/umc-core.sp",
 					"settings":
 					{
-						"buffer_size": 191303,
+						"buffer_size": 260,
 						"regions":
 						{
+							"match":
+							{
+								"flags": 112,
+								"regions":
+								[
+									[
+										172,
+										183
+									]
+								],
+								"scope": ""
+							}
 						},
 						"selection":
 						[
 							[
-								65306,
-								65307
+								176,
+								176
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/C++/C.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
+							"detect_indentation": false,
+							"output_tag": 1,
+							"result_base_dir": "",
+							"result_file_regex": "^([A-Za-z\\\\/<].*):$",
+							"result_line_regex": "^ +([0-9]+):",
+							"scroll_past_end": true,
+							"syntax": "Packages/Default/Find Results.hidden-tmLanguage",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 25174.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 3,
-					"file": "addons/sourcemod/scripting/umc-endvote.sp",
+					"file": "addons/sourcemod/scripting/umc-builtinvotes.sp",
 					"settings":
 					{
-						"buffer_size": 43284,
+						"buffer_size": 9505,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								39591,
-								39591
+								4498,
+								4511
 							]
 						],
 						"settings":
@@ -263,25 +346,31 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 18908.0,
+						"translation.y": 2430.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
-				},
+				}
+			]
+		},
+		{
+			"selected": 0,
+			"sheets":
+			[
 				{
 					"buffer": 4,
 					"file": "addons/sourcemod/scripting/include/umc-core.inc",
 					"settings":
 					{
-						"buffer_size": 16479,
+						"buffer_size": 16480,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								233,
-								233
+								180,
+								180
 							]
 						],
 						"settings":
@@ -316,11 +405,18 @@
 				0,
 				1,
 				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
 			]
 		],
 		"cols":
 		[
 			0.0,
+			0.523781212842,
 			1.0
 		],
 		"rows":
@@ -359,6 +455,6 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 169.0,
+	"side_bar_width": 238.0,
 	"status_bar_visible": true
 }
