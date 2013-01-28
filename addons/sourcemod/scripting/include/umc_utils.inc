@@ -392,8 +392,8 @@ stock DisplayServerMessage(const String:msg[], const String:type[])
         
     //Display a TF2 Game Event message ("G") if...
     //    ...the user specifies.
-    if (StrContains(type, "G") != -1)
-        TF2_SendCustomHudMessageAll("ico_time_10", -1, HudFallback_Hint, message);
+    // if (StrContains(type, "G") != -1)
+    //     TF2_SendCustomHudMessageAll("ico_time_10", -1, HudFallback_Hint, message);
 }
 
 
@@ -423,86 +423,86 @@ public Action:Timer_CenterAd(Handle:timer, Handle:pack)
 
 
 //
-stock TF2_SendCustomHudMesssage(client, const String:icon[], team=-1, CustomHudFallbackType:fallback,
-								const String:format[], any:...)
-{
-    decl String:message[256];
-    VFormat(message, sizeof(message), format, 6);
+// stock TF2_SendCustomHudMessage(client, const String:icon[], team=-1, CustomHudFallbackType:fallback,
+// 							   const String:format[], any:...)
+// {
+//     decl String:message[256];
+//     VFormat(message, sizeof(message), format, 6);
     
-    new Handle:pack = CreateDataPack();
-    WritePackCell(pack, GetClientUserId(client));
-    WritePackString(pack, message);
-    WritePackString(pack, icon);
-    WritePackCell(pack, team);
-    WritePackCell(pack, fallback);
-    QueryClientConVar(client, "cl_hud_minmode", MinModeCheckFinished, pack);
-}
+//     new Handle:pack = CreateDataPack();
+//     WritePackCell(pack, GetClientUserId(client));
+//     WritePackString(pack, message);
+//     WritePackString(pack, icon);
+//     WritePackCell(pack, team);
+//     WritePackCell(pack, fallback);
+//     QueryClientConVar(client, "cl_hud_minmode", MinModeCheckFinished, pack);
+// }
 
 
-//
-stock TF2_SendCustomHudMessageAll(const String:icon[], team=-1, CustomHudFallbackType:fallback,
-								  const String:format[], any:...)
-{
-    decl String:message[256];
-    VFormat(message, sizeof(message), format, 5);
+// //
+// stock TF2_SendCustomHudMessageAll(const String:icon[], team=-1, CustomHudFallbackType:fallback,
+// 								  const String:format[], any:...)
+// {
+//     decl String:message[256];
+//     VFormat(message, sizeof(message), format, 5);
     
-    for (new i = 1; i <= MaxClients; i++)
-    {
-        if (!IsClientInGame(i) || IsFakeClient(i))
-            continue;
+//     for (new i = 1; i <= MaxClients; i++)
+//     {
+//         if (!IsClientInGame(i) || IsFakeClient(i))
+//             continue;
         
-        new Handle:pack = CreateDataPack();
-        WritePackCell(pack, GetClientUserId(i));
-        WritePackString(pack, message);
-        WritePackString(pack, icon);
-        WritePackCell(pack, team);
-        WritePackCell(pack, _:fallback);
-        QueryClientConVar(i, "cl_hud_minmode", MinModeCheckFinished, pack);
-    }
-}
+//         new Handle:pack = CreateDataPack();
+//         WritePackCell(pack, GetClientUserId(i));
+//         WritePackString(pack, message);
+//         WritePackString(pack, icon);
+//         WritePackCell(pack, team);
+//         WritePackCell(pack, _:fallback);
+//         QueryClientConVar(i, "cl_hud_minmode", MinModeCheckFinished, pack);
+//     }
+// }
 
 
-//
-public MinModeCheckFinished(QueryCookie:cookie, uid, ConVarQueryResult:result, const String:cvarName[],
-							const String:cvarValue[], any:pack)
-{
-    ResetPack(pack);
-    new client = GetClientOfUserId(ReadPackCell(pack));
-    if (client == 0)
-    {
-        CloseHandle(pack);
-        return;
-    }
+// //
+// public MinModeCheckFinished(QueryCookie:cookie, uid, ConVarQueryResult:result, const String:cvarName[],
+// 							const String:cvarValue[], any:pack)
+// {
+//     ResetPack(pack);
+//     new client = GetClientOfUserId(ReadPackCell(pack));
+//     if (client == 0)
+//     {
+//         CloseHandle(pack);
+//         return;
+//     }
     
-    decl String:message[256], String:icon[256];
-    ReadPackString(pack, message, sizeof(message));
-    ReadPackString(pack, icon,    sizeof(icon));
+//     decl String:message[256], String:icon[256];
+//     ReadPackString(pack, message, sizeof(message));
+//     ReadPackString(pack, icon,    sizeof(icon));
     
-    new team = ReadPackCell(pack);
+//     new team = ReadPackCell(pack);
     
-    if (result != ConVarQuery_Okay || StringToInt(cvarValue) == 0)
-    {
-        switch (CustomHudFallbackType:ReadPackCell(pack))
-        {
-            case HudFallback_Chat:
-                PrintToChat(client, "%s", message);
-            case HudFallback_Hint:
-                PrintHintText(client, "%s", message);
-            case HudFallback_Center:
-                PrintCenterText(client, "%s", message);
-        }
-    }
-    else
-    {
-        new Handle:msg = StartMessageOne("HudNotifyCustom", client);
-        BfWriteString(msg, message);
-        BfWriteString(msg, icon);
-        BfWriteByte(msg, ((team == -1) ? GetClientTeam(client) : team));
-        EndMessage();
-    }
+//     if (result != ConVarQuery_Okay || StringToInt(cvarValue) == 0)
+//     {
+//         switch (CustomHudFallbackType:ReadPackCell(pack))
+//         {
+//             case HudFallback_Chat:
+//                 PrintToChat(client, "%s", message);
+//             case HudFallback_Hint:
+//                 PrintHintText(client, "%s", message);
+//             case HudFallback_Center:
+//                 PrintCenterText(client, "%s", message);
+//         }
+//     }
+//     else
+//     {
+//         new Handle:msg = StartMessageOne("HudNotifyCustom", client);
+//         BfWriteString(msg, message);
+//         BfWriteString(msg, icon);
+//         BfWriteByte(msg, ((team == -1) ? GetClientTeam(client) : team));
+//         EndMessage();
+//     }
     
-    CloseHandle(pack);
-}
+//     CloseHandle(pack);
+// }
 
 
 //Sets all elements of an array of booleans to false.
