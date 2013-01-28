@@ -228,10 +228,21 @@ public Action:_VGuiMenu(UserMsg:msg_id, Handle:bf, const players[], playersNum, 
 
     if (strcmp(type, "scores", false) == 0)
     {
-        if (BfReadByte(bf) == 1 && BfReadByte(bf) == 0)
+        if (GetUserMessageType() == UM_Protobuf)
         {
-            intermission_called = true;
-            Event_GameEnd(INVALID_HANDLE, "", false);
+            if (PbReadBool(bf, "show") && PbGetRepeatedFieldCount(bf, "subkeys") == 0)
+            {
+                intermission_called = true;
+                Event_GameEnd(INVALID_HANDLE, "", false);
+            }
+        }
+        else
+        {
+            if (BfReadByte(bf) == 1 && BfReadByte(bf) == 0)
+            {
+                intermission_called = true;
+                Event_GameEnd(INVALID_HANDLE, "", false);
+            }
         }
     }
 }
