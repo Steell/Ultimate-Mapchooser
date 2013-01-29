@@ -224,8 +224,15 @@ public Action:_VGuiMenu(UserMsg:msg_id, Handle:bf, const players[], playersNum, 
         return;
 
     new String:type[10];
-    BfReadString(bf, type, sizeof(type));
-
+    if (GetUserMessageType() == UM_Protobuf)
+    {
+        PbReadString(bf, "name", type, sizeof(type));
+    }
+    else
+    {
+        BfReadString(bf, type, sizeof(type));
+    }
+    
     if (strcmp(type, "scores", false) == 0)
     {
         if (GetUserMessageType() == UM_Protobuf)
