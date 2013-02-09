@@ -2383,29 +2383,52 @@ bool:PerformVote(Handle:voteManager, UMC_VoteType:type, Handle:options, time, co
 }
 
 
+enum UMC_BuildOptionsError
+{
+    BuildOptionsError_InvalidMapcycle,
+    BuildOptionsError_NoMapGroups,
+    BuildOptionsError_NotEnoughOptions,
+    BuildOptionsError_Success
+};
+
+
 //Build and returns a new vote menu.
-Handle:BuildVoteItems(Handle:vM, Handle:kv, Handle:mapcycle, UMC_VoteType:type, bool:scramble,
+Handle:BuildVoteItems(Handle:vM, Handle:kv, Handle:mapcycle, UMC_VoteType:&type, bool:scramble,
                       bool:allowDupes, bool:strictNoms, bool:exclude, bool:extend, bool:dontChange)
 {
-    new Handle:result = INVALID_HANDLE;
+    new Handle:result = CreateArray();
+    new UMC_BuildOptionsError:error;
 
     switch (type)
     {
         case (VoteType_Map):
         {
-            result = BuildMapVoteItems(vM, kv, mapcycle, scramble, extend, dontChange, allowDupes,
-                                       strictNoms, .exclude=exclude);
+            error = BuildMapVoteItems(vM, result, kv, mapcycle, scramble, extend, dontChange, 
+                                      allowDupes, strictNoms, .exclude=exclude);
         }
         case (VoteType_Group):
         {
-            result = BuildCatVoteItems(vM, kv, mapcycle, scramble, extend, dontChange, strictNoms,
-                                       exclude);
+            error = BuildCatVoteItems(vM, result, kv, mapcycle, scramble, extend, dontChange, strictNoms,
+                                      exclude);
         }
         case (VoteType_Tier):
         {
-            result = BuildCatVoteItems(vM, kv, mapcycle, scramble, extend, dontChange, strictNoms,
-                                       exclude);
+            error = BuildCatVoteItems(vM, result, kv, mapcycle, scramble, extend, dontChange, strictNoms,
+                                      exclude);
         }
+    }
+
+    if ((type == VoteType_Group || type == VoteType_Tier) && error == BuildOptionsError_NotEnoughOptions)
+    {
+        type = VoteType_Map;
+        error = BuildMapVoteItems(vM, result, kv, mapcycle, scramble, extend, dontChange,
+                                  allowDupes, strictNoms, .exclude=exclude);
+    }
+
+    if (error == BuildOptionsError_InvalidMapcycle || error == BuildOptionsError_NoMapGroups)
+    {
+        CloseHandle(result);
+        result = INVALID_HANDLE;
     }
     
     return result;
@@ -2413,14 +2436,10 @@ Handle:BuildVoteItems(Handle:vM, Handle:kv, Handle:mapcycle, UMC_VoteType:type, 
 
 
 //Builds and returns a menu for a map vote.
-//    callback:   function to be called when the vote is finished.
-//    scramble:   whether the menu items are in a random order (true) or in the order the categories 
-//                are listed in the cycle.
-//    extend:     whether an extend option should be added to the vote.
-//    dontChange: whether a "Don't Change" option should be added to the vote.
-Handle:BuildMapVoteItems(Handle:voteManager, Handle:okv, Handle:mapcycle, bool:scramble,
-                         bool:extend, bool:dontChange, bool:ignoreDupes=false,
-                         bool:strictNoms=false, bool:ignoreInvoteSetting=false, bool:exclude=true)
+UMC_BuildOptionsError:BuildMapVoteItems(Handle:voteManager, Handle:okv, Handle:mapcycle, 
+                                        bool:scramble, bool:extend, bool:dontChange, 
+                                        bool:ignoreDupes=false, bool:strictNoms=false, 
+                                        bool:ignoreInvoteSetting=false, bool:exclude=true)
 {
     DEBUG_MESSAGE("MAPVOTE - Building map vote menu.")
     //Throw an error and return nothing if...
@@ -2428,7 +2447,7 @@ Handle:BuildMapVoteItems(Handle:voteManager, Handle:okv, Handle:mapcycle, bool:s
     if (okv == INVALID_HANDLE)
     {
         LogError("VOTING: Cannot build map vote menu, rotation file is invalid.");
-        return INVALID_HANDLE;
+        return BuildOptionsError_InvalidMapcycle;
     }
     
     DEBUG_MESSAGE("Preparing mapcycle for traversal.")
@@ -2452,7 +2471,7 @@ Handle:BuildMapVoteItems(Handle:voteManager, Handle:okv, Handle:mapcycle, bool:s
     {
         LogError("VOTING: No map groups found in rotation. Vote menu was not built.");
         CloseHandle(kv);
-        return INVALID_HANDLE;
+        return BuildOptionsError_NoMapGroups;
     }
     
     DEBUG_MESSAGE("Preparing vote data storage.")
@@ -2981,7 +3000,6 @@ Handle:BuildMapVoteItems(Handle:voteManager, Handle:okv, Handle:mapcycle, bool:s
     
     new Handle:infoArr = BuildNumArray(voteCounter);
     
-    new Handle:result = CreateArray();
     new Handle:voteItem = INVALID_HANDLE;
     decl String:buffer[MAP_LENGTH];
     for (new i = 0; i < voteCounter; i++)
@@ -3031,26 +3049,21 @@ Handle:BuildMapVoteItems(Handle:voteManager, Handle:okv, Handle:mapcycle, bool:s
         }
     }
     
-    return result;
+    return BuildOptionsError_Success;
 }
 
 
-//Builds and returns a menu for a category vote.
-//    callback:   function to be called when the vote is finished.
-//    scramble:   whether the menu items are in a random order (true) or in the order the categories 
-//                are listed in the cycle.
-//    extend:     whether an extend option should be added to the vote.
-//    dontChange: whether a "Don't Change" option should be added to the vote.
-Handle:BuildCatVoteItems(Handle:vM, Handle:okv, Handle:mapcycle, bool:scramble,
-                         bool:extend, bool:dontChange, bool:strictNoms=false, 
-                         bool:exclude=true)
+//Builds and returns a menu for a group vote.
+UMC_BuildOptionsError:BuildCatVoteItems(Handle:vM, Handle:result, Handle:okv, Handle:mapcycle, 
+                                        bool:scramble, bool:extend, bool:dontChange, 
+                                        bool:strictNoms=false, bool:exclude=true)
 {
     //Throw an error and return nothing if...
     //    ...the mapcycle is invalid.
     if (okv == INVALID_HANDLE)
     {
         LogError("VOTING: Cannot build map group vote menu, rotation file is invalid.");
-        return INVALID_HANDLE;
+        return BuildOptionsError_InvalidMapcycle;
     }
     
     //Rewind our mapcycle.
@@ -3064,7 +3077,7 @@ Handle:BuildCatVoteItems(Handle:vM, Handle:okv, Handle:mapcycle, bool:scramble,
     {
         LogError("VOTING: No map groups found in rotation. Vote menu was not built.");
         CloseHandle(kv);
-        return INVALID_HANDLE;
+        return BuildOptionsError_NoMapGroups;
     }
     
     ClearVoteArrays(vM);
@@ -3186,13 +3199,9 @@ Handle:BuildCatVoteItems(Handle:vM, Handle:okv, Handle:mapcycle, bool:scramble,
     {
         CloseHandle(catArray);
         LogUMCMessage("Not enough groups available for group vote, performing map vote with only group available.");
-        new bool:allowDupes;
-        GetTrieValue(vM, "stored_ignoredupes", allowDupes);
-        return BuildMapVoteItems(vM, kv, mapcycle, scramble, extend, dontChange, allowDupes,
-                                 strictNoms, .exclude=exclude);
+        return BuildOptionsError_NotEnoughOptions;
     }
     
-    new Handle:result = CreateArray();
     new Handle:voteItem = INVALID_HANDLE;
     decl String:buffer[MAP_LENGTH];
     for (new i = 0; i < voteCounter; i++)
@@ -3240,7 +3249,7 @@ Handle:BuildCatVoteItems(Handle:vM, Handle:okv, Handle:mapcycle, bool:scramble,
         }
     }
 
-    return result;
+    return BuildOptionsError_Success;
 }
 
 
