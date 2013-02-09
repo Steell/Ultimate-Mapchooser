@@ -46,6 +46,9 @@ Fixed issue which prevented votes from starting.
 3.3.1 (12/13/11)
 Fixed issue where errors were being logged accidentally.
 Fixed issue where cancelling a vote could cause errors (and in some cases cause voting to stop working).
+
+3.4.6 (2/9/13)
+Updated to new Native Votes API.
 */
 
 
@@ -239,7 +242,8 @@ public Handle_VoteMenu(Handle:menu, MenuAction:action, param1, param2)
 public Handle_MapVoteResults(Handle:menu, num_votes, num_clients, const client_indeces[], const client_votes[],
                              num_items, const item_indeces[], const item_votes[])
 {
-    new Handle:results = ConvertVoteResults(menu, num_clients, client_info, num_items, item_info);
+    new Handle:results = ConvertVoteResults(menu, num_clients, client_indeces, client_votes, num_items,
+                                            item_indeces);
 
     UMC_VoteManagerVoteCompleted("core", results, Handle_UMCVoteResponse);
     
@@ -260,7 +264,7 @@ public Handle_MapVoteResults(Handle:menu, num_votes, num_clients, const client_i
 
 //Converts results of a vote to the format required for UMC to process votes.
 Handle:ConvertVoteResults(Handle:menu, num_clients, const client_indeces[], const client_votes[],
-                          num_items, const item_indeces[], const item_votes[])
+                          num_items, const item_indeces[])
 {
     new Handle:result = CreateArray();
     new itemIndex;
