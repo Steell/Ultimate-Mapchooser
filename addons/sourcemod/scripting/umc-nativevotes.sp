@@ -1,5 +1,5 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- *                             Ultimate Mapchooser - Built-in Voting                             *
+ *                              Ultimate Mapchooser - Native Voting                              *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
  
 #pragma semicolon 1
@@ -8,7 +8,7 @@
 #include <sdktools_sound>
 #include <umc-core>
 #include <umc_utils>
-#include <builtinvotes>
+#include <nativevotes>
 
 #undef REQUIRE_PLUGIN
 
@@ -27,9 +27,9 @@ new Handle:cvar_logging;
 //Plugin Information
 public Plugin:myinfo =
 {
-    name        = "[UMC] Built-in Voting",
+    name        = "[UMC] Native Voting",
     author      = "Steell",
-    description = "Extends Ultimate Mapchooser to allow usage of Built-in Votes.",
+    description = "Extends Ultimate Mapchooser to allow usage of Native Votes.",
     version     = PL_VERSION,
     url         = "http://forums.alliedmods.net/showthread.php?t=134190"
 };
@@ -47,6 +47,8 @@ Fixed issue which prevented votes from starting.
 Fixed issue where errors were being logged accidentally.
 Fixed issue where cancelling a vote could cause errors (and in some cases cause voting to stop working).
 
+3.4.6 (2/9/13)
+Updated to new Native Votes API.
 */
 
 
@@ -55,15 +57,7 @@ public OnAllPluginsLoaded()
 {
     cvar_logging = FindConVar("sm_umc_logging_verbose");
 
-    new String:game[20];
-    GetGameFolderName(game, sizeof(game));
-    
-    if (!StrEqual(game, "tf", false))
-    {
-        SetFailState("UMC Built-in Vote support is only available for Team Fortress 2.");
-    }
-    
-    if (LibraryExists("builtinvotes"))
+    if (LibraryExists("nativevotes"))
     {
         UMC_RegisterVoteManager("core", VM_MapVote, VM_MapVote, VM_CancelVote);
     }
@@ -75,26 +69,6 @@ public OnAllPluginsLoaded()
     }
 #endif
 }
-
-
-//
-/* public OnLibraryAdded(const String:name[])
-{
-    if (StrEqual(name, "builtinvotes"))
-    {
-        UMC_RegisterVoteManager("core", VM_MapVote, VM_MapVote, VM_CancelVote);
-    }
-}
-
-
-//
-public OnLibraryRemoved(const String:name[])
-{
-	if (StrEqual(name, "builtinvotes"))
-	{
-		UMC_UnregisterVoteManager("core");
-	}
-} */
 
 
 #if AUTOUPDATE_ENABLE
@@ -151,7 +125,7 @@ public Action:VM_MapVote(duration, Handle:vote_items, const clients[], numClient
             
     vote_active = true;
     
-    if (g_menu != INVALID_HANDLE && DisplayBuiltinVote(g_menu, clientArr, count, duration))
+    if (g_menu != INVALID_HANDLE && NativeVotes_Display(g_menu, clientArr, count, duration))
     {
         if (strlen(startSound) > 0)
             EmitSoundToAll(startSound);
@@ -162,13 +136,13 @@ public Action:VM_MapVote(duration, Handle:vote_items, const clients[], numClient
     vote_active = false;
     
     //ClearVoteArrays();
-    LogError("Could not start built-in vote.");
+    LogError("Could not start native vote.");
     return Plugin_Stop;
 }
 
 
 //
-Handle:BuildVoteMenu(Handle:vote_items, BuiltinVoteHandler:callback)
+Handle:BuildVoteMenu(Handle:vote_items, NativeVotes_VoteHandler:callback)
 {
     new bool:verboseLogs = cvar_logging != INVALID_HANDLE && GetConVarBool(cvar_logging);
     
@@ -184,10 +158,10 @@ Handle:BuildVoteMenu(Handle:vote_items, BuiltinVoteHandler:callback)
     }
     
     //Begin creating menu
-    new Handle:menu = CreateBuiltinVote(Handle_VoteMenu, BuiltinVoteType_NextLevelMult,
-                                        BuiltinVoteAction_End|BuiltinVoteAction_Cancel);
+    new Handle:menu = NativeVotes_Create(Handle_VoteMenu, NativeVotesType_NextLevelMult,
+                                         NATIVEVOTES_ACTIONS_DEFAULT|MenuAction_VoteCancel);
         
-    SetBuiltinVoteResultCallback(menu, callback); //Set callback
+    NativeVotes_SetResultCallback(menu, callback); //Set callback
         
     new Handle:voteItem;
     decl String:info[MAP_LENGTH], String:display[MAP_LENGTH];
@@ -197,10 +171,10 @@ Handle:BuildVoteMenu(Handle:vote_items, BuiltinVoteHandler:callback)
         GetTrieString(voteItem, "info", info, sizeof(info));
         GetTrieString(voteItem, "display", display, sizeof(display));
         
-        AddBuiltinVoteItem(
+        NativeVotes_AddItem(
             menu, info,
             StrEqual(info, EXTEND_MAP_OPTION) 
-                ? BUILTINVOTES_EXTEND
+                ? NATIVEVOTES_EXTEND
                 : display
         );
         
@@ -208,9 +182,6 @@ Handle:BuildVoteMenu(Handle:vote_items, BuiltinVoteHandler:callback)
             LogUMCMessage("%i: %s (%s)", i + 1, display, info);
     }
     
-    //DEBUG_MESSAGE("Setting proper pagination.")
-    //SetCorrectMenuPagination(menu, voteSlots);
-    //DEBUG_MESSAGE("Vote menu built successfully.")
     return menu; //Return the finished menu.
 }
 
@@ -221,26 +192,36 @@ public VM_CancelVote()
     if (vote_active)
     {
         vote_active = false;
-        CancelBuiltinVote();
+        NativeVotes_Cancel();
     }
 }
 
 
 //Called when a vote has finished.
-public Handle_VoteMenu(Handle:menu, BuiltinVoteAction:action, param1, param2)
+public Handle_VoteMenu(Handle:menu, MenuAction:action, param1, param2)
 {
     switch (action)
     {
-        case BuiltinVoteAction_Select:
+        case MenuAction_Select:
         {
             if (cvar_logging != INVALID_HANDLE && GetConVarBool(cvar_logging))
                 LogUMCMessage("%L selected menu item %i", param1, param2);
             //TODO
             UMC_VoteManagerClientVoted("core", param1, INVALID_HANDLE);
         }
-        case BuiltinVoteAction_Cancel:
+        case MenuAction_VoteCancel:
         {
-            DisplayBuiltinVoteFail(g_menu, BuiltinVoteFailReason:param1);
+            switch (param1)
+            {
+                case VoteCancel_Generic:
+                {
+                    NativeVotes_DisplayFail(g_menu, NativeVotesFail_Generic);
+                }
+                case VoteCancel_NoVotes:
+                {
+                    NativeVotes_DisplayFail(g_menu, NativeVotesFail_NotEnoughVotes);
+                }
+            }
             if (vote_active)
             {
                 DEBUG_MESSAGE("Vote Cancelled")
@@ -248,20 +229,21 @@ public Handle_VoteMenu(Handle:menu, BuiltinVoteAction:action, param1, param2)
                 UMC_VoteManagerVoteCancelled("core");
             }
         }
-        case BuiltinVoteAction_End:
+        case MenuAction_End:
         {
             DEBUG_MESSAGE("MenuAction_End")
-            CloseHandle(menu);
+            NativeVotes_Close(menu);
         }
     }
 }
 
 
 //Handles the results of a vote.
-public Handle_MapVoteResults(Handle:menu, num_votes, num_clients, const client_info[][2], num_items,
-                             const item_info[][2])
+public Handle_MapVoteResults(Handle:menu, num_votes, num_clients, const client_indeces[], const client_votes[],
+                             num_items, const item_indeces[], const item_votes[])
 {
-    new Handle:results = ConvertVoteResults(menu, num_clients, client_info, num_items, item_info);
+    new Handle:results = ConvertVoteResults(menu, num_clients, client_indeces, client_votes, num_items,
+                                            item_indeces);
 
     UMC_VoteManagerVoteCompleted("core", results, Handle_UMCVoteResponse);
     
@@ -281,8 +263,8 @@ public Handle_MapVoteResults(Handle:menu, num_votes, num_clients, const client_i
 
 
 //Converts results of a vote to the format required for UMC to process votes.
-Handle:ConvertVoteResults(Handle:menu, num_clients, const client_info[][2], num_items,
-                          const item_info[][2])
+Handle:ConvertVoteResults(Handle:menu, num_clients, const client_indeces[], const client_votes[],
+                          num_items, const item_indeces[])
 {
     new Handle:result = CreateArray();
     new itemIndex;
@@ -290,8 +272,8 @@ Handle:ConvertVoteResults(Handle:menu, num_clients, const client_info[][2], num_
     decl String:info[MAP_LENGTH], String:disp[MAP_LENGTH];
     for (new i = 0; i < num_items; i++)
     {
-        itemIndex = item_info[i][BUILTINVOTEINFO_ITEM_INDEX];
-        GetBuiltinVoteItem(menu, itemIndex, info, sizeof(info), disp, sizeof(disp));
+        itemIndex = item_indeces[i];
+        NativeVotes_GetItem(menu, itemIndex, info, sizeof(info), disp, sizeof(disp));
         
         voteItem = CreateTrie();
         voteClientArray = CreateArray();
@@ -304,8 +286,8 @@ Handle:ConvertVoteResults(Handle:menu, num_clients, const client_info[][2], num_
         
         for (new j = 0; j < num_clients; j++)
         {
-            if (client_info[j][BUILTINVOTEINFO_CLIENT_ITEM] == itemIndex)
-                PushArrayCell(voteClientArray, client_info[j][BUILTINVOTEINFO_CLIENT_INDEX]);
+            if (client_votes[j] == itemIndex)
+                PushArrayCell(voteClientArray, client_indeces[j]);
         }
     }
     return result;
@@ -320,21 +302,21 @@ public Handle_UMCVoteResponse(UMC_VoteResponse:response, const String:param[])
         {
             decl String:map[MAP_LENGTH];
             strcopy(map, sizeof(map), param);
-            DisplayBuiltinVotePass(g_menu, map);
+            NativeVotes_DisplayPass(g_menu, map);
         }
         case VoteResponse_Runoff:
         {
-            DisplayBuiltinVoteFail(g_menu, BuiltinVoteFail_NotEnoughVotes);
+            NativeVotes_DisplayFail(g_menu, NativeVotesFail_NotEnoughVotes);
         }
         case VoteResponse_Tiered:
         {
             decl String:map[MAP_LENGTH];
             strcopy(map, sizeof(map), param);
-            DisplayBuiltinVotePass(g_menu, map);
+            NativeVotes_DisplayPass(g_menu, map);
         }
         case VoteResponse_Fail:
         {
-            DisplayBuiltinVoteFail(g_menu, BuiltinVoteFail_NotEnoughVotes);
+            NativeVotes_DisplayFail(g_menu, NativeVotesFail_NotEnoughVotes);
         }
     }
 }
