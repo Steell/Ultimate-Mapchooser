@@ -60,35 +60,35 @@ enum UMC_VoteType
 {
     VoteType_Map = 0,
     VoteType_Group,
-    VoteType_Tier
-}
+    VoteType_Tier,
+};
 
 enum UMC_ChangeMapTime
 {
     ChangeMapTime_Now = 0,
     ChangeMapTime_RoundEnd,
-    ChangeMapTime_MapEnd
-}
+    ChangeMapTime_MapEnd,
+};
 
 enum UMC_VoteFailAction
 {
     VoteFailAction_Nothing = 0,
-    VoteFailAction_Runoff
-}
+    VoteFailAction_Runoff,
+};
 
 enum UMC_RunoffFailAction
 {
     RunoffFailAction_Nothing = 0,
-    RunoffFailAction_Accept
-}
+    RunoffFailAction_Accept,
+};
 
 enum UMC_VoteResponse
 {
     VoteResponse_Success = 0,
     VoteResponse_Runoff,
     VoteResponse_Tiered,
-    VoteResponse_Fail
-}
+    VoteResponse_Fail,
+};
 
 
 /**

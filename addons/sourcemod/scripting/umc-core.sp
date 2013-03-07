@@ -2393,7 +2393,7 @@ enum UMC_BuildOptionsError
 
 
 //Build and returns a new vote menu.
-Handle:BuildVoteItems(Handle:vM, Handle:kv, Handle:mapcycle, UMC_VoteType:&type, bool:scramble,
+Handle:BuildVoteItems(Handle:vM, Handle:kv, Handle:mapcycle, &UMC_VoteType:type, bool:scramble,
                       bool:allowDupes, bool:strictNoms, bool:exclude, bool:extend, bool:dontChange)
 {
     new Handle:result = CreateArray();
@@ -2436,10 +2436,11 @@ Handle:BuildVoteItems(Handle:vM, Handle:kv, Handle:mapcycle, UMC_VoteType:&type,
 
 
 //Builds and returns a menu for a map vote.
-UMC_BuildOptionsError:BuildMapVoteItems(Handle:voteManager, Handle:okv, Handle:mapcycle, 
-                                        bool:scramble, bool:extend, bool:dontChange, 
-                                        bool:ignoreDupes=false, bool:strictNoms=false, 
-                                        bool:ignoreInvoteSetting=false, bool:exclude=true)
+UMC_BuildOptionsError:BuildMapVoteItems(Handle:voteManager, Handle:result, Handle:okv, 
+                                        Handle:mapcycle, bool:scramble, bool:extend, 
+                                        bool:dontChange, bool:ignoreDupes=false, 
+                                        bool:strictNoms=false, bool:ignoreInvoteSetting=false, 
+                                        bool:exclude=true)
 {
     DEBUG_MESSAGE("MAPVOTE - Building map vote menu.")
     //Throw an error and return nothing if...
@@ -4615,12 +4616,17 @@ public Action:Handle_TieredVoteTimer(Handle:timer, Handle:pack)
     GetTrieValue(vM, "stored_ignoredupes", stored_ignoredupes);
     GetTrieValue(vM, "stored_strictnoms", stored_strictnoms);
     GetTrieValue(vM, "stored_exclude", stored_exclude);
-    
+
     //Initialize the menu.
-    new Handle:options = BuildMapVoteItems(vM, tieredKV, stored_mapcycle, stored_scramble, false,
-            false, stored_ignoredupes, stored_strictnoms, true, stored_exclude);
+    new Handle:options = CreateArray();
+
+    new UMC_BuildOptionsError:error = BuildMapVoteItems(
+        vM, options, stored_mapcycle,
+        tieredKV, stored_scramble, false,
+        false, stored_ignoredupes,
+        stored_strictnoms, true, stored_exclude);
     
-    if (options != INVALID_HANDLE)
+    if (error == BuildOptionsError_Success)
     {
         //Play the vote start sound if...
         //  ...the vote start sound is defined.
