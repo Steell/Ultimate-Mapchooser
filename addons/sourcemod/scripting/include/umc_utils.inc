@@ -528,7 +528,7 @@ stock CacheSound(const String:sound[])
         
         //Log an error and don't cache the sound if...
         //    ...the sound file does not exist
-        if (!FileExists(filePath))
+        if (!FileExists(filePath, true))
             LogError("SOUND ERROR: Sound file '%s' does not exist.", filePath);
         //Otherwise, cache the sound.
         else
