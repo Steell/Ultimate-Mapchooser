@@ -223,12 +223,7 @@ Handle:BuildVoteMenu(Handle:vote_items, NativeVotes_VoteHandler:callback, Native
         GetTrieString(voteItem, "info", info, sizeof(info));
         GetTrieString(voteItem, "display", display, sizeof(display));
         
-        NativeVotes_AddItem(
-            menu, info,
-            StrEqual(info, EXTEND_MAP_OPTION) 
-                ? NATIVEVOTES_EXTEND
-                : display
-        );
+        NativeVotes_AddItem(menu, info, display);
         
         if (verboseLogs)
             LogUMCMessage("%i: %s (%s)", i + 1, display, info);
