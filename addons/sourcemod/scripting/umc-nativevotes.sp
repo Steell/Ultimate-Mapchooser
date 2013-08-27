@@ -20,6 +20,9 @@
     #define UPDATE_URL "http://www.ccs.neu.edu/home/steell/sourcemod/ultimate-mapchooser/updateinfo-umc-builtinvotes.txt"
 #endif
 
+// From core
+#define NOTHING_OPTION "?nothing?"
+
 new bool:vote_active;
 new Handle:g_menu;
 new Handle:cvar_logging;
@@ -59,7 +62,7 @@ public OnAllPluginsLoaded()
 
     if (LibraryExists("nativevotes"))
     {
-        UMC_RegisterVoteManager("core", VM_MapVote, VM_MapVote, VM_CancelVote);
+        UMC_RegisterVoteManager("core", VM_MapVote, VM_GroupVote, VM_CancelVote);
     }
     
 #if AUTOUPDATE_ENABLE
@@ -121,8 +124,9 @@ public Action:VM_MapVote(duration, Handle:vote_items, const clients[], numClient
     }
     
     //new Handle:menu = BuildVoteMenu(vote_items, "Map Vote Menu Title", Handle_MapVoteResults);
-    g_menu = BuildVoteMenu(vote_items, Handle_MapVoteResults);
-            
+    //g_menu = BuildVoteMenu(vote_items, Handle_MapVoteResults);
+    g_menu = BuildVoteMenu(vote_items, Handle_MapVoteResults, NativeVotesType_NextLevelMult);
+    
     vote_active = true;
     
     if (g_menu != INVALID_HANDLE && NativeVotes_Display(g_menu, clientArr, count, duration))
@@ -140,9 +144,53 @@ public Action:VM_MapVote(duration, Handle:vote_items, const clients[], numClient
     return Plugin_Stop;
 }
 
+public Action:VM_GroupVote(duration, Handle:vote_items, const clients[], numClients,
+                           const String:startSound[])
+{
+    new bool:verboseLogs = cvar_logging != INVALID_HANDLE && GetConVarBool(cvar_logging);
+
+    decl clientArr[MAXPLAYERS+1];
+    new count = 0;
+    new client;
+    for (new i = 0; i < numClients; i++)
+    {
+        client = clients[i];
+        if (client != 0 && IsClientInGame(client))
+        {
+            if (verboseLogs)
+                LogUMCMessage("%i: %N (%i)", i, client, client);
+            clientArr[count++] = client;
+        }
+    }
+    
+    if (count == 0)
+    {
+        LogUMCMessage("Could not start core vote, no players to display vote to!");
+        return Plugin_Stop;
+    }
+    
+    //new Handle:menu = BuildVoteMenu(vote_items, "Map Vote Menu Title", Handle_MapVoteResults);
+    g_menu = BuildVoteMenu(vote_items, Handle_MapVoteResults, NativeVotesType_Custom_Mult, "Group Vote Menu Title");
+    
+    vote_active = true;
+    
+    if (g_menu != INVALID_HANDLE && NativeVotes_Display(g_menu, clientArr, count, duration))
+    {
+        if (strlen(startSound) > 0)
+            EmitSoundToAll(startSound);
+        
+        return Plugin_Continue;
+    }
+            
+    vote_active = false;
+    
+    //ClearVoteArrays();
+    LogError("Could not start native vote.");
+    return Plugin_Stop;
+}
 
 //
-Handle:BuildVoteMenu(Handle:vote_items, NativeVotes_VoteHandler:callback)
+Handle:BuildVoteMenu(Handle:vote_items, NativeVotes_VoteHandler:callback, NativeVotesType:type, const String:title[]="")
 {
     new bool:verboseLogs = cvar_logging != INVALID_HANDLE && GetConVarBool(cvar_logging);
     
@@ -158,9 +206,13 @@ Handle:BuildVoteMenu(Handle:vote_items, NativeVotes_VoteHandler:callback)
     }
     
     //Begin creating menu
-    new Handle:menu = NativeVotes_Create(Handle_VoteMenu, NativeVotesType_NextLevelMult,
-                                         NATIVEVOTES_ACTIONS_DEFAULT|MenuAction_VoteCancel);
+    new Handle:menu = NativeVotes_Create(Handle_VoteMenu, type,
+                                         NATIVEVOTES_ACTIONS_DEFAULT|MenuAction_VoteCancel|MenuAction_Display|MenuAction_DisplayItem);
         
+    if (title[0] != '\0')
+    {
+        NativeVotes_SetDetails(menu, "Group Vote Menu Title");
+    }
     NativeVotes_SetResultCallback(menu, callback); //Set callback
         
     new Handle:voteItem;
@@ -171,12 +223,7 @@ Handle:BuildVoteMenu(Handle:vote_items, NativeVotes_VoteHandler:callback)
         GetTrieString(voteItem, "info", info, sizeof(info));
         GetTrieString(voteItem, "display", display, sizeof(display));
         
-        NativeVotes_AddItem(
-            menu, info,
-            StrEqual(info, EXTEND_MAP_OPTION) 
-                ? NATIVEVOTES_EXTEND
-                : display
-        );
+        NativeVotes_AddItem(menu, info, display);
         
         if (verboseLogs)
             LogUMCMessage("%i: %s (%s)", i + 1, display, info);
@@ -184,7 +231,6 @@ Handle:BuildVoteMenu(Handle:vote_items, NativeVotes_VoteHandler:callback)
     
     return menu; //Return the finished menu.
 }
-
 
 //
 public VM_CancelVote()
@@ -208,6 +254,22 @@ public Handle_VoteMenu(Handle:menu, MenuAction:action, param1, param2)
                 LogUMCMessage("%L selected menu item %i", param1, param2);
             //TODO
             UMC_VoteManagerClientVoted("core", param1, INVALID_HANDLE);
+        }
+        
+        case MenuAction_Display:
+        {
+            new NativeVotesType:type = NativeVotes_GetType(menu);
+            if (type == NativeVotesType_Custom_Mult)
+            {
+                decl String:phrase[255];
+                NativeVotes_GetDetails(menu, phrase, sizeof(phrase));
+                
+                decl String:buffer[255];
+                FormatEx(buffer, sizeof(buffer), "%T", phrase, param1);
+				
+                NativeVotes_RedrawVoteTitle(buffer);
+                return _:Plugin_Changed;
+            }
         }
         case MenuAction_VoteCancel:
         {
@@ -234,7 +296,22 @@ public Handle_VoteMenu(Handle:menu, MenuAction:action, param1, param2)
             DEBUG_MESSAGE("MenuAction_End")
             NativeVotes_Close(menu);
         }
+        case MenuAction_DisplayItem:
+        {
+            decl String:map[MAP_LENGTH], String:display[MAP_LENGTH];
+            NativeVotes_GetItem(menu, param2, map, MAP_LENGTH, display, MAP_LENGTH);
+            if (StrEqual(map, EXTEND_MAP_OPTION) || StrEqual(map, DONT_CHANGE_OPTION) ||
+                (StrEqual(map, NOTHING_OPTION) && strlen(display) > 0))
+            {
+                decl String:buffer[255];
+                FormatEx(buffer, sizeof(buffer), "%T", display, param1);
+                
+                NativeVotes_RedrawVoteItem(buffer);
+                return _:Plugin_Changed;
+            }
+		}
     }
+    return 0;
 }
 
 
@@ -300,9 +377,27 @@ public Handle_UMCVoteResponse(UMC_VoteResponse:response, const String:param[])
     {
         case VoteResponse_Success:
         {
-            decl String:map[MAP_LENGTH];
-            strcopy(map, sizeof(map), param);
-            NativeVotes_DisplayPass(g_menu, map);
+			if (StrEqual(param, EXTEND_MAP_OPTION))
+			{
+				NativeVotes_DisplayPassEx(g_menu, NativeVotesPass_Extend);
+			}
+			else if (StrEqual(param, DONT_CHANGE_OPTION))
+			{
+				NativeVotes_DisplayPassCustom(g_menu, "%t", "Map Unchanged");
+			}
+			else
+			{
+				decl String:map[MAP_LENGTH];
+				strcopy(map, sizeof(map), param);
+				if (NativeVotes_GetType(g_menu) == NativeVotesType_Custom_Mult)
+				{
+					NativeVotes_DisplayPassEx(g_menu, NativeVotesPass_NextLevel, map);
+				}
+				else
+				{
+					NativeVotes_DisplayPass(g_menu, map);
+				}
+			}
         }
         case VoteResponse_Runoff:
         {
