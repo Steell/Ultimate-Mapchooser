@@ -2017,6 +2017,12 @@ public Action:VM_MapVote(duration, Handle:vote_items, const clients[], numClient
 public Action:VM_GroupVote(duration, Handle:vote_items, const clients[], numClients,
                            const String:startSound[])
 {
+    if (IsVoteInProgress())
+    {
+        LogUMCMessage("Could not start core vote, another SM vote is already in progress.");
+        return Plugin_Stop;
+    }
+
     new bool:verboseLogs = GetConVarBool(cvar_logging);
 
     if (verboseLogs)

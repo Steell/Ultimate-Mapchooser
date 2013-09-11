@@ -101,6 +101,12 @@ public OnPluginEnd()
 public Action:VM_MapVote(duration, Handle:vote_items, const clients[], numClients,
                          const String:startSound[])
 {
+    if (NativeVotes_IsVoteInProgress())
+    {
+        LogUMCMessage("Could not start core vote, another NativeVotes vote is already in progress.");
+        return Plugin_Stop;
+    }
+
     new bool:verboseLogs = cvar_logging != INVALID_HANDLE && GetConVarBool(cvar_logging);
 
     decl clientArr[MAXPLAYERS+1];
@@ -147,6 +153,12 @@ public Action:VM_MapVote(duration, Handle:vote_items, const clients[], numClient
 public Action:VM_GroupVote(duration, Handle:vote_items, const clients[], numClients,
                            const String:startSound[])
 {
+    if (NativeVotes_IsVoteInProgress())
+    {
+        LogUMCMessage("Could not start core vote, another NativeVotes vote is already in progress.");
+        return Plugin_Stop;
+    }
+
     new bool:verboseLogs = cvar_logging != INVALID_HANDLE && GetConVarBool(cvar_logging);
 
     decl clientArr[MAXPLAYERS+1];
