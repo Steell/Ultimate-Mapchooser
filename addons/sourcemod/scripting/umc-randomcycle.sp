@@ -223,8 +223,10 @@ public Action:_VGuiMenu(UserMsg:msg_id, Handle:bf, const players[], playersNum, 
     if (intermission_called)
         return;
 
+    new bool:protoBuf = GetFeatureStatus(FeatureType_Native, "GetUserMessageType") == FeatureStatus_Available && GetUserMessageType() == UM_Protobuf;
+    
     new String:type[10];
-    if (GetUserMessageType() == UM_Protobuf)
+    if (protoBuf)
     {
         PbReadString(bf, "name", type, sizeof(type));
     }
@@ -235,7 +237,7 @@ public Action:_VGuiMenu(UserMsg:msg_id, Handle:bf, const players[], playersNum, 
     
     if (strcmp(type, "scores", false) == 0)
     {
-        if (GetUserMessageType() == UM_Protobuf)
+        if (protoBuf)
         {
             if (PbReadBool(bf, "show") && PbGetRepeatedFieldCount(bf, "subkeys") == 0)
             {
