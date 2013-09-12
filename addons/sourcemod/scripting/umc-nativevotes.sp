@@ -97,11 +97,16 @@ public OnPluginEnd()
 //                                        CORE VOTE MANAGER                                       //
 //************************************************************************************************//
 
+public bool:VM_IsVoteInProgress()
+{
+	return NativeVotes_IsVoteInProgress();
+}
+
 //
 public Action:VM_MapVote(duration, Handle:vote_items, const clients[], numClients,
                          const String:startSound[])
 {
-    if (NativeVotes_IsVoteInProgress())
+    if (VM_IsVoteInProgress())
     {
         LogUMCMessage("Could not start core vote, another NativeVotes vote is already in progress.");
         return Plugin_Stop;
@@ -153,7 +158,7 @@ public Action:VM_MapVote(duration, Handle:vote_items, const clients[], numClient
 public Action:VM_GroupVote(duration, Handle:vote_items, const clients[], numClients,
                            const String:startSound[])
 {
-    if (NativeVotes_IsVoteInProgress())
+    if (VM_IsVoteInProgress())
     {
         LogUMCMessage("Could not start core vote, another NativeVotes vote is already in progress.");
         return Plugin_Stop;
