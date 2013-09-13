@@ -74,6 +74,12 @@ new bool:setting_map; //Are we setting the nextmap at the end of this map?
 //                                        SOURCEMOD EVENTS                                        //
 //************************************************************************************************//
 
+public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
+{
+    MarkNativeAsOptional("GetUserMessageType");
+    return APLRes_Success;
+}
+
 //Called when the plugin is finished loading.
 public OnPluginStart()
 {
