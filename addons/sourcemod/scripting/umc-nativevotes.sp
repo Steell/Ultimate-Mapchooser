@@ -55,6 +55,11 @@ Updated to new Native Votes API.
 */
 
 
+public OnPluginStart()
+{
+    LoadTranslations("ultimate-mapchooser.phrases");
+}
+
 //
 public OnAllPluginsLoaded()
 {
