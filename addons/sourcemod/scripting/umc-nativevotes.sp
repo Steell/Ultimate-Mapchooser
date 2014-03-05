@@ -55,6 +55,11 @@ Updated to new Native Votes API.
 */
 
 
+public OnPluginStart()
+{
+    LoadTranslations("ultimate-mapchooser.phrases");
+}
+
 //
 public OnAllPluginsLoaded()
 {
@@ -228,7 +233,8 @@ Handle:BuildVoteMenu(Handle:vote_items, NativeVotes_VoteHandler:callback, Native
         
     if (title[0] != '\0')
     {
-        NativeVotes_SetDetails(menu, "Group Vote Menu Title");
+        NativeVotes_SetTitle(menu, title);
+        //NativeVotes_SetDetails(menu, "Group Vote Menu Title");
     }
     NativeVotes_SetResultCallback(menu, callback); //Set callback
         
@@ -279,7 +285,7 @@ public Handle_VoteMenu(Handle:menu, MenuAction:action, param1, param2)
             if (type == NativeVotesType_Custom_Mult)
             {
                 decl String:phrase[255];
-                NativeVotes_GetDetails(menu, phrase, sizeof(phrase));
+                NativeVotes_GetTitle(menu, phrase, sizeof(phrase));
                 
                 decl String:buffer[255];
                 FormatEx(buffer, sizeof(buffer), "%T", phrase, param1);
@@ -394,27 +400,28 @@ public Handle_UMCVoteResponse(UMC_VoteResponse:response, const String:param[])
     {
         case VoteResponse_Success:
         {
-			if (StrEqual(param, EXTEND_MAP_OPTION))
-			{
-				NativeVotes_DisplayPassEx(g_menu, NativeVotesPass_Extend);
-			}
-			else if (StrEqual(param, DONT_CHANGE_OPTION))
-			{
-				NativeVotes_DisplayPassCustom(g_menu, "%t", "Map Unchanged");
-			}
-			else
-			{
-				decl String:map[MAP_LENGTH];
-				strcopy(map, sizeof(map), param);
-				if (NativeVotes_GetType(g_menu) == NativeVotesType_Custom_Mult)
-				{
-					NativeVotes_DisplayPassEx(g_menu, NativeVotesPass_NextLevel, map);
-				}
-				else
-				{
-					NativeVotes_DisplayPass(g_menu, map);
-				}
-			}
+           if (StrEqual(param, EXTEND_MAP_OPTION))
+           {
+              NativeVotes_DisplayPassEx(g_menu, NativeVotesPass_Extend);
+           }
+           else if (StrEqual(param, DONT_CHANGE_OPTION))
+           {
+              NativeVotes_DisplayPassCustom(g_menu, "%t", "Map Unchanged");
+           }
+           else
+           {
+              decl String:map[MAP_LENGTH];
+              strcopy(map, sizeof(map), param);
+              if (NativeVotes_GetType(g_menu) == NativeVotesType_Custom_Mult)
+              {
+                 // NativeVotes_DisplayPassEx(g_menu, NativeVotesPass_NextLevel, map);
+                 NativeVotes_DisplayPassCustom(g_menu, "%t", map);
+              }
+              else
+              {
+                 NativeVotes_DisplayPass(g_menu, map);
+              }
+           }
         }
         case VoteResponse_Runoff:
         {
@@ -424,7 +431,8 @@ public Handle_UMCVoteResponse(UMC_VoteResponse:response, const String:param[])
         {
             decl String:map[MAP_LENGTH];
             strcopy(map, sizeof(map), param);
-            NativeVotes_DisplayPass(g_menu, map);
+            //NativeVotes_DisplayPass(g_menu, map);
+            NativeVotes_DisplayPassCustom(g_menu, "%t", map);
         }
         case VoteResponse_Fail:
         {

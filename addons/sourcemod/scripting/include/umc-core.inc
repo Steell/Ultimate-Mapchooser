@@ -418,6 +418,8 @@ functag UMC_VoteInProgressHandler bool:public();
  *
  * @param id    Unique string identifier for this VoteManager.
  * @param callback  Function to be called when a vote is ready to be started.
+ * @param cancelCallback  Function to be called when a vote is cancelled.
+ * @param progressCallback  Function to be called to check if a vote is in progress.  Set to INVALID_FUNCTION to use IsVoteInProgress()
  *
  * @noreturn
  */
@@ -510,6 +512,9 @@ native UMC_FormatDisplayString(String:display[], maxlen, Handle:mapcycle, const 
                                const String:group[]);
 
 /**
- * 
+ * Is a new vote allowed on this vote manager?
+ *
+ * @param id  ID of the Vote Manager to check. Defaults to "core".
+ * @return  True if we can start a new vote, false otherwise.
  */
 native bool:UMC_IsNewVoteAllowed(const String:id[]="core");
