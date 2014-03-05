@@ -233,7 +233,8 @@ Handle:BuildVoteMenu(Handle:vote_items, NativeVotes_VoteHandler:callback, Native
         
     if (title[0] != '\0')
     {
-        NativeVotes_SetDetails(menu, "Group Vote Menu Title");
+        NativeVotes_SetTitle(menu, title);
+        //NativeVotes_SetDetails(menu, "Group Vote Menu Title");
     }
     NativeVotes_SetResultCallback(menu, callback); //Set callback
         
@@ -284,7 +285,7 @@ public Handle_VoteMenu(Handle:menu, MenuAction:action, param1, param2)
             if (type == NativeVotesType_Custom_Mult)
             {
                 decl String:phrase[255];
-                NativeVotes_GetDetails(menu, phrase, sizeof(phrase));
+                NativeVotes_GetTitle(menu, phrase, sizeof(phrase));
                 
                 decl String:buffer[255];
                 FormatEx(buffer, sizeof(buffer), "%T", phrase, param1);
