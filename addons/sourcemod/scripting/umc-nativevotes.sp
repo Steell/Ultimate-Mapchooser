@@ -400,27 +400,28 @@ public Handle_UMCVoteResponse(UMC_VoteResponse:response, const String:param[])
     {
         case VoteResponse_Success:
         {
-			if (StrEqual(param, EXTEND_MAP_OPTION))
-			{
-				NativeVotes_DisplayPassEx(g_menu, NativeVotesPass_Extend);
-			}
-			else if (StrEqual(param, DONT_CHANGE_OPTION))
-			{
-				NativeVotes_DisplayPassCustom(g_menu, "%t", "Map Unchanged");
-			}
-			else
-			{
-				decl String:map[MAP_LENGTH];
-				strcopy(map, sizeof(map), param);
-				if (NativeVotes_GetType(g_menu) == NativeVotesType_Custom_Mult)
-				{
-					NativeVotes_DisplayPassEx(g_menu, NativeVotesPass_NextLevel, map);
-				}
-				else
-				{
-					NativeVotes_DisplayPass(g_menu, map);
-				}
-			}
+           if (StrEqual(param, EXTEND_MAP_OPTION))
+           {
+              NativeVotes_DisplayPassEx(g_menu, NativeVotesPass_Extend);
+           }
+           else if (StrEqual(param, DONT_CHANGE_OPTION))
+           {
+              NativeVotes_DisplayPassCustom(g_menu, "%t", "Map Unchanged");
+           }
+           else
+           {
+              decl String:map[MAP_LENGTH];
+              strcopy(map, sizeof(map), param);
+              if (NativeVotes_GetType(g_menu) == NativeVotesType_Custom_Mult)
+              {
+                 // NativeVotes_DisplayPassEx(g_menu, NativeVotesPass_NextLevel, map);
+                 NativeVotes_DisplayPassCustom(g_menu, "%t", map);
+              }
+              else
+              {
+                 NativeVotes_DisplayPass(g_menu, map);
+              }
+           }
         }
         case VoteResponse_Runoff:
         {
@@ -430,7 +431,8 @@ public Handle_UMCVoteResponse(UMC_VoteResponse:response, const String:param[])
         {
             decl String:map[MAP_LENGTH];
             strcopy(map, sizeof(map), param);
-            NativeVotes_DisplayPass(g_menu, map);
+            //NativeVotes_DisplayPass(g_menu, map);
+            NativeVotes_DisplayPassCustom(g_menu, "%t", map);
         }
         case VoteResponse_Fail:
         {
