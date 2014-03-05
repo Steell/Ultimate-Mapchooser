@@ -646,6 +646,7 @@ public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
     CreateNative("UMC_VoteManagerVoteCancelled", Native_UMCVoteManagerCancel);
     CreateNative("UMC_VoteManagerClientVoted", Native_UMCVoteManagerVoted);
     CreateNative("UMC_FormatDisplayString", Native_UMCFormatDisplay);
+    CreateNative("UMC_IsNewVoteAllowed", Native_UMCIsNewVoteAllowed);
     
     RegPluginLibrary("umccore");
     
@@ -864,7 +865,7 @@ public OnPluginStart()
     vote_managers = CreateTrie();
     vote_manager_ids = CreateArray(ByteCountToCells(64));
     
-    UMC_RegisterVoteManager("core", VM_MapVote, VM_GroupVote, VM_CancelVote);
+    UMC_RegisterVoteManager("core", VM_MapVote, VM_GroupVote, VM_CancelVote, VM_IsVoteInProgress);
     
 #if AUTOUPDATE_ENABLE
     if (LibraryExists("updater"))
@@ -1048,6 +1049,46 @@ public OnMapEnd()
 //                                             NATIVES                                            //
 //************************************************************************************************//
 
+public Native_UMCIsNewVoteAllowed(Handle:plugin, numParams)
+{
+    //Retrieve the vote manager.
+    new len;
+    GetNativeStringLength(1, len);
+    new String:voteManagerID[len+1];
+    if (len > 0)
+    GetNativeString(1, voteManagerID, len+1);
+    
+    if (strlen(voteManagerID) == 0)
+    GetConVarString(cvar_default_vm, voteManagerID, len+1);
+    
+    new Handle:voteManager = INVALID_HANDLE;
+    if (!GetTrieValue(vote_managers, voteManagerID, voteManager))
+    {
+        if (StrEqual(voteManagerID, "core"))
+        {
+            LogError("FATAL: Could not find core vote manager. Aborting vote.");
+            return _:false;
+        }
+        LogError("Could not find a vote manager matching ID \"%s\". Using \"core\" instead.");
+        if (!GetTrieValue(vote_managers, "core", voteManager))
+        {
+            LogError("FATAL: Could not find core vote manager. Aborting vote.");
+            return _:false;
+        }
+        strcopy(voteManagerID, len+1, "core");
+    }
+    
+    new bool:vote_inprogress;
+    GetTrieValue(voteManager, "in_progress", vote_inprogress);
+    
+    if (vote_inprogress)
+    {
+        return _:false;
+    }
+    
+    return _:!IsVMVoteInProgress(voteManager);
+}
+
 public Native_UMCFormatDisplay(Handle:plugin, numParams)
 {
     new maxlen = GetNativeCell(2);
@@ -1161,6 +1202,7 @@ public Native_UMCRegVoteManager(Handle:plugin, numParams)
     SetTrieValue(voteManager, "map", GetNativeCell(2));
     SetTrieValue(voteManager, "group", GetNativeCell(3));
     SetTrieValue(voteManager, "cancel", GetNativeCell(4));
+    SetTrieValue(voteManager, "checkprogress", GetNativeCell(5));
     SetTrieValue(voteManager, "vote_storage", CreateArray());
     SetTrieValue(voteManager, "in_progress", false);
     SetTrieValue(voteManager, "active", false);
@@ -1211,7 +1253,7 @@ public Native_UMCUnregVoteManager(Handle:plugin, numParams)
     
     if (StrEqual(id, "core", false))
     {
-        UMC_RegisterVoteManager("core", VM_MapVote, VM_GroupVote, VM_CancelVote);
+        UMC_RegisterVoteManager("core", VM_MapVote, VM_GroupVote, VM_CancelVote, VM_IsVoteInProgress);
     }
 }
 
@@ -1955,11 +1997,16 @@ public Action:Command_StopVote(client, args)
 
 new bool:core_vote_active;
 
+public bool:VM_IsVoteInProgress()
+{
+	return IsVoteInProgress();
+}
+
 //
 public Action:VM_MapVote(duration, Handle:vote_items, const clients[], numClients,
                          const String:startSound[])
 {
-    if (IsVoteInProgress())
+    if (VM_IsVoteInProgress())
     {
         LogUMCMessage("Could not start core vote, another SM vote is already in progress.");
         return Plugin_Stop;
@@ -2017,7 +2064,7 @@ public Action:VM_MapVote(duration, Handle:vote_items, const clients[], numClient
 public Action:VM_GroupVote(duration, Handle:vote_items, const clients[], numClients,
                            const String:startSound[])
 {
-    if (IsVoteInProgress())
+    if (VM_IsVoteInProgress())
     {
         LogUMCMessage("Could not start core vote, another SM vote is already in progress.");
         return Plugin_Stop;
@@ -2340,6 +2387,27 @@ FreeOptions(Handle:options)
     CloseHandle(options);
 }
 
+bool:IsVMVoteInProgress(Handle:voteManager)
+{
+    new Handle:plugin;
+    GetTrieValue(voteManager, "plugin", plugin);
+
+    new Function:progressCheck;
+    GetTrieValue(voteManager, "checkprogress", progressCheck);
+    new bool:result;
+	
+    if (progressCheck == INVALID_FUNCTION)
+    {
+        result = IsVoteInProgress();
+    }
+    else
+    {
+        Call_StartFunction(plugin, progressCheck);
+        Call_Finish(result);
+    }
+
+    return result;
+}
 
 //
 bool:PerformVote(Handle:voteManager, UMC_VoteType:type, Handle:options, time, const clients[], 
@@ -4043,7 +4111,7 @@ public Action:Handle_RunoffVoteTimer(Handle:timer, Handle:datapack)
     
     //Log an error and do nothing if...
     //    ...another vote is currently running for some reason.
-    if (IsVoteInProgress()) 
+    if (IsVMVoteInProgress(vM)) 
     {
         //LogUMCMessage("RUNOFF: There is a vote already in progress, cannot start a new vote.");
         return Plugin_Continue;
@@ -4605,7 +4673,7 @@ public Action:Handle_TieredVoteTimer(Handle:timer, Handle:pack)
         return Plugin_Continue;
     }
         
-    if (IsVoteInProgress())
+    if (IsVMVoteInProgress(vM))
     {
         return Plugin_Continue;
     }

@@ -1308,7 +1308,7 @@ public StartMapVote()
     
     //Log an error and retry vote if...
     //    ...another vote is currently running for some reason.
-    if (IsVoteInProgress()) 
+    if (!UMC_IsNewVoteAllowed("core")) 
     {
         LogUMCMessage("There is a vote already in progress, cannot start a new vote.");
         MakeRetryVoteTimer(StartMapVote);

@@ -724,7 +724,7 @@ AttemptRTV(client)
         {
             //Start the vote if...
             //    ...there isn't one happening already.
-            if (!IsVoteInProgress())
+            if (UMC_IsNewVoteAllowed("core"))
             {
                 PrintToChatAll("\x03[UMC]\x01 %t", "RTV Start");
                 StartRTV();
@@ -843,7 +843,7 @@ public StartRTV()
     {
         //Do nothing if...
         //    ...there is a vote already in progress.
-        if (IsVoteInProgress()) 
+        if (!UMC_IsNewVoteAllowed("core")) 
         {
             LogUMCMessage("There is a vote already in progress, cannot start a new vote.");
             MakeRetryVoteTimer(StartRTV);

@@ -45,6 +45,7 @@ public __pl_umccore_SetNTVOptional()
     MarkNativeAsOptional("UMC_VoteManagerVoteCancelled");
     MarkNativeAsOptional("UMC_VoteManagerClientVoted");
     MarkNativeAsOptional("UMC_FormatDisplayString");
+    MarkNativeAsOptional("UMC_IsNewVoteAllowed");
 }
 
 #define INVALID_GROUP ""
@@ -410,25 +411,28 @@ functag UMC_VoteHandler Action:public(duration, Handle:vote_items, const clients
  */
 functag UMC_VoteCancelledHandler public();
 
+functag UMC_VoteInProgressHandler bool:public();
 
 /**
  * Registers a new VoteManager for UMC votes.
  *
  * @param id    Unique string identifier for this VoteManager.
  * @param callback  Function to be called when a vote is ready to be started.
+ * @param cancelCallback  Function to be called when a vote is cancelled.
+ * @param progressCallback  Function to be called to check if a vote is in progress.  Set to INVALID_FUNCTION to use IsVoteInProgress()
  *
  * @noreturn
  */
 native UMC_RegisterVoteManager(const String:id[], UMC_VoteHandler:mapCallback,
                                UMC_VoteHandler:groupCallback,
-                               UMC_VoteCancelledHandler:cancelCallback);
+                               UMC_VoteCancelledHandler:cancelCallback,
+                               UMC_VoteInProgressHandler:progressCallback=INVALID_FUNCTION);
 
 
 /**
  *
  */
 functag UMC_VoteResponseHandler public(UMC_VoteResponse:response, const String:param[]);
-
 
 /**
  * Notifies UMC that the current vote has completed.
@@ -506,3 +510,11 @@ forward UMC_OnFormatTemplateString(String:template[], maxlen, Handle:kv, const S
  */
 native UMC_FormatDisplayString(String:display[], maxlen, Handle:mapcycle, const String:map[],
                                const String:group[]);
+
+/**
+ * Is a new vote allowed on this vote manager?
+ *
+ * @param id  ID of the Vote Manager to check. Defaults to "core".
+ * @return  True if we can start a new vote, false otherwise.
+ */
+native bool:UMC_IsNewVoteAllowed(const String:id[]="core");
