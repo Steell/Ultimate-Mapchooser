@@ -9,6 +9,8 @@
 #include <umc-core>
 #include <umc_utils>
 
+#include <emitsoundany>
+
 #undef REQUIRE_PLUGIN
 #include <umc-playerlimits>
 
@@ -632,7 +634,7 @@ ChangeToValidMap(Handle:cvar)
                     //Play the vote start sound if...
                     //  ...the vote start sound is defined.
                     if (strlen(vote_start_sound) > 0)
-                        EmitSoundToAll(vote_start_sound);
+                        EmitSoundToAllAny(vote_start_sound);
                 }
                 else
                 {
@@ -740,7 +742,7 @@ public Handle_YesNoMapVote(Handle:menu, num_votes, num_clients, const client_inf
     //Play the vote completed sound if...
     //  ...the vote completed sound is defined.
     if (strlen(vote_end_sound) > 0)
-        EmitSoundToAll(vote_end_sound);
+        EmitSoundToAllAny(vote_end_sound);
     
     //Get the map used.
     decl String:map[MAP_LENGTH];

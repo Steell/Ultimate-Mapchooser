@@ -12,6 +12,8 @@
 #include <sourcemod>
 #include <sdktools_sound>
 
+#include <emitsoundany>
+
 #undef REQUIRE_PLUGIN
 
 //Auto update
@@ -2047,7 +2049,7 @@ public Action:VM_MapVote(duration, Handle:vote_items, const clients[], numClient
         DEBUG_MESSAGE("Setting CVA True")
 
         if (strlen(startSound) > 0)
-            EmitSoundToAll(startSound);
+            EmitSoundToAllAny(startSound);
         
         return Plugin_Continue;
     }
@@ -2103,7 +2105,7 @@ public Action:VM_GroupVote(duration, Handle:vote_items, const clients[], numClie
     if (menu != INVALID_HANDLE && VoteMenu(menu, clientArr, count, duration))
     {
         if (strlen(startSound) > 0)
-            EmitSoundToAll(startSound);
+            EmitSoundToAllAny(startSound);
         
         return Plugin_Continue;
     }
@@ -4101,7 +4103,7 @@ public Action:Handle_RunoffVoteTimer(Handle:timer, Handle:datapack)
     if (runoff_delay > 0)
     {
         if (strlen(countdown_sound) > 0)
-            EmitSoundToAll(countdown_sound);
+            EmitSoundToAllAny(countdown_sound);
         
         SetTrieValue(vM, "runoff_delay", runoff_delay - 1);
         return Plugin_Continue;
@@ -4147,11 +4149,11 @@ public Action:Handle_RunoffVoteTimer(Handle:timer, Handle:datapack)
    /*  //Play the vote start sound if...
     //  ...the filename is defined.
     if (strlen(stored_runoff_sound) > 0)
-        EmitSoundToAll(stored_runoff_sound);
+        EmitSoundToAllAny(stored_runoff_sound);
     //Otherwise, play the sound for end-of-map votes if...
     //  ...the filename is defined.
     else if (strlen(stored_start_sound) > 0)
-        EmitSoundToAll(stored_start_sound);
+        EmitSoundToAllAny(stored_start_sound);
     
     //Run the vote to selected client only if...
     //  ...the cvar to do so is enabled.
@@ -4275,7 +4277,7 @@ public Handle_MapVoteWinner(Handle:vM, const String:info[], const String:disp[],
     //Play the vote completed sound if...
     //  ...the vote completed sound is defined.
     if (strlen(stored_end_sound) > 0)
-        EmitSoundToAll(stored_end_sound);
+        EmitSoundToAllAny(stored_end_sound);
     
     //No longer need the vote array.
     ClearVoteArrays(vM);
@@ -4479,7 +4481,7 @@ public Handle_CatVoteWinner(Handle:vM, const String:cat[], const String:disp[],
     //Play the vote completed sound if...
     //  ...the vote completed sound is defined.
     if (strlen(stored_end_sound) > 0)
-        EmitSoundToAll(stored_end_sound);
+        EmitSoundToAllAny(stored_end_sound);
         
     DeleteVoteParams(vM);
 }
@@ -4637,7 +4639,7 @@ public Handle_TierVoteWinner(Handle:vM, const String:cat[], const String:disp[],
     //Play the vote completed sound if...
     //  ...the vote completed sound is defined.
     if (strlen(stored_end_sound) > 0)
-        EmitSoundToAll(stored_end_sound);
+        EmitSoundToAllAny(stored_end_sound);
         
     DEBUG_MESSAGE("Finished handling Tiered winner.")
 }
@@ -4667,7 +4669,7 @@ public Action:Handle_TieredVoteTimer(Handle:timer, Handle:pack)
     if (tiered_delay > 0)
     {
         if (strlen(countdown_sound) > 0)
-            EmitSoundToAll(countdown_sound);
+            EmitSoundToAllAny(countdown_sound);
 
         SetTrieValue(vM, "tiered_delay", tiered_delay - 1);
         return Plugin_Continue;
@@ -4705,7 +4707,7 @@ public Action:Handle_TieredVoteTimer(Handle:timer, Handle:pack)
         //Play the vote start sound if...
         //  ...the vote start sound is defined.
         /* if (strlen(stored_start_sound) > 0)
-            EmitSoundToAll(stored_start_sound);
+            EmitSoundToAllAny(stored_start_sound);
         
         //Display the menu.
         VoteMenuToAllWithFlags(menu, stored_votetime, stored_adminflags); */

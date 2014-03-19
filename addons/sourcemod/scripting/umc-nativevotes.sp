@@ -10,6 +10,8 @@
 #include <umc_utils>
 #include <nativevotes>
 
+#include <emitsoundany>
+
 #undef REQUIRE_PLUGIN
 
 //Auto update
@@ -148,7 +150,7 @@ public Action:VM_MapVote(duration, Handle:vote_items, const clients[], numClient
     if (g_menu != INVALID_HANDLE && NativeVotes_Display(g_menu, clientArr, count, duration))
     {
         if (strlen(startSound) > 0)
-            EmitSoundToAll(startSound);
+            EmitSoundToAllAny(startSound);
         
         return Plugin_Continue;
     }
@@ -199,7 +201,7 @@ public Action:VM_GroupVote(duration, Handle:vote_items, const clients[], numClie
     if (g_menu != INVALID_HANDLE && NativeVotes_Display(g_menu, clientArr, count, duration))
     {
         if (strlen(startSound) > 0)
-            EmitSoundToAll(startSound);
+            EmitSoundToAllAny(startSound);
         
         return Plugin_Continue;
     }
