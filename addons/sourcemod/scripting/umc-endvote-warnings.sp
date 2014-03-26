@@ -11,6 +11,8 @@
 #include <umc-core>
 #include <umc_utils>
 
+#include <emitsoundany>
+
 #undef REQUIRE_PLUGIN
 
 //Auto update
@@ -540,14 +542,14 @@ DisplayVoteWarning(Handle:warning, param=0)
     decl String:notification[2];
     decl String:sound[PLATFORM_MAX_PATH];
     GetTrieValue(warning, "time", time);
-    GetTrieString(warning, "message", message, sizeof(message));
+    GetTrieString(warning, "message", message, sizeof(message));
     GetTrieString(warning, "notification", notification, sizeof(notification));
     GetTrieString(warning, "sound", sound, sizeof(sound));
     
     //Emit the warning sound if...
     //    ...the sound is defined.
     if (strlen(sound) > 0)
-        EmitSoundToAll(sound);
+        EmitSoundToAllAny(sound);
     
     //Stop here if...
     //  ...there is nothing to display.

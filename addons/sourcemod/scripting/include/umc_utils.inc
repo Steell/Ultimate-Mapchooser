@@ -13,6 +13,7 @@
 #include <sdktools_entinput>
 #include <sdktools_stringtables>
 #include <regex>
+#include <emitsoundany>
 
 //************************************************************************************************//
 //                                        GENERAL UTILITIES                                       //
@@ -537,7 +538,7 @@ stock CacheSound(const String:sound[])
             AddFileToDownloadsTable(filePath);
             
             //Cache it.
-            PrecacheSound(sound, true);
+            PrecacheSoundAny(sound, true);
             
             //Log an error if...
             //    ...the sound failed to be cached.
