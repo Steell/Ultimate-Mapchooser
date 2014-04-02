@@ -56,16 +56,6 @@ Fixed issue where cancelling a vote could cause errors (and in some cases cause 
 Updated to new Native Votes API.
 */
 
-public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
-{
-	if (!NativeVotes_IsVoteTypeSupported(NativeVotesType_Custom_Mult))
-	{
-		strcopy(error, err_max, "This game doesn't support multiple-choice NativeVotes.");
-		return APLRes_Failure;
-	}
-	return APLRes_Success;
-}
-
 public OnPluginStart()
 {
     LoadTranslations("ultimate-mapchooser.phrases");
@@ -76,7 +66,7 @@ public OnAllPluginsLoaded()
 {
     cvar_logging = FindConVar("sm_umc_logging_verbose");
 
-    if (LibraryExists("nativevotes"))
+    if (LibraryExists("nativevotes") && NativeVotes_IsVoteTypeSupported(NativeVotesType_NextLevelMult))
     {
         UMC_RegisterVoteManager("core", VM_MapVote, VM_GroupVote, VM_CancelVote);
     }
