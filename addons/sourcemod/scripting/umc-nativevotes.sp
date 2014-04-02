@@ -56,6 +56,15 @@ Fixed issue where cancelling a vote could cause errors (and in some cases cause 
 Updated to new Native Votes API.
 */
 
+public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
+{
+	if (!NativeVotes_IsVoteTypeSupported(NativeVotesType_Custom_Mult))
+	{
+		strcopy(error, err_max, "This game doesn't support multiple-choice NativeVotes.");
+		return APLRes_Failure;
+	}
+	return APLRes_Success;
+}
 
 public OnPluginStart()
 {
