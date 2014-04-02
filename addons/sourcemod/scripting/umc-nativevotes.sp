@@ -56,7 +56,6 @@ Fixed issue where cancelling a vote could cause errors (and in some cases cause 
 Updated to new Native Votes API.
 */
 
-
 public OnPluginStart()
 {
     LoadTranslations("ultimate-mapchooser.phrases");
@@ -67,7 +66,7 @@ public OnAllPluginsLoaded()
 {
     cvar_logging = FindConVar("sm_umc_logging_verbose");
 
-    if (LibraryExists("nativevotes"))
+    if (LibraryExists("nativevotes") && NativeVotes_IsVoteTypeSupported(NativeVotesType_NextLevelMult))
     {
         UMC_RegisterVoteManager("core", VM_MapVote, VM_GroupVote, VM_CancelVote);
     }
