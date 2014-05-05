@@ -66,6 +66,7 @@ public OnAllPluginsLoaded()
 {
     cvar_logging = FindConVar("sm_umc_logging_verbose");
 
+	// Don't replace core if we're on L4D, L4D2, or CS:GO
     if (LibraryExists("nativevotes") && NativeVotes_IsVoteTypeSupported(NativeVotesType_NextLevelMult))
     {
         UMC_RegisterVoteManager("core", VM_MapVote, VM_GroupVote, VM_CancelVote);
