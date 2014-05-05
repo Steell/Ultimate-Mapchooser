@@ -349,7 +349,7 @@ public Handle_VoteMenu(Handle:menu, MenuAction:action, param1, param2)
         {
             decl String:map[MAP_LENGTH], String:display[MAP_LENGTH];
             NativeVotes_GetItem(menu, param2, map, sizeof(map), display, sizeof(display));
-			
+
             if (StrEqual(map, EXTEND_MAP_OPTION) || StrEqual(map, DONT_CHANGE_OPTION) ||
                 (StrEqual(map, NOTHING_OPTION) && strlen(display) > 0))
             {
