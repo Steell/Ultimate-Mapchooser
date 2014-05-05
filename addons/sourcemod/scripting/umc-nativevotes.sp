@@ -114,12 +114,16 @@ public Action:VM_MapVote(duration, Handle:vote_items, const clients[], numClient
 {
     if (VM_IsVoteInProgress())
     {
-        LogUMCMessage("Could not start core vote, another NativeVotes vote is already in progress.");
+        LogUMCMessage("Could not start native vote, another NativeVotes vote is already in progress.");
         return Plugin_Stop;
     }
 
     new bool:verboseLogs = cvar_logging != INVALID_HANDLE && GetConVarBool(cvar_logging);
 
+    if (verboseLogs)
+       LogUMCMessage("Adding Clients to Vote:");
+	
+    DEBUG_MESSAGE("Attempting to start native vote...")
     decl clientArr[MAXPLAYERS+1];
     new count = 0;
     new client;
@@ -136,7 +140,7 @@ public Action:VM_MapVote(duration, Handle:vote_items, const clients[], numClient
     
     if (count == 0)
     {
-        LogUMCMessage("Could not start core vote, no players to display vote to!");
+        LogUMCMessage("Could not start native vote, no players to display vote to!");
         return Plugin_Stop;
     }
     
@@ -144,21 +148,24 @@ public Action:VM_MapVote(duration, Handle:vote_items, const clients[], numClient
     //g_menu = BuildVoteMenu(vote_items, Handle_MapVoteResults);
     g_menu = BuildVoteMenu(vote_items, Handle_MapVoteResults, NativeVotesType_NextLevelMult);
     
-    vote_active = true;
+    vote_active = g_menu != INVALID_HANDLE && NativeVotes_Display(g_menu, clientArr, count, duration);
     
-    if (g_menu != INVALID_HANDLE && NativeVotes_Display(g_menu, clientArr, count, duration))
+    if (vote_active)
     {
-        if (strlen(startSound) > 0)
-            EmitSoundToAllAny(startSound);
+		
+       DEBUG_MESSAGE("Setting CVA True")
+
+       if (strlen(startSound) > 0)
+           EmitSoundToAllAny(startSound);
         
-        return Plugin_Continue;
+       return Plugin_Continue;
     }
-            
-    vote_active = false;
-    
-    //ClearVoteArrays();
-    LogError("Could not start native vote.");
-    return Plugin_Stop;
+    else
+    {
+       DEBUG_MESSAGE("Setting CVA False -- Couldn't start vote")
+       LogError("Could not start native vote.");
+       return Plugin_Stop;
+    }
 }
 
 public Action:VM_GroupVote(duration, Handle:vote_items, const clients[], numClients,
@@ -166,11 +173,14 @@ public Action:VM_GroupVote(duration, Handle:vote_items, const clients[], numClie
 {
     if (VM_IsVoteInProgress())
     {
-        LogUMCMessage("Could not start core vote, another NativeVotes vote is already in progress.");
+        LogUMCMessage("Could not start native vote, another NativeVotes vote is already in progress.");
         return Plugin_Stop;
     }
 
     new bool:verboseLogs = cvar_logging != INVALID_HANDLE && GetConVarBool(cvar_logging);
+
+    if (verboseLogs)
+       LogUMCMessage("Adding Clients to Vote:");
 
     decl clientArr[MAXPLAYERS+1];
     new count = 0;
@@ -188,13 +198,14 @@ public Action:VM_GroupVote(duration, Handle:vote_items, const clients[], numClie
     
     if (count == 0)
     {
-        LogUMCMessage("Could not start core vote, no players to display vote to!");
+        LogUMCMessage("Could not start native vote, no players to display vote to!");
         return Plugin_Stop;
     }
     
     //new Handle:menu = BuildVoteMenu(vote_items, "Map Vote Menu Title", Handle_MapVoteResults);
     g_menu = BuildVoteMenu(vote_items, Handle_MapVoteResults, NativeVotesType_Custom_Mult, "Group Vote Menu Title");
     
+    DEBUG_MESSAGE("Setting CVA True")
     vote_active = true;
     
     if (g_menu != INVALID_HANDLE && NativeVotes_Display(g_menu, clientArr, count, duration))
@@ -204,7 +215,8 @@ public Action:VM_GroupVote(duration, Handle:vote_items, const clients[], numClie
         
         return Plugin_Continue;
     }
-            
+	
+    DEBUG_MESSAGE("Setting CVA False -- Couldn't start vote")
     vote_active = false;
     
     //ClearVoteArrays();
@@ -248,19 +260,32 @@ Handle:BuildVoteMenu(Handle:vote_items, NativeVotes_VoteHandler:callback, Native
         GetTrieString(voteItem, "display", display, sizeof(display));
         
         NativeVotes_AddItem(menu, info, display);
-        
+
+#if UMC_DEBUG
+        if (StrEqual(info, EXTEND_MAP_OPTION))
+            DEBUG_MESSAGE("Adding Extend Option to vote menu. Position: %i", i + 1)
+        else if (StrEqual(info, DONT_CHANGE_OPTION))
+            DEBUG_MESSAGE("Adding Don't Change Option to vote menu. Position: %i", i + 1)
+#endif
+ 
         if (verboseLogs)
             LogUMCMessage("%i: %s (%s)", i + 1, display, info);
     }
     
+    DEBUG_MESSAGE("Vote menu built successfully.")
     return menu; //Return the finished menu.
 }
 
 //
 public VM_CancelVote()
 {
+    DEBUG_MESSAGE("Vote Cancelled Callback -- NativeVotes")
+    DEBUG_MESSAGE("Is NativeVotes Vote still active? %i", core_vote_active)
     if (vote_active)
     {
+        DEBUG_MESSAGE("Vote Cancelled Callback -- NativeVotes Inner")        
+        DEBUG_MESSAGE("Vote Cancelled and Cancel Callback not yet called!")
+        DEBUG_MESSAGE("Setting CVA False -- Cancelled")
         vote_active = false;
         NativeVotes_Cancel();
     }
@@ -301,11 +326,11 @@ public Handle_VoteMenu(Handle:menu, MenuAction:action, param1, param2)
             {
                 case VoteCancel_Generic:
                 {
-                    NativeVotes_DisplayFail(g_menu, NativeVotesFail_Generic);
+                    NativeVotes_DisplayFail(menu, NativeVotesFail_Generic);
                 }
                 case VoteCancel_NoVotes:
                 {
-                    NativeVotes_DisplayFail(g_menu, NativeVotesFail_NotEnoughVotes);
+                    NativeVotes_DisplayFail(menu, NativeVotesFail_NotEnoughVotes);
                 }
             }
             if (vote_active)
@@ -323,7 +348,8 @@ public Handle_VoteMenu(Handle:menu, MenuAction:action, param1, param2)
         case MenuAction_DisplayItem:
         {
             decl String:map[MAP_LENGTH], String:display[MAP_LENGTH];
-            NativeVotes_GetItem(menu, param2, map, MAP_LENGTH, display, MAP_LENGTH);
+            NativeVotes_GetItem(menu, param2, map, sizeof(map), display, sizeof(display));
+			
             if (StrEqual(map, EXTEND_MAP_OPTION) || StrEqual(map, DONT_CHANGE_OPTION) ||
                 (StrEqual(map, NOTHING_OPTION) && strlen(display) > 0))
             {
@@ -343,6 +369,10 @@ public Handle_VoteMenu(Handle:menu, MenuAction:action, param1, param2)
 public Handle_MapVoteResults(Handle:menu, num_votes, num_clients, const client_indeces[], const client_votes[],
                              num_items, const item_indeces[], const item_votes[])
 {
+    DEBUG_MESSAGE("Handling vote results...")
+    DEBUG_MESSAGE("Setting CVA False -- Completed")
+    vote_active = false;
+	
     new Handle:results = ConvertVoteResults(menu, num_clients, client_indeces, client_votes, num_items,
                                             item_indeces);
 
@@ -416,7 +446,7 @@ public Handle_UMCVoteResponse(UMC_VoteResponse:response, const String:param[])
               if (NativeVotes_GetType(g_menu) == NativeVotesType_Custom_Mult)
               {
                  // NativeVotes_DisplayPassEx(g_menu, NativeVotesPass_NextLevel, map);
-                 NativeVotes_DisplayPassCustom(g_menu, "%t", map);
+                 NativeVotes_DisplayPassCustom(g_menu, "%s", map);
               }
               else
               {
@@ -433,7 +463,7 @@ public Handle_UMCVoteResponse(UMC_VoteResponse:response, const String:param[])
             decl String:map[MAP_LENGTH];
             strcopy(map, sizeof(map), param);
             //NativeVotes_DisplayPass(g_menu, map);
-            NativeVotes_DisplayPassCustom(g_menu, "%t", map);
+            NativeVotes_DisplayPassCustom(g_menu, "%s", map);
         }
         case VoteResponse_Fail:
         {
