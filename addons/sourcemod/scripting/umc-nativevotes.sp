@@ -281,7 +281,7 @@ Handle:BuildVoteMenu(Handle:vote_items, NativeVotes_VoteHandler:callback, Native
 public VM_CancelVote()
 {
     DEBUG_MESSAGE("Vote Cancelled Callback -- NativeVotes")
-    DEBUG_MESSAGE("Is NativeVotes Vote still active? %i", core_vote_active)
+    DEBUG_MESSAGE("Is NativeVotes Vote still active? %i", vote_active)
     if (vote_active)
     {
         DEBUG_MESSAGE("Vote Cancelled Callback -- NativeVotes Inner")        

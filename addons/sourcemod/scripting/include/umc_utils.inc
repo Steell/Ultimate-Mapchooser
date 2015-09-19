@@ -896,19 +896,19 @@ stock Handle:CopyStringArray(Handle:arr, blocksize=1)
 //Makes the timer to retry running a vote every second.
 stock MakeRetryVoteTimer(Function:callback)
 {
-    CreateTimer(1.0, Handle_RetryVoteTimer, callback, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
+    new Handle:callbackForward = CreateForward(ET_Single);
+    AddToForward(callbackForward, INVALID_HANDLE, callback);
+    CreateTimer(1.0, Handle_RetryVoteTimer, callbackForward, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 }
 
 
 //Handles the retry timer for votes that were attempted to be started.
-public Action:Handle_RetryVoteTimer(Handle:timer, any:data)
+public Action:Handle_RetryVoteTimer(Handle:timer, Handle:callback)
 {
-    if (IsVoteInProgress())
+    if (UMC_IsNewVoteAllowed())
         return Plugin_Continue;
 
-    new Function:callback = Function:data;
-    
-    Call_StartFunction(INVALID_HANDLE, callback);
+    Call_StartForward(callback);
     Call_Finish();
     
     return Plugin_Stop;

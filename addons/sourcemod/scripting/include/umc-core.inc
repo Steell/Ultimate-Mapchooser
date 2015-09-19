@@ -100,7 +100,8 @@ enum UMC_VoteResponse
  *
  * @noreturn
  */
-forward OnNominationRemoved(const String:map[], client);
+//Commented out to compile on SourceMod 1.7 or newer
+//forward OnNominationRemoved(const String:map[], client);
 
 
 /**
