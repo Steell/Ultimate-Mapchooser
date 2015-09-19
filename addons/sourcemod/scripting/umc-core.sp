@@ -1211,9 +1211,9 @@ public Native_UMCRegVoteManager(Handle:plugin, numParams)
     
     new Handle:progressCallback = CreateForward(ET_Single);
     new Function:progressFunction = GetNativeFunction(5);
-    if (progressFunction == INVALID_FUNCTION)
+    if (progressFunction != INVALID_FUNCTION)
     {
-        AddToForward(progressCallback, plugin, GetNativeFunction(5));
+        AddToForward(progressCallback, plugin, progressFunction);
     }
     SetTrieValue(voteManager, "plugin", plugin);
     SetTrieValue(voteManager, "map", mapCallback);
