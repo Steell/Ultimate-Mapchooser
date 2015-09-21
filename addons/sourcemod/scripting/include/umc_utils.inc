@@ -905,7 +905,7 @@ stock MakeRetryVoteTimer(Function:callback)
 //Handles the retry timer for votes that were attempted to be started.
 public Action:Handle_RetryVoteTimer(Handle:timer, Handle:callback)
 {
-    if (UMC_IsNewVoteAllowed())
+    if (!UMC_IsNewVoteAllowed())
         return Plugin_Continue;
 
     Call_StartForward(callback);
