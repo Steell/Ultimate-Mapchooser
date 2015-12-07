@@ -49,7 +49,7 @@ public __pl_umccore_SetNTVOptional()
 }
 
 #define INVALID_GROUP ""
-#define MAP_LENGTH 64
+#define MAP_LENGTH PLATFORM_MAX_PATH
 
 #define MAP_TRIE_MAP_KEY   "map"
 #define MAP_TRIE_GROUP_KEY "group"
@@ -100,7 +100,8 @@ enum UMC_VoteResponse
  *
  * @noreturn
  */
-forward OnNominationRemoved(const String:map[], client);
+//Commented out to compile on SourceMod 1.7 or newer
+//forward OnNominationRemoved(const String:map[], client);
 
 
 /**

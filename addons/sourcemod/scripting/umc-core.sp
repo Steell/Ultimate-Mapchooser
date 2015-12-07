@@ -12,6 +12,8 @@
 #include <sourcemod>
 #include <sdktools_sound>
 
+#include <emitsoundany>
+
 #undef REQUIRE_PLUGIN
 
 //Auto update
@@ -626,6 +628,9 @@ RunTests()
 //Called before the plugin loads, sets up our natives.
 public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
 {
+    MarkNativeAsOptional("GetMapDisplayName"); // SM 1.8
+    MarkNativeAsOptional("FindMap"); // SM 1.7.3
+
     CreateNative("UMC_AddWeightModifier", Native_UMCAddWeightModifier);
     CreateNative("UMC_StartVote", Native_UMCStartVote);
     CreateNative("UMC_GetCurrentMapGroup", Native_UMCGetCurrentGroup);
@@ -752,7 +757,7 @@ public OnPluginStart()
     //Version
     cvar_version = CreateConVar(
         "improved_map_randomizer_version", PL_VERSION, "Ultimate Mapchooser's version",
-        FCVAR_NOTIFY|FCVAR_DONTRECORD|FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED
+        FCVAR_NOTIFY|FCVAR_DONTRECORD|FCVAR_SPONLY|FCVAR_REPLICATED
     );
     
     //Create the config if it doesn't exist, and then execute it.
@@ -1198,11 +1203,26 @@ public Native_UMCRegVoteManager(Handle:plugin, numParams)
     
     SetTrieValue(vote_managers, id, voteManager);
     
+    new Handle:mapCallback = CreateForward(ET_Single, Param_Cell, Param_Cell, Param_Array, Param_Cell, Param_String);
+    AddToForward(mapCallback, plugin, GetNativeFunction(2));
+    
+    new Handle:groupCallback = CreateForward(ET_Single, Param_Cell, Param_Cell, Param_Array, Param_Cell, Param_String);
+    AddToForward(groupCallback, plugin, GetNativeFunction(3));
+    
+    new Handle:cancelCallback = CreateForward(ET_Ignore);
+    AddToForward(cancelCallback, plugin, GetNativeFunction(4));
+    
+    new Handle:progressCallback = CreateForward(ET_Single);
+    new Function:progressFunction = GetNativeFunction(5);
+    if (progressFunction != INVALID_FUNCTION)
+    {
+        AddToForward(progressCallback, plugin, progressFunction);
+    }
     SetTrieValue(voteManager, "plugin", plugin);
-    SetTrieValue(voteManager, "map", GetNativeCell(2));
-    SetTrieValue(voteManager, "group", GetNativeCell(3));
-    SetTrieValue(voteManager, "cancel", GetNativeCell(4));
-    SetTrieValue(voteManager, "checkprogress", GetNativeCell(5));
+    SetTrieValue(voteManager, "map", mapCallback);
+    SetTrieValue(voteManager, "group", groupCallback);
+    SetTrieValue(voteManager, "cancel", cancelCallback);
+    SetTrieValue(voteManager, "checkprogress", progressCallback);
     SetTrieValue(voteManager, "vote_storage", CreateArray());
     SetTrieValue(voteManager, "in_progress", false);
     SetTrieValue(voteManager, "active", false);
@@ -1240,6 +1260,15 @@ public Native_UMCUnregVoteManager(Handle:plugin, numParams)
     CloseHandle(hndl);
     GetTrieValue(vM, "map_vote", hndl);
     CloseHandle(hndl);
+    GetTrieValue(vM, "map", hndl);
+    CloseHandle(hndl);
+    GetTrieValue(vM, "group", hndl);
+    CloseHandle(hndl);
+    GetTrieValue(vM, "cancel", hndl);
+    CloseHandle(hndl);
+    GetTrieValue(vM, "checkprogress", hndl);
+    CloseHandle(hndl);
+	
     
     CloseHandle(vM);
     
@@ -1276,7 +1305,7 @@ public Native_UMCVoteManagerComplete(Handle:plugin, numParams)
     
     new Handle:response = ProcessVoteResults(vM, voteOptions);
     
-    new UMC_VoteResponseHandler:handler = UMC_VoteResponseHandler:GetNativeCell(3);
+    new UMC_VoteResponseHandler:handler = UMC_VoteResponseHandler:GetNativeFunction(3);
     
     new UMC_VoteResponse:result;
     new String:param[MAP_LENGTH];
@@ -2047,7 +2076,7 @@ public Action:VM_MapVote(duration, Handle:vote_items, const clients[], numClient
         DEBUG_MESSAGE("Setting CVA True")
 
         if (strlen(startSound) > 0)
-            EmitSoundToAll(startSound);
+            EmitSoundToAllAny(startSound);
         
         return Plugin_Continue;
     }
@@ -2103,7 +2132,7 @@ public Action:VM_GroupVote(duration, Handle:vote_items, const clients[], numClie
     if (menu != INVALID_HANDLE && VoteMenu(menu, clientArr, count, duration))
     {
         if (strlen(startSound) > 0)
-            EmitSoundToAll(startSound);
+            EmitSoundToAllAny(startSound);
         
         return Plugin_Continue;
     }
@@ -2389,20 +2418,17 @@ FreeOptions(Handle:options)
 
 bool:IsVMVoteInProgress(Handle:voteManager)
 {
-    new Handle:plugin;
-    GetTrieValue(voteManager, "plugin", plugin);
-
-    new Function:progressCheck;
+    new Handle:progressCheck;
     GetTrieValue(voteManager, "checkprogress", progressCheck);
     new bool:result;
 	
-    if (progressCheck == INVALID_FUNCTION)
+    if (GetForwardFunctionCount(progressCheck) == 0)
     {
         result = IsVoteInProgress();
     }
     else
     {
-        Call_StartFunction(plugin, progressCheck);
+        Call_StartForward(progressCheck);
         Call_Finish(result);
     }
 
@@ -2413,10 +2439,7 @@ bool:IsVMVoteInProgress(Handle:voteManager)
 bool:PerformVote(Handle:voteManager, UMC_VoteType:type, Handle:options, time, const clients[], 
                  numClients, const String:startSound[])
 {
-    new Handle:plugin = INVALID_HANDLE;
-    GetTrieValue(voteManager, "plugin", plugin);
-    
-    new VoteHandler:handler;
+    new Handle:handler;
     switch (type)
     {
         case VoteType_Map:
@@ -2437,7 +2460,7 @@ bool:PerformVote(Handle:voteManager, UMC_VoteType:type, Handle:options, time, co
     }
     
     new Action:result;
-    Call_StartFunction(plugin, handler);
+    Call_StartForward(handler);
     Call_PushCell(time);
     Call_PushCell(options);
     Call_PushArray(clients, numClients);
@@ -3370,13 +3393,31 @@ public UMC_OnFormatTemplateString(String:template[], maxlen, Handle:kv, const St
 {
     DEBUG_MESSAGE("OFTS: '%s' '%s' '%s'", map, group, template)
 
+    decl String:resolvedMap[MAP_LENGTH];
+	
+    if (GetFeatureStatus(FeatureType_Native, "GetMapDisplayName") == FeatureStatus_Available)
+    {
+        // SM 1.8
+        GetMapDisplayName(map, resolvedMap, sizeof(resolvedMap));
+    }
+    else
+    if (GetFeatureStatus(FeatureType_Native, "FindMap") == FeatureStatus_Available)
+    {
+        // SM 1.7.3
+        FindMap(map, resolvedMap, sizeof(resolvedMap));
+    }
+    else
+    {
+        strcopy(resolvedMap, sizeof(resolvedMap), map);
+    }
+
     if (strlen(template) == 0)
     {
-        strcopy(template, maxlen, map);
+        strcopy(template, maxlen, resolvedMap);
         return;
     }
     
-    ReplaceString(template, maxlen, "{MAP}", map, false);
+    ReplaceString(template, maxlen, "{MAP}", resolvedMap, false);
     
     decl String:nomString[16];
     GetConVarString(cvar_nomdisp, nomString, sizeof(nomString));
@@ -3479,7 +3520,7 @@ FindStringInVoteArray(const String:target[], const String:val[], Handle:arr)
 VoteCancelled(Handle:vM)
 {
     DEBUG_MESSAGE("*VoteCancelled*")
-    new Handle:plugin, UMC_VoteCancelledHandler:handler;
+    new Handle:handler;
     new bool:vote_inprogress;//, bool:vote_active;
     GetTrieValue(vM, "in_progress", vote_inprogress);
     //GetTrieValue(vM, "active", vote_active);
@@ -3488,7 +3529,6 @@ VoteCancelled(Handle:vM)
         DEBUG_MESSAGE("Cancelling vote that is in progress...")
     
         GetTrieValue(vM, "cancel", handler);
-        GetTrieValue(vM, "plugin", plugin);
         
         /*if (vote_active)
         {
@@ -3506,7 +3546,7 @@ VoteCancelled(Handle:vM)
         DeleteVoteParams(vM);
         VoteFailed(vM);
         
-        Call_StartFunction(plugin, handler);
+        Call_StartForward(handler);
         Call_Finish();
     }
 #if UMC_DEBUG
@@ -4101,7 +4141,7 @@ public Action:Handle_RunoffVoteTimer(Handle:timer, Handle:datapack)
     if (runoff_delay > 0)
     {
         if (strlen(countdown_sound) > 0)
-            EmitSoundToAll(countdown_sound);
+            EmitSoundToAllAny(countdown_sound);
         
         SetTrieValue(vM, "runoff_delay", runoff_delay - 1);
         return Plugin_Continue;
@@ -4147,11 +4187,11 @@ public Action:Handle_RunoffVoteTimer(Handle:timer, Handle:datapack)
    /*  //Play the vote start sound if...
     //  ...the filename is defined.
     if (strlen(stored_runoff_sound) > 0)
-        EmitSoundToAll(stored_runoff_sound);
+        EmitSoundToAllAny(stored_runoff_sound);
     //Otherwise, play the sound for end-of-map votes if...
     //  ...the filename is defined.
     else if (strlen(stored_start_sound) > 0)
-        EmitSoundToAll(stored_start_sound);
+        EmitSoundToAllAny(stored_start_sound);
     
     //Run the vote to selected client only if...
     //  ...the cvar to do so is enabled.
@@ -4275,7 +4315,7 @@ public Handle_MapVoteWinner(Handle:vM, const String:info[], const String:disp[],
     //Play the vote completed sound if...
     //  ...the vote completed sound is defined.
     if (strlen(stored_end_sound) > 0)
-        EmitSoundToAll(stored_end_sound);
+        EmitSoundToAllAny(stored_end_sound);
     
     //No longer need the vote array.
     ClearVoteArrays(vM);
@@ -4479,7 +4519,7 @@ public Handle_CatVoteWinner(Handle:vM, const String:cat[], const String:disp[],
     //Play the vote completed sound if...
     //  ...the vote completed sound is defined.
     if (strlen(stored_end_sound) > 0)
-        EmitSoundToAll(stored_end_sound);
+        EmitSoundToAllAny(stored_end_sound);
         
     DeleteVoteParams(vM);
 }
@@ -4637,7 +4677,7 @@ public Handle_TierVoteWinner(Handle:vM, const String:cat[], const String:disp[],
     //Play the vote completed sound if...
     //  ...the vote completed sound is defined.
     if (strlen(stored_end_sound) > 0)
-        EmitSoundToAll(stored_end_sound);
+        EmitSoundToAllAny(stored_end_sound);
         
     DEBUG_MESSAGE("Finished handling Tiered winner.")
 }
@@ -4667,7 +4707,7 @@ public Action:Handle_TieredVoteTimer(Handle:timer, Handle:pack)
     if (tiered_delay > 0)
     {
         if (strlen(countdown_sound) > 0)
-            EmitSoundToAll(countdown_sound);
+            EmitSoundToAllAny(countdown_sound);
 
         SetTrieValue(vM, "tiered_delay", tiered_delay - 1);
         return Plugin_Continue;
@@ -4705,7 +4745,7 @@ public Action:Handle_TieredVoteTimer(Handle:timer, Handle:pack)
         //Play the vote start sound if...
         //  ...the vote start sound is defined.
         /* if (strlen(stored_start_sound) > 0)
-            EmitSoundToAll(stored_start_sound);
+            EmitSoundToAllAny(stored_start_sound);
         
         //Display the menu.
         VoteMenuToAllWithFlags(menu, stored_votetime, stored_adminflags); */
