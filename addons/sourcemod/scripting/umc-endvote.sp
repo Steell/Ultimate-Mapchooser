@@ -373,6 +373,7 @@ public OnPluginStart()
         HookEventEx("teamplay_restart_round", Event_RestartRound); //TF2  
         HookEventEx("cs_match_end_restart",   Event_RestartRound); //CS:GO
         HookEventEx("round_win",              Event_RoundEnd); //Nuclear Dawn
+        HookEventEx("game_end",               Event_RoundEnd); //EmpiresMod
     }
     
     //Hook score.
