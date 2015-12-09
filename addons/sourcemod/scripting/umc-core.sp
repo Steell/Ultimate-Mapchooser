@@ -793,6 +793,7 @@ public OnPluginStart()
     HookEventEx("teamplay_win_panel", Event_RoundEnd); //TF2
     HookEventEx("arena_win_panel",    Event_RoundEnd); //TF2
     HookEventEx("round_win",          Event_RoundEnd); //Nuclear Dawn
+    HookEventEx("game_end",           Event_RoundEnd); //EmpiresMod
     
     //Initialize our vote arrays
     nominations_arr = CreateArray();
