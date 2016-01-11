@@ -611,6 +611,9 @@ new Handle:cvar_winlimit  = INVALID_HANDLE;
 new Handle:cvar_nextlevel = INVALID_HANDLE; //GE:S
 
 
+/* ForceChangeMap System */
+new Handle:forceChangeMap_forward = INVALID_HANDLE;
+
 #if RUNTESTS
 RunTests()
 {
@@ -652,6 +655,7 @@ public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
     CreateNative("UMC_VoteManagerClientVoted", Native_UMCVoteManagerVoted);
     CreateNative("UMC_FormatDisplayString", Native_UMCFormatDisplay);
     CreateNative("UMC_IsNewVoteAllowed", Native_UMCIsNewVoteAllowed);
+    CreateNative("UMC_ForceChangeMap", Native_UMCForceChangeMap);
     
     RegPluginLibrary("umccore");
     
@@ -866,6 +870,10 @@ public OnPluginStart()
         "UMC_OnFormatTemplateString",
         ET_Ignore, 
         Param_String, Param_Cell, Param_Cell, Param_String, Param_String
+    );
+    
+    forceChangeMap_forward = CreateGlobalForward(
+        "UMC_OnForceMapChange", ET_Ignore, Param_Cell
     );
     
     vote_managers = CreateTrie();
@@ -1269,7 +1277,7 @@ public Native_UMCUnregVoteManager(Handle:plugin, numParams)
     CloseHandle(hndl);
     GetTrieValue(vM, "checkprogress", hndl);
     CloseHandle(hndl);
-	
+    
     
     CloseHandle(vM);
     
@@ -1892,6 +1900,41 @@ public Native_UMCGetCurrentGroup(Handle:plugin, numParams)
     SetNativeString(1, current_cat, GetNativeCell(2), false);
 }
 
+//const String:map[], Float:time, const String:reason[]=""
+public Native_UMCForceChangeMap(Handle:plugin, numParams)
+{
+    new mapLen;
+    GetNativeStringLength(1,mapLen);
+    new String:map[mapLen];
+    GetNativeString(1, map, mapLen);
+    
+    new Float:time = Float:GetNativeCell(2);
+    
+    new reasonLen;
+    GetNativeStringLength(3,reasonLen);
+    new String:reason[reasonLen];
+    GetNativeString(1, reason, reasonLen);
+    
+    LogUMCMessage("%s: Changing map to '%s' in %.f seconds.", reason, map, time);
+    
+    // Send an advertisment
+    Call_StartForward(forceChangeMap_forward);
+    Call_PushCell(time);
+    Call_Finish();
+    
+    //Setup the timer.
+    new Handle:pack;
+    CreateDataTimer(
+        time,
+        Handle_MapChangeTimer,
+        pack,
+        TIMER_FLAG_NO_MAPCHANGE
+    );
+    WritePackString(pack, map);
+    WritePackString(pack, reason);
+    
+}
+
 
 //************************************************************************************************//
 //                                            COMMANDS                                            //
@@ -2029,7 +2072,7 @@ new bool:core_vote_active;
 
 public bool:VM_IsVoteInProgress()
 {
-	return IsVoteInProgress();
+    return IsVoteInProgress();
 }
 
 //
@@ -2422,7 +2465,7 @@ bool:IsVMVoteInProgress(Handle:voteManager)
     new Handle:progressCheck;
     GetTrieValue(voteManager, "checkprogress", progressCheck);
     new bool:result;
-	
+    
     if (GetForwardFunctionCount(progressCheck) == 0)
     {
         result = IsVoteInProgress();
@@ -3395,7 +3438,7 @@ public UMC_OnFormatTemplateString(String:template[], maxlen, Handle:kv, const St
     DEBUG_MESSAGE("OFTS: '%s' '%s' '%s'", map, group, template)
 
     decl String:resolvedMap[MAP_LENGTH];
-	
+    
     if (GetFeatureStatus(FeatureType_Native, "GetMapDisplayName") == FeatureStatus_Available)
     {
         // SM 1.8
@@ -4106,8 +4149,8 @@ Handle:BuildRunoffOptions(Handle:vM, Handle:clientArray)
     
     return newMenu;
 }
-                       
-                       
+
+
 //Called when the runoff timer for an end-of-map vote completes.
 public Action:Handle_RunoffVoteTimer(Handle:timer, Handle:datapack)
 {    
@@ -5560,4 +5603,17 @@ bool:GetRandomCat(Handle:kv, String:buffer[], size)
     return result;
 }
 
-
+//Called after the mapchange timer is completed.
+public Action:Handle_MapChangeTimer(Handle:timer, Handle:pack)
+{
+    //Get map from the timer's pack.
+    decl String:map[MAP_LENGTH], String:reason[255];
+    ResetPack(pack);
+    ReadPackString(pack, map, sizeof(map));
+    ReadPackString(pack, reason, sizeof(reason));
+    
+    DEBUG_MESSAGE("Changing map to %s: %s", map, reason)
+    
+    //Change the map.
+    ForceChangeLevel(map, reason);
+}
