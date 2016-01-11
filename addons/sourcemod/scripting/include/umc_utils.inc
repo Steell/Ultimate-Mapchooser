@@ -250,7 +250,7 @@ enum CustomHudFallbackType {
     HudFallback_Chat,
     HudFallback_Hint,
     HudFallback_Center,
-	HudFallback_None
+    HudFallback_None
 }
 
 //Color Arrays for colors in warning messages.
@@ -425,7 +425,7 @@ public Action:Timer_CenterAd(Handle:timer, Handle:pack)
 
 //
 // stock TF2_SendCustomHudMessage(client, const String:icon[], team=-1, CustomHudFallbackType:fallback,
-// 							   const String:format[], any:...)
+//                                const String:format[], any:...)
 // {
 //     decl String:message[256];
 //     VFormat(message, sizeof(message), format, 6);
@@ -442,7 +442,7 @@ public Action:Timer_CenterAd(Handle:timer, Handle:pack)
 
 // //
 // stock TF2_SendCustomHudMessageAll(const String:icon[], team=-1, CustomHudFallbackType:fallback,
-// 								  const String:format[], any:...)
+//                                   const String:format[], any:...)
 // {
 //     decl String:message[256];
 //     VFormat(message, sizeof(message), format, 5);
@@ -465,7 +465,7 @@ public Action:Timer_CenterAd(Handle:timer, Handle:pack)
 
 // //
 // public MinModeCheckFinished(QueryCookie:cookie, uid, ConVarQueryResult:result, const String:cvarName[],
-// 							const String:cvarValue[], any:pack)
+//                             const String:cvarValue[], any:pack)
 // {
 //     ResetPack(pack);
 //     new client = GetClientOfUserId(ReadPackCell(pack));
@@ -634,43 +634,8 @@ stock ForceChangeInFive(const String:map[], const String:reason[]="")
     PrintToChatAll("\x03[UMC]\x01 %t", "Map Change in 5");
     
     //Setup the change.
-    ForceChangeMap(map, 5.0, reason);
+    UMC_ForceChangeMap(map, 5.0, reason);
 }
-
-
-//Changes the map after the specified time period.
-stock ForceChangeMap(const String:map[], Float:time, const String:reason[]="")
-{
-    LogUMCMessage("%s: Changing map to '%s' in %.f seconds.", reason, map, time);
-
-    //Setup the timer.
-    new Handle:pack;
-    CreateDataTimer(
-        time,
-        Handle_MapChangeTimer,
-        pack,
-        TIMER_FLAG_NO_MAPCHANGE
-    );
-    WritePackString(pack, map);
-    WritePackString(pack, reason);
-}
-
-
-//Called after the mapchange timer is completed.
-public Action:Handle_MapChangeTimer(Handle:timer, Handle:pack)
-{
-    //Get map from the timer's pack.
-    decl String:map[MAP_LENGTH], String:reason[255];
-    ResetPack(pack);
-    ReadPackString(pack, map, sizeof(map));
-    ReadPackString(pack, reason, sizeof(reason));
-    
-    DEBUG_MESSAGE("Changing map to %s: %s", map, reason)
-    
-    //Change the map.
-    ForceChangeLevel(map, reason);
-}
-
 
 //Determines if the current server time is between the given min and max.
 stock bool:IsTimeBetween(min, max)
