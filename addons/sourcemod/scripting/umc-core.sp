@@ -965,7 +965,7 @@ public Action:OnPlayerChat(client, const String:command[], argc)
     
     if (StrEqual(text, "umc", false) || StrEqual(text, "!umc", false)
         || StrEqual(text, "/umc", false))
-        PrintToChatAll("[SM] Ultimate Mapchooser v%s by Steell", PL_VERSION);
+        PrintToChat(client, "[SM] Ultimate Mapchooser v%s by Steell", PL_VERSION);
     
     return Plugin_Continue;
 }
