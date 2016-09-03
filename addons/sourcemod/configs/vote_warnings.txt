@@ -1,0 +1,92 @@
+//Vote warning definitions for Ultimate Mapchooser v3.0 by Steell
+
+///////////////////////////////////////////////////////////////////////////////
+//***************************************************************************//
+//**                          ULTIMATE MAPCHOOSER                          **//
+//***************************************************************************//
+// The format of this file is as specified in the following example:         //
+//                                                                           //
+// "vote_warnings"                                                           //
+// {                                                                         //
+//      "default"  //The default definition, containing default values to be //
+//                 //used in the event that they are ommited from actual     //
+//                 //definitions.                                            //
+//      {                                                                    //
+//          //The message to be displayed for the warning. May contain the   //
+//          //string {TIME}, which will be replaced in the message with the  //
+//          //time (in seconds) before the vote appears.                     //
+//          // Default value: "{TIME} seconds until vote."                   //
+//          "message"       "string"                                         //
+//                                                                           //
+//          //The type of notification players will receive for this warning //
+//          // Types                                                         //
+//          // -----                                                         //
+//          // C: Center message                                             //
+//          // H: Hint message                                               //
+//          // S: Say message                                                //
+//          //    - Colors:  {DEFAULT}, {GREEN}, {LIGHTGREEN}                //
+//          //      For L4D you can use {RED}.                               //
+//          //      For TF2, DODS you can use {DARKGREEN}.                   //
+//          //      For DODS you can not use {LIGHTGREEN}.                   //
+//          // T: Top message                                                //
+//          //    - Colors:  {WHITE}, {RED}, {GREEN}, {BLUE}, {YELLOW},      //
+//          //               {PURPLE}, {CYAN}, {ORANGE}, {PINK}, {OLIVE},    //
+//          //               {LIME}, {VIOLET}, {LIGHTBLUE}                   //
+//          // G: Game Text TF message (TF2 only)                            //
+//          // -----                                                         //
+//          // Default value: "C"                                            //
+//          "notification"  "string containing characters 'CHSTG'"           //
+//                                                                           //
+//          //The name of the sound (relative to the 'sound' directory) of   //
+//          //the sound to be played. If empty, then no sound will be played.//
+//          //May contain the string {TIME}, which will be replaced in the   //
+//          //filename with the time (in seconds) before the vote appears.   //
+//          // Default value: ""                                             //
+//          "sound"         "filename"                                       //
+//      }                                                                    //
+//                                                                           //
+//      "TRIGGER TIME" //Time before the vote that this warning is displayed.//
+//                     //value: integer > 0                                  //
+//                     //       A sequence of warnings can be defined by     //
+//                     //       separating the starting and ending times with//
+//                     //       "-"  Ex: "20-1" will make warnings from      //
+//                     //                20secs to 1sec.                     //
+//      {                                                                    //
+//          "message"           "string"                                     //
+//          "notification"      "string containing characters 'CHSTG'"       //
+//          "sound"             "filename"                                   //
+//      }                                                                    //
+//                                                                           //
+//      "TRIGGER TIME"                                                       //
+//      {                                                                    //
+//          ...                                                              //
+//      }                                                                    //
+//                                                                           //
+//      ...                                                                  //
+//                                                                           //
+//      "TRIGGER TIME"                                                       //
+//      {                                                                    //
+//          ...                                                              //
+//      }                                                                    //
+// }                                                                         //
+//***************************************************************************//
+///////////////////////////////////////////////////////////////////////////////
+
+"vote_warnings"
+{
+    "default"
+    {
+        "message"   "{TIME} seconds until vote."
+        "notification"  "H"
+        "sound"     ""
+    }
+    
+    "10-2" {}
+    
+    "1"
+    {
+        "message"   "1 second until vote."
+    }
+    
+    "0" {}
+}

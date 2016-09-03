@@ -1,0 +1,206 @@
+// Mapcycle definition for Ultimate Mapchooser v3.1 by Steell
+
+///////////////////////////////////////////////////////////////////////////////
+//***************************************************************************//
+//**                           ULTIMATE MAPCHOOSER                         **//
+//***************************************************************************//
+// The format of this file is as specified in the following example:         //
+//                                                                           //
+// "umc_mapcycle"                                                            //
+// {                                                                         //
+//      "GROUPNAME-1" //Name of the group, used by group votes.              //
+//      {                                                                    //
+//          //Text to display for maps from this group in the vote. If left  //
+//          //blank or omitted, the map's name will be used as the default.  //
+//          //The following string will be replaced when parsed:             //
+//          //  {MAP}           =   The map's name                           //
+//          //  {NOMINATED}     =   If nominated, a string determined by the //
+//          //                      "sm_umc_nomination_display" cvar in      //
+//          //                      "ultimate-mapchooser.cfg"                //
+//          //  {MIN_PLAYERS}                                                //
+//          //  {MAX_PLATERS}   =   The "min_players" and "max_players"      //
+//          //                      settings for the map.                    //
+//          //  {MIN_TIME}                                                   //
+//          //  {MAX_TIME}      =   The "min_time" and "max_time" settings   //
+//          //                      for the map.                             //
+//          // (Default value: "{MAP}")                                      //
+//          "display-template"      "any value"                              //
+//            //Defined in "umc-core.smx"                                    //
+//                                                                           //
+//          //Number of maps to include from this group in a vote.           //
+//          // (Default value: 1)                                            //
+//          "maps_invote"           "int >= 0"                               //
+//            //Defined in "umc-core.smx"                                    //
+//                                                                           //
+//          //The weight of this group for random picking. Higher numbers    //
+//          //mean the group is more likely to be picked. 0 means the group  //
+//          //can never be picked randomly.                                  //
+//          // (Default value: 1)                                            //
+//          "group_weight"          "float > 0"                              //
+//            //Defined in "umc-weight.smx"                                  //
+//                                                                           //
+//          //If a map from this group is picked randomly or via vote, the   //
+//          //next time a map is chosen randomly, it will be from the group  //
+//          //specified in this setting. If "" then a random group is picked.//
+//          // (Default value: "")                                           //
+//          "next_mapgroup"         "Group Name"                             //
+//            //Defined in "umc-randomcycle.smx"                             //
+//                                                                           //
+//          //Used as defaults if "min_players" or "max_players" is          //
+//          //not defined for a map in this group.                           //
+//          // (Default value: 0)                                            //
+//          "default_min_players"   "int >= 0"                               //
+//          // (Default value: Player limit of the server)                   //
+//          "default_max_players"   "int >= 0"                               //
+//            //Defined in "umc-playerlimits.smx"                            //
+//                                                                           //
+//          //Used as defaults if "min_time" or "max_time" is not defined    //
+//          //for a map in this group.                                       //
+//          // (Default value: "0000")                                       //
+//          "default_min_time"  "HHMM, where HH is the hour and MM is the    //
+//                               minute"                                     //
+//          // (Default value: "2359")                                       //
+//          "default_max_time"	    "HHMM"                                   //
+//            //Defined in "umc-timelimits.smx"                              //
+//                                                                           //
+//          //Used as default if "allow_every" is not defined for a map in   //
+//          //this group.                                                    //
+//          // (Default value: 0)                                            //
+//          "default_allow_every"   "int >= 0"                               //
+//            //Defined in "umc_postexclude.smx"                             //
+//                                                                           //
+//          //The command specified here is performed at the start of all    //
+//          //maps in this group.                                            //
+//          // (Default value: "")                                           //
+//          "command"   "any valid console command"                          //
+//            //Defined in "umc-mapcommands.smx"                             //
+//                                                                           //
+//          //Players need to have at least one admin flag specified in this //
+//          //string in order to nominate this map.                          //
+//          // (Default value: "")                                           //
+//          "nominate_flags"    "sequence of admin flags"                    //
+//            //Defined in "umc-nominate.smx"                                //
+//                                                                           //
+//          //Admins need to have at least one admin flag specified in this  //
+//          //string in order to see this map in the admin menu.             //
+//          // (Default value: "")                                           //
+//          "adminmenu_flags"   "sequence of admin flags"                    //
+//            //Defined in "umc-adminmenu.smx"                               //
+//                                                                           //
+//          "MAP-1" //Name of a map, must be a valid map.                    //
+//          {                                                                //
+//              //Text to display for this map in the vote. If left blank    //
+//              //or omitted, the map's name will be used instead.           //
+//              // (Default value: "{MAP}")                                  //
+//              "display"       "any value"                                  //
+//                //Defined in "umc-core.smx"                                //
+//                                                                           //
+//              //The weight of this map with reference to other maps        //
+//              //in this category. This number affect how likely the        //
+//              //map will appear in a vote, as well as how likely this      //
+//              //map will be chosen randomly (assuming this group has       //
+//              //already been chosen.)                                      //
+//              // (Default value: 1)                                        //
+//              "weight"        "float > 0"                                  //
+//                //Defined in "umc-weight.smx"                              //
+//                                                                           //
+//              //Overrides the option of the same name in the group level.  //
+//              // (Default value: "")                                       //
+//              "next_mapgroup"     "Group Name"                             //
+//                //Defined in "umc-randcycle.smx"                           //
+//                                                                           //
+//              //Defines the number of players required to be on the        //
+//              //server in order for this map to be used.                   //
+//              // (Default values: see "default_min_players" and            //
+//              //  "default_max_players")                                   //
+//              "min_players"   "int >= 0"                                   //
+//              "max_players"   "int >= 0"                                   //
+//                //Defined in "umc-playerlimits.smx"                        //
+//                                                                           //
+//              //Defines the minimum and maximum times that UMC will pick   //
+//              //this map to be played.                                     //
+//              "min_time"      "HHMM"                                       //
+//              "max_time"      "HHMM"                                       //
+//                //Defined in "umc-timelimits.smx"                          //
+//                                                                           //
+//              //Defines an amount of time in minutes that a map is to be   //
+//              //excluded from selection after it has been played.          //
+//              "allow_every"   "int >= 0"                                   //
+//                //Defined in "umc-postexclude.smx"                         //
+//                                                                           //
+//              //This command is performed at the start of this map. Note:  //
+//              //The command specified here is performed AFTER the one      //
+//              //specified for the group, and does not override it.         //
+//              // (Default value: "")                                       //
+//              "command"       "any valid console command"                  //
+//                //Defined in "umc-mapcommands.smx"                         //
+//                                                                           //
+//              //Players need to have at least one admin flag specified in  //
+//              //this string in order to nominate this map. This overrides  //
+//              //the option  specified by this group for this map.          //
+//              // (Default value: "")                                       //
+//              "nominate_flags"    "sequence of admin flags"                //
+//                //Defined in "umc-nominate.smx"                            //
+//                                                                           //
+//              //Admins need to have at least one admin flag specified in   //
+//              //this string in order to see this map in the admin menu.    //
+//              //This overrides the option specified by this group for this //
+//              //map.                                                       //
+//              // (Default value: "")                                       //
+//              "adminmenu_flags"   "sequence of admin flags"                //
+//                //Defined in "umc-adminmenu.smx"                           //
+//                                                                           //
+//              //When this map is nominated, it is associated with the group//
+//              //specified by this setting, overriding the group that it's  //
+//              //physically located in within this definition file. If blank//
+//              //it uses the group it's currently located in.               //
+//              // (Default value: "")                                       //
+//              "nominate_group"    "Group Name"                             //
+//                //Defined in "umc-core.smx"                                //
+//          }                                                                //
+//                                                                           //
+//          "MAP-2"                                                          //
+//          {                                                                //
+//              ...                                                          //
+//          }                                                                //
+//                                                                           //
+//          ...                                                              //
+//                                                                           //
+//          "MAP-N"                                                          //
+//          {                                                                //
+//              ...                                                          //
+//          }                                                                //
+//      }                                                                    //
+//                                                                           //
+//      "GROUPNAME-2"                                                        //
+//      {                                                                    //
+//          ...                                                              //
+//      }                                                                    //
+//                                                                           //
+//      ...                                                                  //
+//                                                                           //
+//      "GROUPNAME-N"                                                        //
+//      {                                                                    //
+//          ...                                                              //
+//      }                                                                    //
+// }                                                                         //
+//***************************************************************************//
+//*                      ^YOU MAY DELETE THIS SECTION^                      *//
+///////////////////////////////////////////////////////////////////////////////
+
+"umc_mapcycle"
+{
+    "A Group" //Name this whatever you like
+    {
+        "maps_invote"   "5"
+        //...other settings...
+        
+        //Place maps here using the following format://
+        //-------------------------------------------//
+        //"MAPNAME"                                  //
+        //{                                          //
+        //    ...settings...                         //
+        //}                                          //
+        //-------------------------------------------//
+    }
+}
