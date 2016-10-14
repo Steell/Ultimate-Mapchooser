@@ -16,7 +16,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this plugin.  If not, see <http://www.gnu.org/licenses/>.
 *************************************************************************
-*************************************************************************/
+*************************************************************************/  
 #pragma semicolon 1
 
 #include <sourcemod>
@@ -353,7 +353,7 @@ public OnPluginStart()
 //Called after all config files were executed.
 public OnConfigsExecuted()
 {
-    DEBUG_MESSAGE("Executing AdminMenu OnConfigsExecuted")
+    //DEBUG_MESSAGE("Executing AdminMenu OnConfigsExecuted")
     
     can_vote = ReloadMapcycle();
     
@@ -1744,7 +1744,7 @@ public HandleMV_When(Handle:menu, MenuAction:action, param1, param2)
             
             SetTrieValue(menu_tries[param1], "when", StringToInt(info));
             
-            DEBUG_MESSAGE("Change When Selection: %s", info)
+            //DEBUG_MESSAGE("Change When Selection: %s", info)
             
             DoMapVote(param1);
         }
@@ -1812,7 +1812,7 @@ bool:UsingDefaults(client)
 //
 DoMapVote(client)
 {
-    DEBUG_MESSAGE("Starting Map Vote")
+    //DEBUG_MESSAGE("Starting Map Vote")
 
     new Handle:trie = menu_tries[client];
     
@@ -1828,14 +1828,14 @@ DoMapVote(client)
         
     GetTrieValue(trie, "maps", selectedMaps);
     
-    DEBUG_MESSAGE("Creating vote mapcycle")
+    //DEBUG_MESSAGE("Creating vote mapcycle")
     
     new bool:autoPop = VoteAutoPopulated(client);
     new Handle:mapcycle = autoPop
         ? map_kv
         : CreateVoteKV(selectedMaps);
     
-    DEBUG_MESSAGE("Fetching vote parameters")
+    //DEBUG_MESSAGE("Fetching vote parameters")
     
     GetTrieValue(trie, "type",               type);
     GetTrieValue(trie, "scramble",           scramble);
@@ -1857,9 +1857,9 @@ DoMapVote(client)
     
     CloseClientVoteTrie(client);
     
-    DEBUG_MESSAGE("Change When Value: %i", when)
+    //DEBUG_MESSAGE("Change When Value: %i", when)
     
-    DEBUG_MESSAGE("Calling native")
+    //DEBUG_MESSAGE("Calling native")
     
     UMC_StartVote(
         "core",
@@ -1871,7 +1871,7 @@ DoMapVote(client)
         numClients, !ignoreExclusion
     );
     
-    DEBUG_MESSAGE("Cleanup")
+    //DEBUG_MESSAGE("Cleanup")
     
     if (!autoPop)
         CloseHandle(mapcycle);
@@ -1881,18 +1881,18 @@ DoMapVote(client)
 //
 Handle:CreateVoteKV(Handle:maps)
 {
-    DEBUG_MESSAGE("Copying mapcycle")
+    //DEBUG_MESSAGE("Copying mapcycle")
     new Handle:result = CreateKeyValues("umc_rotation");
     KvRewind(map_kv);
     KvCopySubkeys(map_kv, result);
     
     if (!KvGotoFirstSubKey(result))
     {
-        DEBUG_MESSAGE("Cannot find any groups, returning empty mapcycle.")
+        //DEBUG_MESSAGE("Cannot find any groups, returning empty mapcycle.")
         return result;
     }
     
-    DEBUG_MESSAGE("Starting group traversal")
+    //DEBUG_MESSAGE("Starting group traversal")
     decl String:group[MAP_LENGTH];
     decl String:map[MAP_LENGTH];
     new bool:goBackMap;
@@ -1907,16 +1907,16 @@ Handle:CreateVoteKV(Handle:maps)
         
         if (!KvGotoFirstSubKey(result))
         {
-            DEBUG_MESSAGE("No maps in group %s", group)
+            //DEBUG_MESSAGE("No maps in group %s", group)
             if (!KvGotoNextKey(result))
             {
-                DEBUG_MESSAGE("End of group traversal.")
+                //DEBUG_MESSAGE("End of group traversal.")
                 break;
             }
             continue;
         }
         
-        DEBUG_MESSAGE("Starting map traversal")
+        //DEBUG_MESSAGE("Starting map traversal")
         
         for ( ; ; )
         {
@@ -1924,10 +1924,10 @@ Handle:CreateVoteKV(Handle:maps)
             
             if (!FindMapInList(maps, map, group))
             {
-                DEBUG_MESSAGE("Map wasn't found in selected list. Deleting.")
+                //DEBUG_MESSAGE("Map wasn't found in selected list. Deleting.")
                 if (KvDeleteThis(result) == -1)
                 {
-                    DEBUG_MESSAGE("Last map in group deleted")
+                    //DEBUG_MESSAGE("Last map in group deleted")
                     goBackMap = false;
                     break;
                 }
@@ -1941,23 +1941,23 @@ Handle:CreateVoteKV(Handle:maps)
             
             if (!KvGotoNextKey(result))
             {
-                DEBUG_MESSAGE("End of map traversal, found %i maps.", groupMapCount)
+                //DEBUG_MESSAGE("End of map traversal, found %i maps.", groupMapCount)
                 break;
             }
         }
         
         if (goBackMap)
         {
-            DEBUG_MESSAGE("Returning to group level")
+            //DEBUG_MESSAGE("Returning to group level")
             KvGoBack(result);
         }
         
         if (!KvGotoFirstSubKey(result))
         {
-            DEBUG_MESSAGE("All maps have been removed from group. Deleting group.")
+            //DEBUG_MESSAGE("All maps have been removed from group. Deleting group.")
             if (KvDeleteThis(result) == -1)
             {
-                DEBUG_MESSAGE("Last map group deleted")
+                //DEBUG_MESSAGE("Last map group deleted")
                 goBackGroup = false;
                 break;
             }
@@ -1966,21 +1966,21 @@ Handle:CreateVoteKV(Handle:maps)
         }
         else
         {
-            DEBUG_MESSAGE("Setting maps_invote for group.")
+            //DEBUG_MESSAGE("Setting maps_invote for group.")
             KvGoBack(result);
             KvSetNum(result, "maps_invote", groupMapCount);
         }
             
         if (!KvGotoNextKey(result))
         {
-            DEBUG_MESSAGE("End of group traversal.")
+            //DEBUG_MESSAGE("End of group traversal.")
             break;
         }
     }
     
     if (goBackGroup)
     {
-        DEBUG_MESSAGE("Returning to mapcycle root level")
+        //DEBUG_MESSAGE("Returning to mapcycle root level")
         KvGoBack(result);
     }
     
@@ -2213,7 +2213,7 @@ public Handle_ManualChangeWhenMenu(Handle:menu, MenuAction:action, param1, param
             
             SetTrieValue(menu_tries[param1], "when", StringToInt(info));
             
-            DEBUG_MESSAGE("Change When Selection: %s", info)
+            //DEBUG_MESSAGE("Change When Selection: %s", info)
             
             DoManualMapChange(param1);
         }
@@ -2302,7 +2302,7 @@ public Handle_AutoChangeWhenMenu(Handle:menu, MenuAction:action, param1, param2)
             
             DoAutoMapChange(param1, UMC_ChangeMapTime:StringToInt(info));
             
-            DEBUG_MESSAGE("Change When Selection: %s", info)
+            //DEBUG_MESSAGE("Change When Selection: %s", info)
         }
         case MenuAction_Cancel:
         {

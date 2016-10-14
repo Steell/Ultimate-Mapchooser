@@ -16,7 +16,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this plugin.  If not, see <http://www.gnu.org/licenses/>.
 *************************************************************************
-*************************************************************************/
+*************************************************************************/   
 #pragma semicolon 1
 
 #include <sourcemod>
@@ -162,11 +162,10 @@ public OnPluginStart()
 //************************************************************************************************//
 //                                           GAME EVENTS                                          //
 //************************************************************************************************//
-
 //Called after all config files were executed.
 public OnConfigsExecuted()
 {
-    DEBUG_MESSAGE("Executing Nominate OnConfigsExecuted")
+    //DEBUG_MESSAGE("Executing Nominate OnConfigsExecuted")
     
     can_nominate = ReloadMapcycle();
     vote_completed = false;
@@ -222,7 +221,7 @@ public Action:OnPlayerChat(client, const String:command[], argc)
     //    ...nothing was typed.
     if (argc == 0) return Plugin_Continue;
     
-    DEBUG_MESSAGE("Checking for chat command...")
+    //DEBUG_MESSAGE("Checking for chat command...")
     
     if (!GetConVarBool(cvar_nominate))
     {
@@ -240,7 +239,7 @@ public Action:OnPlayerChat(client, const String:command[], argc)
     
     if (StrEqual(arg, "nominate", false))
     {
-        DEBUG_MESSAGE("Chat command registered!")
+        //DEBUG_MESSAGE("Chat command registered!")
     
         if (vote_completed || !can_nominate)
         {
@@ -248,12 +247,12 @@ public Action:OnPlayerChat(client, const String:command[], argc)
         }
         else //Otherwise, let them nominate.
         {
-            DEBUG_MESSAGE("Checking for argument...")
+            //DEBUG_MESSAGE("Checking for argument...")
             if (next != -1)
             {
                 BreakString(text[next], arg, sizeof(arg));
                 
-                DEBUG_MESSAGE("Argument found! '%s'", arg)
+                //DEBUG_MESSAGE("Argument found! '%s'", arg)
                 
                 //Get the selected map.
                 decl String:groupName[MAP_LENGTH], String:nomGroup[MAP_LENGTH];
@@ -295,7 +294,7 @@ public Action:OnPlayerChat(client, const String:command[], argc)
                     }
                     else
                     {
-                        DEBUG_MESSAGE("Nomination via extra arg -- chat.")
+                        //DEBUG_MESSAGE("Nomination via extra arg -- chat.")
                         
                         //Nominate it.
                         UMC_NominateMap(map_kv, arg, groupName, client, nomGroup);
@@ -311,7 +310,7 @@ public Action:OnPlayerChat(client, const String:command[], argc)
             }
             else
             {
-                DEBUG_MESSAGE("No argument! Displaying menu.")
+                //DEBUG_MESSAGE("No argument! Displaying menu.")
                 if (!DisplayNominationMenu(client))
                     PrintToChat(client, "\x03[UMC]\x01 %t", "No Nominate Nextmap");
             }                
@@ -442,7 +441,7 @@ public Action:Command_Nominate(client, args)
                     //Nominate it.
                     UMC_NominateMap(map_kv, arg, groupName, client, nomGroup);
                     
-                    DEBUG_MESSAGE("Nomination via extra arg -- command.")
+                    //DEBUG_MESSAGE("Nomination via extra arg -- command.")
                 
                     //Display a message.
                     decl String:clientName[MAX_NAME_LENGTH];
@@ -486,7 +485,7 @@ bool:DisplayNominationMenu(client)
     {
 #if UMC_DEBUG
         new bool:result = DisplayMenu(menu, client, 0);
-        DEBUG_MESSAGE("Displaying nomination menu to client. (%i)", result)
+        //DEBUG_MESSAGE("Displaying nomination menu to client. (%i)", result)
         return result;
 #else
         return DisplayMenu(menu, client, 0);
@@ -722,7 +721,7 @@ public Handle_NominationMenu(Handle:menu, MenuAction:action, client, param2)
             //Display a message.
             decl String:clientName[MAX_NAME_LENGTH];
             GetClientName(client, clientName, sizeof(clientName));
-            DEBUG_MESSAGE("Nomination via menu.")
+            //DEBUG_MESSAGE("Nomination via menu.")
             PrintToChatAll("\x03[UMC]\x01 %t", "Player Nomination", clientName, map);
             LogUMCMessage("%s has nominated '%s' from group '%s'", clientName, map, group);
             

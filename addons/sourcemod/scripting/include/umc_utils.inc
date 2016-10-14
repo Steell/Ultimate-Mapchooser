@@ -117,13 +117,13 @@ stock Handle:GetKvFromFile(const String:filename[], const String:rootKey[], bool
 //
 stock bool:ConvertNormalMapcycle(Handle:kv, const String:filename[])
 {
-    DEBUG_MESSAGE("Opening Mapcycle File %s", filename)
+    //DEBUG_MESSAGE("Opening Mapcycle File %s", filename)
     new Handle:file = OpenFile(filename, "r");
     
     if (file == INVALID_HANDLE)
         return false;
         
-    DEBUG_MESSAGE("Fetching first line.")
+    //DEBUG_MESSAGE("Fetching first line.")
     new String:firstLine[256];
     new bool:foundDef;
     while (ReadFileLine(file, firstLine, sizeof(firstLine)))
@@ -138,12 +138,12 @@ stock bool:ConvertNormalMapcycle(Handle:kv, const String:filename[])
     
     if (!foundDef)
     {
-        DEBUG_MESSAGE("Couldn't find first line")
+        //DEBUG_MESSAGE("Couldn't find first line")
         CloseHandle(file);
         return false;
     }
     
-    DEBUG_MESSAGE("Checking first line for UMC header: \"%s\"", firstLine)
+    //DEBUG_MESSAGE("Checking first line for UMC header: \"%s\"", firstLine)
     
     static Handle:re = INVALID_HANDLE;
     if (re == INVALID_HANDLE)
@@ -155,12 +155,12 @@ stock bool:ConvertNormalMapcycle(Handle:kv, const String:filename[])
         GetRegexSubString(re, 1, buffer, sizeof(buffer));
     else
     {
-        DEBUG_MESSAGE("Header was not found. Aborting.")
+        //DEBUG_MESSAGE("Header was not found. Aborting.")
         CloseHandle(file);
         return false;
     }
     
-    DEBUG_MESSAGE("Making a map group.")
+    //DEBUG_MESSAGE("Making a map group.")
     
     static Handle:re2 = INVALID_HANDLE;
     if (re2 == INVALID_HANDLE)
@@ -169,7 +169,7 @@ stock bool:ConvertNormalMapcycle(Handle:kv, const String:filename[])
     KvJumpToKey(kv, "Mapcycle", true);
     KvSetNum(kv, "maps_invote", StringToInt(buffer));
     
-    DEBUG_MESSAGE("Parsing maps.")
+    //DEBUG_MESSAGE("Parsing maps.")
     
     decl String:map[MAP_LENGTH];
     decl String:line[256];
@@ -179,7 +179,7 @@ stock bool:ConvertNormalMapcycle(Handle:kv, const String:filename[])
         if (MatchRegex(re2, line) > 1)
         {
             GetRegexSubString(re2, 1, map, sizeof(map));
-            DEBUG_MESSAGE("Adding map: %s", map)
+            //DEBUG_MESSAGE("Adding map: %s", map)
             KvJumpToKey(kv, map, true);
             KvGoBack(kv);
         }
@@ -681,7 +681,7 @@ public Action:Handle_MapChangeTimer(Handle:timer, Handle:pack)
     ReadPackString(pack, map, sizeof(map));
     ReadPackString(pack, reason, sizeof(reason));
     
-    DEBUG_MESSAGE("Changing map to %s: %s", map, reason)
+    //DEBUG_MESSAGE("Changing map to %s: %s", map, reason)
     
     //Change the map.
     ForceChangeLevel(map, reason);
@@ -744,13 +744,13 @@ stock bool:GetWeightedRandomSubKey(String:buffer[], size, Handle:weightArr, Hand
     //Calc total number of maps we're choosing.
     new total = GetArraySize(weightArr);
     
-    DEBUG_MESSAGE("Getting number of items in the pool - %i", total)
+    //DEBUG_MESSAGE("Getting number of items in the pool - %i", total)
     
     //Return an answer immediately if...
     //    ...there's only one map to choose from.
     if (total == 1)
     {   
-        DEBUG_MESSAGE("Only 1 item in pool, setting it as the winner.")
+        //DEBUG_MESSAGE("Only 1 item in pool, setting it as the winner.")
         //WE HAVE A WINNER!
         GetArrayString(nameArr, 0, buffer, size);
         return true;
@@ -759,44 +759,44 @@ stock bool:GetWeightedRandomSubKey(String:buffer[], size, Handle:weightArr, Hand
     //    ...there are no maps to choose from.
     else if (total == 0)
     {
-        DEBUG_MESSAGE("No items in the pool. Returning false.")
+        //DEBUG_MESSAGE("No items in the pool. Returning false.")
         return false;
     }
 
-    DEBUG_MESSAGE("Setting up array of weights.")
+    //DEBUG_MESSAGE("Setting up array of weights.")
     //Convert the adt_array of weights to a normal array.
     new Float:weights[total];
     ConvertAdtArray(weightArr, weights, total);
 
-    DEBUG_MESSAGE("Picking a random number.")
+    //DEBUG_MESSAGE("Picking a random number.")
     //We select a random number here by getting a random Float in the
     //range [0, 1), and then multiply it by the sum of the weights, to
     //make the effective range [0, totalweight).
     new Float:rand = GetURandomFloat() * ArraySum(weights, total);
     new Float:runningTotal = 0.0; //keeps track of total so far
     
-    DEBUG_MESSAGE("Find the winner in the pool.")
+    //DEBUG_MESSAGE("Find the winner in the pool.")
     //Determine if a map is the winner for...
     //    ...each map in the arrays.
     for (new i = 0; i < total; i++)
     {
-        DEBUG_MESSAGE("Update running total of weights.")
+        //DEBUG_MESSAGE("Update running total of weights.")
         //add weight onto the total
         runningTotal += weights[i];
         
-        DEBUG_MESSAGE("Check if we're at the right item.")
+        //DEBUG_MESSAGE("Check if we're at the right item.")
         //We have found an answer if...
         //    ...the running total has reached the random number.
         if (runningTotal > rand)
         {
-            DEBUG_MESSAGE("Item found.")
+            //DEBUG_MESSAGE("Item found.")
             GetArrayString(nameArr, i, buffer, size);
             index = i;
             return true;
         }
     }
     
-    DEBUG_MESSAGE("ERROR WITH THE RANDOMIZATION ALGORITHM!")
+    //DEBUG_MESSAGE("ERROR WITH THE RANDOMIZATION ALGORITHM!")
     //This shouldn't ever happen, but alas the compiler complains.
     index = -1;
     return false;
@@ -1071,7 +1071,7 @@ stock GetClientsWithFlags(const String:flagstring[], clients[], maxlen, &amt)
     {
         if (IsClientInGame(i) && !IsFakeClient(i) && (!checkFlags || (flags & GetUserFlagBits(i))))
         {
-            DEBUG_MESSAGE("Client has correct flags: %L (%i) [F: %s]", i, i, flagstring)
+            //DEBUG_MESSAGE("Client has correct flags: %L (%i) [F: %s]", i, i, flagstring)
             clients[count++] = i;
         }
     }
@@ -1137,10 +1137,10 @@ stock FilterMapcycleFromArrays(Handle:kv, Handle:exMaps, Handle:exGroups, numExG
         {
             if (!KvGotoFirstSubKey(kv))
             {
-                DEBUG_MESSAGE("Removing empty group \"%s\".", group)
+                //DEBUG_MESSAGE("Removing empty group \"%s\".", group)
                 if (KvDeleteThis(kv) == -1)
                 {
-                    DEBUG_MESSAGE("Mapcycle filtering completed.")
+                   // DEBUG_MESSAGE("Mapcycle filtering completed.")
                     return;
                 }
                 else
@@ -1155,7 +1155,7 @@ stock FilterMapcycleFromArrays(Handle:kv, Handle:exMaps, Handle:exGroups, numExG
     
     KvGoBack(kv);
     
-    DEBUG_MESSAGE("Mapcycle filtering completed.")
+    //DEBUG_MESSAGE("Mapcycle filtering completed.")
 }
 
 
@@ -1168,7 +1168,7 @@ stock FilterMapGroupFromArrays(Handle:kv, Handle:exMaps, Handle:exGroups)
     if (!KvGotoFirstSubKey(kv))
         return;
     
-    DEBUG_MESSAGE("Starting filtering of map group \"%s\".", group)
+    //DEBUG_MESSAGE("Starting filtering of map group \"%s\".", group)
     
     decl String:mapName[MAP_LENGTH];
     for ( ; ; )
@@ -1176,10 +1176,10 @@ stock FilterMapGroupFromArrays(Handle:kv, Handle:exMaps, Handle:exGroups)
         KvGetSectionName(kv, mapName, sizeof(mapName));
         if (IsMapInArrays(mapName, group, exMaps, exGroups))
         {
-            DEBUG_MESSAGE("Removing invalid map \"%s\" from group \"%s\".", mapName, group)
+            //DEBUG_MESSAGE("Removing invalid map \"%s\" from group \"%s\".", mapName, group)
             if (KvDeleteThis(kv) == -1)
             {
-                DEBUG_MESSAGE("Map Group filtering completed for group \"%s\".", group)
+                //DEBUG_MESSAGE("Map Group filtering completed for group \"%s\".", group)
                 return;
             }
         }
@@ -1192,14 +1192,14 @@ stock FilterMapGroupFromArrays(Handle:kv, Handle:exMaps, Handle:exGroups)
     
     KvGoBack(kv);
     
-    DEBUG_MESSAGE("Map Group filtering completed for group \"%s\".", group)
+    //DEBUG_MESSAGE("Map Group filtering completed for group \"%s\".", group)
 }
 
 
 //
 stock bool:IsMapInArrays(const String:map[], const String:group[], Handle:exMaps, Handle:exGroups)
 {
-    DEBUG_MESSAGE("Starting exclusion traversal...")
+    //DEBUG_MESSAGE("Starting exclusion traversal...")
     new index = -1;
     new bool:isExcluded = false;
     decl String:exGroup[MAP_LENGTH];
@@ -1212,10 +1212,10 @@ stock bool:IsMapInArrays(const String:map[], const String:group[], Handle:exMaps
             
             if (index >= 0 && index < gSize)
             {
-                DEBUG_MESSAGE("Map found at %i", index)
+                //DEBUG_MESSAGE("Map found at %i", index)
                 GetArrayString(exGroups, index, exGroup, sizeof(exGroup));
                 isExcluded = StrEqual(exGroup, group, false);
-                DEBUG_MESSAGE("Map Excluded? %i (%s | %s)", _:isExcluded, exGroup, group)
+                //DEBUG_MESSAGE("Map Excluded? %i (%s | %s)", _:isExcluded, exGroup, group)
             }
         }
         while (!isExcluded && index != -1);

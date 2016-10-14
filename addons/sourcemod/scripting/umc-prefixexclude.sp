@@ -77,7 +77,7 @@ public OnPluginStart()
 
 public OnConfigsExecuted()
 {
-    DEBUG_MESSAGE("Executing PrefixExclude OnConfigsExecuted")
+    //DEBUG_MESSAGE("Executing PrefixExclude OnConfigsExecuted")
 
     decl String:prefix[MAP_LENGTH];
     GetCurrentMapPrefix(prefix, sizeof(prefix));
@@ -135,7 +135,7 @@ public Action:UMC_OnDetermineMapExclude(Handle:kv, const String:map[], const Str
         GetArrayString(prefix_array, i, prefix, sizeof(prefix));
         if (StrEqual(mapPrefix, prefix, false) && (--amt == 0))
         {
-            DEBUG_MESSAGE("Map %s is excluded due to Prefix Exclusion.")
+            //DEBUG_MESSAGE("Map %s is excluded due to Prefix Exclusion.")
             return Plugin_Stop;
         }
     }

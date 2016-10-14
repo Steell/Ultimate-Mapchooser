@@ -16,7 +16,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this plugin.  If not, see <http://www.gnu.org/licenses/>.
 *************************************************************************
-*************************************************************************/
+*************************************************************************/   
 #pragma semicolon 1
 
 #include <sourcemod>
@@ -380,7 +380,6 @@ public OnPluginStart()
         HookEventEx("teamplay_restart_round", Event_RestartRound); //TF2  
         HookEventEx("cs_match_end_restart",   Event_RestartRound); //CS:GO
         HookEventEx("round_win",              Event_RoundEnd); //Nuclear Dawn
-        HookEventEx("game_end",               Event_RoundEnd); //EmpiresMod
     }
     
     //Hook score.
@@ -438,7 +437,7 @@ public OnPluginStart()
 //Called after all config files were executed.
 public OnConfigsExecuted()
 {
-    DEBUG_MESSAGE("Executing EndVote OnConfigsExecuted")
+    //DEBUG_MESSAGE("Executing EndVote OnConfigsExecuted")
     
     //Set initial values for cvar value storage.
     //maxrounds_mem = GetConVarInt(cvar_maxrounds);
@@ -532,7 +531,7 @@ public Event_PlayerDeath(Handle:evnt, String:name[], bool:dontBroadcast)
 //Needed to update our vote timer.
 public OnMapTimeLeftChanged()
 {
-    DEBUG_MESSAGE("Timeleft Changed")
+    //DEBUG_MESSAGE("Timeleft Changed")
 
     //Update the end-of-map vote timer if...
     //    ...we haven't already completed an RTV.
@@ -647,7 +646,7 @@ public Event_RestartRound(Handle:evnt, const String:name[], bool:dontBroadcast)
 //Called at the end of a map.
 public OnMapEnd()
 {
-    DEBUG_MESSAGE("Executing EndVote OnMapEnd")
+    //DEBUG_MESSAGE("Executing EndVote OnMapEnd")
 
     //Vote timer is not running
     timer_alive = false;
@@ -709,12 +708,12 @@ MakeVoteTimer()
     //Make the end-of-map vote timer.
     if (timer_alive)
     {
-        DEBUG_MESSAGE("Killing timer. (MakeVoteTimer)")
+        //DEBUG_MESSAGE("Killing timer. (MakeVoteTimer)")
         timer_alive = false;
         KillTimer(vote_timer);
         vote_timer = INVALID_HANDLE;
     }
-    DEBUG_MESSAGE("*MakeVoteTimer*")
+    //DEBUG_MESSAGE("*MakeVoteTimer*")
     vote_timer = MakeTimer();
     
     UpdateOtherTimers();
@@ -744,7 +743,7 @@ UpdateOtherTimers()
         new winScore;
         new winTeam = GetWinningTeam(winScore);
         start = GetConVarInt(cvar_winlimit) - GetConVarInt(cvar_start_rounds) - winScore;
-        DEBUG_MESSAGE("Cvar (mp_winlimit): %i, Cvar (startrounds): %i, WinnerScore: %i", GetConVarInt(cvar_winlimit), GetConVarInt(cvar_start_rounds), winScore)
+        //DEBUG_MESSAGE("Cvar (mp_winlimit): %i, Cvar (startrounds): %i, WinnerScore: %i", GetConVarInt(cvar_winlimit), GetConVarInt(cvar_start_rounds), winScore)
         if (start > 0)
             LogUMCMessage("End of map vote will appear after %i more wins.", start);
         
@@ -811,7 +810,7 @@ public Handle_MapCycleFileChange(Handle:convar, const String:oldVal[], const Str
 {
     if (!StrEqual(oldVal, newVal))
     {
-        DEBUG_MESSAGE("sm_umc_endvote_cyclefile -- value has been changed from \"%s\" to \"%s\"", oldVal, newVal)
+        //DEBUG_MESSAGE("sm_umc_endvote_cyclefile -- value has been changed from \"%s\" to \"%s\"", oldVal, newVal)
     }
 }
 #endif
@@ -927,7 +926,7 @@ public Handle_VoteChange(Handle:convar, const String:oldValue[], const String:ne
 public Handle_TriggerChange(Handle:convar, const String:oldVal[], const String:newVal[])
 {
     //Update all necessary timers.
-    DEBUG_MESSAGE("*TriggerChange*")
+    //DEBUG_MESSAGE("*TriggerChange*")
     UpdateTimers();
 }
 
@@ -1032,7 +1031,7 @@ CheckMaxRounds()
         if (maxrounds > 0)
         {
             new startRounds = GetConVarInt(cvar_start_rounds);
-            DEBUG_MESSAGE("Determining if mp_maxrounds trigger has been reached. MR: %i, T: %i, C: %i", maxrounds, startRounds, round_counter)
+            //DEBUG_MESSAGE("Determining if mp_maxrounds trigger has been reached. MR: %i, T: %i, C: %i", maxrounds, startRounds, round_counter)
             if (round_counter >= (maxrounds - startRounds))
             {
                 LogUMCMessage("Round limit triggered end of map vote.");
@@ -1043,7 +1042,7 @@ CheckMaxRounds()
             {
                 new winnerScore;
                 GetTopTwoTeamScores(winnerScore);
-                DEBUG_MESSAGE("Checking clinch. W: %i  Th: %i  Te: %i  MR/2: %f", winnerScore, startRounds, (winnerScore + startRounds), (maxrounds / 2.0))
+                //DEBUG_MESSAGE("Checking clinch. W: %i  Th: %i  Te: %i  MR/2: %f", winnerScore, startRounds, (winnerScore + startRounds), (maxrounds / 2.0))
                 if (winnerScore > (maxrounds / 2 - startRounds))
                 {
                     LogUMCMessage("Round limit triggered end of map vote due to potential clinch.");
@@ -1063,14 +1062,14 @@ CheckMaxRounds()
 GetTopTwoTeamScores(&first, &second=0)
 {
     new teamCount = GetTeamCount();
-    DEBUG_MESSAGE("Fetching Scores. TC: %i", teamCount)
+    //DEBUG_MESSAGE("Fetching Scores. TC: %i", teamCount)
     first = 0;
     second = 0;
     new score;
     for (new i = 2; i < teamCount; i++)
     {
         score = GetTeamScore(i);
-        DEBUG_MESSAGE("Team: %i  Score: %i", i, score)
+        //DEBUG_MESSAGE("Team: %i  Score: %i", i, score)
         if (score > first)
         {
             second = first;
@@ -1087,7 +1086,7 @@ GetTopTwoTeamScores(&first, &second=0)
 //Makes the timer which will activate the end-of-map vote at a certain time.
 Handle:MakeTimer()
 {
-    DEBUG_MESSAGE("*MakeTimer*")
+    //DEBUG_MESSAGE("*MakeTimer*")
     new Handle:result = INVALID_HANDLE;
     if (SetTimerTriggerTime())
     {
@@ -1107,10 +1106,10 @@ Handle:MakeTimer()
                 "End of map timer could not be created. Please file a bug report with the author."
             );
         }
-#if UMC_DEBUG
-        else
-            DEBUG_MESSAGE("Making timer.")
-#endif
+//#if UMC_DEBUG
+        //else
+            //DEBUG_MESSAGE("Making timer.")
+//#endif
     }
     else
     {
@@ -1171,7 +1170,7 @@ bool:SetTimerTriggerTime()
     //Duration until the vote starts.
     triggertime = timeleft - starttime;
     
-    DEBUG_MESSAGE("*SetTimerTriggerTime* -- TimeLeft: %i   StartTime: %f   TriggerTime: %f", timeleft, starttime, triggertime)   
+    //DEBUG_MESSAGE("*SetTimerTriggerTime* -- TimeLeft: %i   StartTime: %f   TriggerTime: %f", timeleft, starttime, triggertime)   
     
     new bool:result;
     
@@ -1204,7 +1203,7 @@ bool:SetTimerTriggerTime()
 //Update the end-of-map vote timer.
 UpdateTimers()
 {
-    DEBUG_MESSAGE("*UpdateTimers*")
+    //DEBUG_MESSAGE("*UpdateTimers*")
     //Reset the timer if...
     //    ...we haven't already completed a vote.
     //    ...the cvar to run an end-of-round vote is enabled.
@@ -1212,26 +1211,26 @@ UpdateTimers()
     {
         if (!SetTimerTriggerTime())
         {
-            DEBUG_MESSAGE("Killing Timer (UpdateTimers)")
+            //DEBUG_MESSAGE("Killing Timer (UpdateTimers)")
             timer_alive = false;
             KillTimer(vote_timer);
             vote_timer = INVALID_HANDLE;
         }
-#if UMC_DEBUG
+//#if UMC_DEBUG
         else
         {
             LogUMCMessage("Map vote timer successfully updated.");
         }
-#endif
+//#endif
     }
     else //Make a new timer.
     {
         vote_timer = MakeTimer();
     
-#if UMC_DEBUG
-        if (timer_alive)
-            DEBUG_MESSAGE("Map vote timer successfully updated.")
-#endif
+//#if UMC_DEBUG
+        //if (timer_alive)
+            //DEBUG_MESSAGE("Map vote timer successfully updated.")
+//#endif
     }
 }
 
@@ -1245,7 +1244,7 @@ DestroyTimers()
     //    ...the timer is alive.
     if (timer_alive)
     {
-        DEBUG_MESSAGE("Killing Timer (DestroyTimers)")
+        //DEBUG_MESSAGE("Killing Timer (DestroyTimers)")
         timer_alive = false;
         KillTimer(vote_timer);
         vote_timer = INVALID_HANDLE;
@@ -1314,10 +1313,10 @@ public StartMapVote()
     new numClients;
     GetClientsWithFlags(flags, clients, sizeof(clients), numClients);
 
-#if UMC_DEBUG
-    for (new i = 0; i < numClients; i++)
-        DEBUG_MESSAGE("Sending EndVote to client: %i", clients[i])
-#endif
+//#if UMC_DEBUG
+    //for (new i = 0; i < numClients; i++)
+        //DEBUG_MESSAGE("Sending EndVote to client: %i", clients[i])
+//#endif
     
     //Start the UMC vote.
     new bool:result = UMC_StartVote(
@@ -1363,7 +1362,7 @@ public StartMapVote()
 //Called when UMC has extended a map.
 public UMC_OnMapExtended()
 {
-    DEBUG_MESSAGE("*Map extended.*")
+    //DEBUG_MESSAGE("*Map extended.*")
     UpdateTimers();
     UpdateOtherTimers();
     extend_counter++;

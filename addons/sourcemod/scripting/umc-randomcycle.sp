@@ -16,7 +16,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this plugin.  If not, see <http://www.gnu.org/licenses/>.
 *************************************************************************
-*************************************************************************/
+*************************************************************************/  
 #pragma semicolon 1
 
 #include <sourcemod>
@@ -168,7 +168,7 @@ public OnPluginStart()
 //Called after all config files were executed.
 public OnConfigsExecuted()
 {
-    DEBUG_MESSAGE("Executing RandomCycle OnConfigsExecuted")
+    ////DEBUG_MESSAGE("Executing RandomCycle OnConfigsExecuted")
     
     intermission_called = false;
     setting_map = ReloadMapcycle();
@@ -185,7 +185,7 @@ public OnConfigsExecuted()
         KvFindGroupOfMap(umc_mapcycle, mapName, groupName, sizeof(groupName));
     }
     
-    DEBUG_MESSAGE("Current Map: %s -- %s", mapName, groupName)
+    ////DEBUG_MESSAGE("Current Map: %s -- %s", mapName, groupName)
     
     SetupNextRandGroup(mapName, groupName);
     
@@ -215,7 +215,7 @@ public Action:_VGuiMenu(UserMsg:msg_id, Handle:bf, const players[], playersNum, 
         return;
 
     new bool:protoBuf = GetFeatureStatus(FeatureType_Native, "GetUserMessageType") == FeatureStatus_Available && GetUserMessageType() == UM_Protobuf;
-    
+
     new String:type[10];
     if (protoBuf)
     {
@@ -292,7 +292,7 @@ SetupNextRandGroup(const String:map[], const String:group[])
         KvGoBack(umc_mapcycle);   
     }
     
-    DEBUG_MESSAGE("Next Random Mapgroup: %s", next_rand_cat)
+    ////DEBUG_MESSAGE("Next Random Mapgroup: %s", next_rand_cat)
 }
 
 
@@ -389,12 +389,12 @@ public Action:Command_Random(client, args)
 //Sets a random next map. Returns true on success.
 DoRandomNextMap() 
 {    
-    DEBUG_MESSAGE("next_rand_cat: %s", next_rand_cat)
+    ////DEBUG_MESSAGE("next_rand_cat: %s", next_rand_cat)
     decl String:nextMap[MAP_LENGTH], String:nextGroup[MAP_LENGTH];
     if (UMC_GetRandomMap(map_kv, umc_mapcycle, next_rand_cat, nextMap, sizeof(nextMap), nextGroup,
                          sizeof(nextGroup), false, true))
     {
-        DEBUG_MESSAGE("Random map: %s %s", nextMap, nextGroup)
+        ////DEBUG_MESSAGE("Random map: %s %s", nextMap, nextGroup)
         UMC_SetNextMap(map_kv, nextMap, nextGroup, ChangeMapTime_MapEnd);
     }
     else

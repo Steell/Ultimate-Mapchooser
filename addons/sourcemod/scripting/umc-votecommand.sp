@@ -16,7 +16,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this plugin.  If not, see <http://www.gnu.org/licenses/>.
 *************************************************************************
-*************************************************************************/
+*************************************************************************/   
 #pragma semicolon 1
 
 #include <sourcemod>
@@ -267,7 +267,7 @@ public OnPluginStart()
 //Called after all config files were executed.
 public OnConfigsExecuted()
 {
-    DEBUG_MESSAGE("Executing VoteCommand OnConfigsExecuted")
+    //DEBUG_MESSAGE("Executing VoteCommand OnConfigsExecuted")
     
     can_vote = ReloadMapcycle();
     

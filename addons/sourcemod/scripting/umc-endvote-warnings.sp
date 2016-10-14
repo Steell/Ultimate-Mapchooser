@@ -16,7 +16,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this plugin.  If not, see <http://www.gnu.org/licenses/>.
 *************************************************************************
-*************************************************************************/
+*************************************************************************/   
 #pragma semicolon 1
 
 #include <sourcemod>
@@ -73,7 +73,7 @@ new current_win;
 
 public OnPluginStart()
 {
-    DEBUG_MESSAGE("Loading plugin...")
+    ////DEBUG_MESSAGE("Loading plugin...")
 
     cvar_time = CreateConVar(
         "sm_umc_endvote_timewarnings",
@@ -112,7 +112,7 @@ public OnPluginStart()
 
 public OnConfigsExecuted()
 {
-    DEBUG_MESSAGE("Executing Warnings OnConfigsExecuted")
+    ////DEBUG_MESSAGE("Executing Warnings OnConfigsExecuted")
     
     //Clear warning arrays
     ClearHandleArray(time_array);
@@ -137,9 +137,9 @@ public OnConfigsExecuted()
     //    ...vote warnings are enabled.
     if (time_enabled)
     {
-        DEBUG_MESSAGE("Fetching time-warnings...")
+        ////DEBUG_MESSAGE("Fetching time-warnings...")
         GetVoteWarnings(timefile, time_array, current_time);
-        DEBUG_MESSAGE("Number of time warnings: %i", GetArraySize(time_array))
+        ////DEBUG_MESSAGE("Number of time warnings: %i", GetArraySize(time_array))
     }
     if (frag_enabled)
         GetVoteWarnings(fragfile, frag_array, current_frag);
@@ -298,7 +298,7 @@ GetVoteWarnings(const String:fileName[], Handle:warningArray, &next)
             SetTrieString(warning, "message", message);
             SetTrieString(warning, "notification", notification);
             SetTrieString(warning, "flags", flags);
-            DEBUG_MESSAGE("Warning time: %i, message: %s", warningTime - i, message)
+            ////DEBUG_MESSAGE("Warning time: %i, message: %s", warningTime - i, message)
             
             //Insert correct time remaining if...
             //    ...the message has a place to insert it.
@@ -325,7 +325,7 @@ GetVoteWarnings(const String:fileName[], Handle:warningArray, &next)
             //Increment the counter.
             warningCount++;
             
-            DEBUG_MESSAGE("Number of warnings: %i", GetArraySize(warningArray))
+            ////DEBUG_MESSAGE("Number of warnings: %i", GetArraySize(warningArray))
         }
     } while(KvGotoNextKey(kv)); //Do this for every warning.
     
@@ -346,7 +346,7 @@ GetVoteWarnings(const String:fileName[], Handle:warningArray, &next)
         
         next = GetArraySize(warningArray);
         
-        DEBUG_MESSAGE("Sorted Warnings: %i", GetArraySize(warningArray))
+        ////DEBUG_MESSAGE("Sorted Warnings: %i", GetArraySize(warningArray))
     }
 }
 
@@ -371,7 +371,7 @@ UpdateWarnings(Handle:array, threshold, &warningTime)
             break;
     }
     
-    DEBUG_MESSAGE("Next warning after update located at index %i", i)
+    ////DEBUG_MESSAGE("Next warning after update located at index %i", i)
     
     return i;
 }
@@ -379,7 +379,7 @@ UpdateWarnings(Handle:array, threshold, &warningTime)
 
 UpdateWinWarnings(winsleft)
 {
-    DEBUG_MESSAGE("*UpdateWinWarnings*")
+    ////DEBUG_MESSAGE("*UpdateWinWarnings*")
     new warningTime;
     current_win = UpdateWarnings(win_array, winsleft, warningTime);
     
@@ -396,7 +396,7 @@ UpdateWinWarnings(winsleft)
 
 UpdateFragWarnings(fragsleft)
 {
-    DEBUG_MESSAGE("*UpdateFragWarnings*")
+    ////DEBUG_MESSAGE("*UpdateFragWarnings*")
     new warningTime;
     current_frag = UpdateWarnings(frag_array, fragsleft, warningTime);
     
@@ -414,8 +414,8 @@ UpdateFragWarnings(fragsleft)
 UpdateTimeWarnings(timeleft)
 {
 #if UMC_DEBUG
-    DEBUG_MESSAGE("*UpdateTimeWarnings*")
-    DEBUG_MESSAGE("Threshold: %i", timeleft)
+    ////DEBUG_MESSAGE("*UpdateTimeWarnings*")
+    ////DEBUG_MESSAGE("Threshold: %i", timeleft)
     new Handle:warning;
     decl String:message[255];
     for (new i = 0; i < GetArraySize(time_array); i++)
@@ -423,7 +423,7 @@ UpdateTimeWarnings(timeleft)
         warning = GetArrayCell(time_array, i);
         if (GetTrieString(warning, "message", message, sizeof(message)))
         {
-            DEBUG_MESSAGE("%i: %s", i, message)
+            ////DEBUG_MESSAGE("%i: %s", i, message)
         }
     }
 #endif
@@ -443,7 +443,7 @@ UpdateTimeWarnings(timeleft)
 
 UpdateRoundWarnings(roundsleft)
 {
-    DEBUG_MESSAGE("*UpdateRoundWarnings*")
+    ////DEBUG_MESSAGE("*UpdateRoundWarnings*")
     new warningTime;
     current_round = UpdateWarnings(round_array, roundsleft, warningTime);
     
@@ -477,7 +477,7 @@ stock DoVoteWarning(Handle:warningArray, &next, triggertime, param=0)
     //    ...the time to trigger it has come.
     if (triggertime <= warningTime)
     {
-        DEBUG_MESSAGE("Displaying warning time: %i (trigger time: %i)", warningTime, triggertime)
+        ////DEBUG_MESSAGE("Displaying warning time: %i (trigger time: %i)", warningTime, triggertime)
     
         DisplayVoteWarning(warning, param);
         

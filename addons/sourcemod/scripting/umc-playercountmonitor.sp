@@ -289,7 +289,7 @@ public OnPluginStart()
 //Called after all config files were executed.
 public OnConfigsExecuted()
 {
-    DEBUG_MESSAGE("Executing PlayerCountMonitor OnConfigsExecuted")
+    //DEBUG_MESSAGE("Executing PlayerCountMonitor OnConfigsExecuted")
     
     validity_enabled = false;
     

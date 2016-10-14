@@ -16,7 +16,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this plugin.  If not, see <http://www.gnu.org/licenses/>.
 *************************************************************************
-*************************************************************************/
+*************************************************************************/  
 #pragma semicolon 1
 
 #include <sourcemod>
@@ -337,7 +337,7 @@ public OnPluginStart()
 //Called after all config files were executed.
 public OnConfigsExecuted()
 {
-    DEBUG_MESSAGE("Executing RTV OnConfigsExecuted")
+    //DEBUG_MESSAGE("Executing RTV OnConfigsExecuted")
     
     //We have not completed an RTV.
     rtv_completed = false;
@@ -454,7 +454,7 @@ public OnClientDisconnect_Post(client)
 //Called at the end of a map.
 public OnMapEnd()
 {
-    DEBUG_MESSAGE("Executing RTV OnMapEnd")
+    //DEBUG_MESSAGE("Executing RTV OnMapEnd")
     
     //Empty array of clients who have entered RTV.
     ClearArray(rtv_clients);
@@ -610,16 +610,16 @@ AttemptRTV(client)
     new clients = GetRealClientCount();
     new minPlayers = GetConVarInt(cvar_rtv_minplayers);
     
-    DEBUG_MESSAGE("Checking RTV Entry Validity")
+    //DEBUG_MESSAGE("Checking RTV Entry Validity")
     
     //Print a message if...
     //    ...an RTV has already been completed OR
     //    ...a vote has already been completed and RTVs after votes aren't allowed.
     if (rtv_completed || (vote_completed && GetConVarInt(cvar_rtv_postaction) == 1))
     {
-        DEBUG_MESSAGE("RTV Already Completed? -- %s", rtv_completed ? "true" : "false")
-        DEBUG_MESSAGE("Vote Already Completed? -- %s", vote_completed ? "true" : "false")
-        DEBUG_MESSAGE("Change Map On Post? -- %s", GetConVarBool(cvar_rtv_postaction) ? "true" : "false")
+        //DEBUG_MESSAGE("RTV Already Completed? -- %s", rtv_completed ? "true" : "false")
+        //DEBUG_MESSAGE("Vote Already Completed? -- %s", vote_completed ? "true" : "false")
+        //DEBUG_MESSAGE("Change Map On Post? -- %s", GetConVarBool(cvar_rtv_postaction) ? "true" : "false")
         
         PrintToChat(client, "\x03[UMC]\x01 %t", "No RTV Nextmap");
         return;
@@ -739,7 +739,7 @@ AttemptRTV(client)
 //Creates the RTV timer. While this timer is active, players are not able to RTV.
 MakeRTVTimer()
 {
-    DEBUG_MESSAGE("Enabling RTV; setting rtv_completed flag to false")
+    //DEBUG_MESSAGE("Enabling RTV; setting rtv_completed flag to false")
     //We are re-enabling RTV at this point.
     rtv_completed = false;
     
@@ -803,7 +803,7 @@ public StartRTV()
     //Clear the array of clients who have entered RTV.
     ClearArray(rtv_clients);
     
-    DEBUG_MESSAGE("Disabling RTV; setting rtv_completed flag to true")
+    //DEBUG_MESSAGE("Disabling RTV; setting rtv_completed flag to true")
     rtv_completed = true;
     
     new postAction = GetConVarInt(cvar_rtv_postaction);
@@ -839,7 +839,7 @@ public StartRTV()
         
         decl String:flags[64];
         GetConVarString(cvar_voteflags, flags, sizeof(flags));
-        DEBUG_MESSAGE("Vote Flags: \"%s\"", flags)
+        //DEBUG_MESSAGE("Vote Flags: \"%s\"", flags)
         
         new clients[MAXPLAYERS+1];
         new numClients;
@@ -890,7 +890,7 @@ public UMC_OnVoteFailed()
 {
     if (rtv_inprogress)
     {
-        DEBUG_MESSAGE("RTV Failed. Setting completion flags to false.")
+        //DEBUG_MESSAGE("RTV Failed. Setting completion flags to false.")
         rtv_inprogress = false;
         vote_completed = false;
         rtv_delaystart = GetConVarFloat(cvar_rtv_interval);
@@ -902,7 +902,7 @@ public UMC_OnVoteFailed()
 //Called when UMC has set a next map.
 public UMC_OnNextmapSet(Handle:kv, const String:map[], const String:group[], const String:display[])
 {
-    DEBUG_MESSAGE("Next Map has been set by UMC. Setting vote_completion flag to true")
+    //DEBUG_MESSAGE("Next Map has been set by UMC. Setting vote_completion flag to true")
     vote_completed = true;
     rtv_inprogress = false;
 }

@@ -16,7 +16,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this plugin.  If not, see <http://www.gnu.org/licenses/>.
 *************************************************************************
-*************************************************************************/
+*************************************************************************/  
 #pragma semicolon 1
 
 #include <sourcemod>
@@ -67,12 +67,13 @@ public OnPluginStart()
     
     //Load the translations file
     LoadTranslations("ultimate-mapchooser.phrases");
+
 }
 
 //Called when UMC has set the next map.
 public UMC_OnNextmapSet(Handle:kv, const String:map[], const String:group[], const String:display[])
 {
-    DEBUG_MESSAGE("Map changed, displaying message...")
+    //DEBUG_MESSAGE("Map changed, displaying message...")
 
     new bool:disp = !GetConVarBool(cvar_display);
 
@@ -83,7 +84,7 @@ public UMC_OnNextmapSet(Handle:kv, const String:map[], const String:group[], con
             Format(msg, sizeof(msg), "[UMC] %t", "Next Map", display);
         else
             Format(msg, sizeof(msg), "[UMC] %t", "Next Map", map);
-        DEBUG_MESSAGE("Attempting to display center message: \"%s\"", msg)
+        //DEBUG_MESSAGE("Attempting to display center message: \"%s\"", msg)
         DisplayServerMessage(msg, "C");
         //PrintCenterTextAll("[UMC] %t", "Next Map", map);
     }
@@ -91,15 +92,13 @@ public UMC_OnNextmapSet(Handle:kv, const String:map[], const String:group[], con
     {
         if (disp && strlen(display) > 0)
         {
-            DEBUG_MESSAGE("Attempting to display hint message: \"%s\"", display)
+            //DEBUG_MESSAGE("Attempting to display hint message: \"%s\"", display)
             PrintHintTextToAll("[UMC] %t", "Next Map", display);
         }
         else
         {
-            DEBUG_MESSAGE("Attempting to display hint message: \"%s\"", map)
+            //DEBUG_MESSAGE("Attempting to display hint message: \"%s\"", map)
             PrintHintTextToAll("[UMC] %t", "Next Map", map);
         }
     }
 }
-
-

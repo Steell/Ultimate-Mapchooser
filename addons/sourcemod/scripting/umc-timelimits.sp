@@ -116,7 +116,7 @@ public Action:UMC_OnDetermineMapExclude(Handle:kv, const String:map[], const Str
     if (IsTimeBetween(min, max))
         return Plugin_Continue;
     
-    DEBUG_MESSAGE("Map %s is excluded due to Time Limits. Min: %i, Max: %i", map, min, max)
+    //DEBUG_MESSAGE("Map %s is excluded due to Time Limits. Min: %i, Max: %i", map, min, max)
     return Plugin_Stop;
 }
 
