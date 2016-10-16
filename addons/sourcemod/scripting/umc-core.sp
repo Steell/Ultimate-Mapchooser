@@ -2819,6 +2819,7 @@ UMC_BuildOptionsError:BuildMapVoteItems(Handle:voteManager, Handle:result, Handl
                         
                         SetTrieValue(map, "mapcycle", nomMapcycle);
                         
+                        
                         //DEBUG_MESSAGE("*MEMLEAKTEST* Inserting map trie created at [3] into vote manager storage")
                         InsertArrayCell(map_vote, position, map);
                         InsertArrayString(map_vote_display, position, display);
@@ -3009,7 +3010,6 @@ UMC_BuildOptionsError:BuildMapVoteItems(Handle:voteManager, Handle:result, Handl
             }
             
             //At this point we have a map which we are going to add to the vote array.
-
             if (verboseLogs)
             {
                 LogUMCMessage(
@@ -3071,12 +3071,6 @@ UMC_BuildOptionsError:BuildMapVoteItems(Handle:voteManager, Handle:result, Handl
             
             KvGoBack(kv); */
             
-            //DEBUG_MESSAGE("Determining where to place the map in the vote.")
-            //Get the position in the vote array to add the map to.
-            position = GetNextMenuIndex(voteCounter, scramble);
-            
-            //DEBUG_MESSAGE("Adding map to the vote.")
-                    
             //DEBUG_MESSAGE("*MEMLEAKTEST* Creating map trie (BuildMapVoteItems) [5]")
             new Handle:map = CreateMapTrie(mapName, catName);
             
@@ -3084,10 +3078,26 @@ UMC_BuildOptionsError:BuildMapVoteItems(Handle:voteManager, Handle:result, Handl
             KvCopySubkeys(mapcycle, mapMapcycle);
             
             SetTrieValue(map, "mapcycle", mapMapcycle);
+                
+            // Depending on the cvar, we will display all nominations in the vote either at the top or at the bottom
+            // Top of map vote (below any extend/don't display options
+            if (GetConVarBool(cvar_nomination_display))
+            {
+                //DEBUG_MESSAGE("*MEMLEAKTEST* Inserting map trie created at [5] into vote manager storage")
+                InsertArrayCell(map_vote, 0, map);
+                InsertArrayString(map_vote_display, 0, display);
+            }
+            // Wherever is available
+            else
+            {
+                //DEBUG_MESSAGE("Determining where to place the map in the vote.")
+                //Get the position in the vote array to add the map to.
+                position = GetNextMenuIndex(voteCounter, scramble);
             
-            //DEBUG_MESSAGE("*MEMLEAKTEST* Inserting map trie created at [5] into vote manager storage")
-            InsertArrayCell(map_vote, position, map);
-            InsertArrayString(map_vote_display, position, display);
+                //DEBUG_MESSAGE("*MEMLEAKTEST* Inserting map trie created at [5] into vote manager storage")
+                InsertArrayCell(map_vote, position, map);
+                InsertArrayString(map_vote_display, position, display);
+            }
             
             //Increment number of maps added to the vote.
             voteCounter++;
@@ -5320,7 +5330,7 @@ bool:InternalNominateMap(Handle:kv, const String:map[], const String:group[], cl
     else
     {
         PushArrayCell(nominations_arr, nomination);
-        //DEBUG_MESSAGE("Adding Nominated Map to end of options list...")
+        //DEBUG_MESSAGE("Adding Nominated Map to the list...")
     }
     
     return true;
