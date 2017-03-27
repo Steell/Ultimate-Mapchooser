@@ -39,7 +39,7 @@ along with this plugin.  If not, see <http://www.gnu.org/licenses/>.
 public Plugin:myinfo =
 {
     name        = "[UMC] Ultimate Mapchooser Core",
-    author      = "Original:Steell, Update: Powerlord (3.4.6-dev), Mr.Silence (3.5.0)",
+    author      = "Original:Steell, Update: Powerlord (3.4.6-dev), Mr.Silence (3.5.1)",
     description = "Core component for [UMC]",
     version     = PL_VERSION,
     url         = "http://forums.alliedmods.net/showthread.php?t=134190"
@@ -47,6 +47,9 @@ public Plugin:myinfo =
 
 //Changelog:
 /*
+ 3.5.1 (03/25/2017)
+  Fixed a conflict in cvars for nomination display. This most likely caused a bug with both display of the message and the display on the vote menu.
+  
  3.5.0 (10/14/2016)
   Added a number of changes from 3.4.6-dev (done by powerlord) to the plugin (including 1.7.3 Sourcemod support)
     * This does not include the use of "FindMap". I removed this due to incompatiblities with older games that do not use workshop.
@@ -54,7 +57,7 @@ public Plugin:myinfo =
     * Due to this game only running on Source 2007, some features (such as echonextmap) will not work correctly. 
       Keep this in mind when using UMC for ZPS and other old source-based games.
   Added GNU headers to all plugins.
-  Added Nomination display cvar to plugin (see the configuration file for more details)
+  Added Nomination display cvar to plugin. You can now display map nominations at the top or bottom of the vote list.
   Commented DEBUG_MESSAGE in the code of all plugins.
   Updated spacing/tabbing of code files.
   Cleaned up some of the code.
@@ -567,8 +570,8 @@ new Handle:cvar_extend_command      = INVALID_HANDLE;
 new Handle:cvar_default_vm          = INVALID_HANDLE;
 new Handle:cvar_block_slots         = INVALID_HANDLE;
 new Handle:cvar_novote              = INVALID_HANDLE;
-new Handle:cvar_nomdisp             = INVALID_HANDLE;
-new Handle:cvar_nomination_display  = INVALID_HANDLE;
+new Handle:cvar_nommsg_disp             = INVALID_HANDLE;
+new Handle:cvar_mapnom_display  = INVALID_HANDLE;
 
 //Stores the current category.
 new String:current_cat[MAP_LENGTH];
@@ -680,8 +683,8 @@ public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
 //Called when the plugin is finished loading.
 public OnPluginStart()
 {
-    cvar_nomdisp = CreateConVar(
-        "sm_umc_nomination_display",
+    cvar_nommsg_disp = CreateConVar(
+        "sm_umc_nommsg_display",
         "^",
         "String to replace the {NOMINATED} map display-template string with."
     );
@@ -739,8 +742,8 @@ public OnPluginStart()
         0, true, 0.0, true, 1.0
     );
     
-    cvar_nomination_display = CreateConVar(
-        "sm_umc_nomination_display",
+    cvar_mapnom_display = CreateConVar(
+        "sm_umc_mapnom_display",
         "0",
         "Determines where in votes the nominated maps will be displayed.\n 0 - Bottom,\n 1 - Top",
         0, true, 0.0, true, 1.0
@@ -3081,7 +3084,7 @@ UMC_BuildOptionsError:BuildMapVoteItems(Handle:voteManager, Handle:result, Handl
                 
             // Depending on the cvar, we will display all nominations in the vote either at the top or at the bottom
             // Top of map vote (below any extend/don't display options
-            if (GetConVarBool(cvar_nomination_display))
+            if (GetConVarBool(cvar_mapnom_display))
             {
                 //DEBUG_MESSAGE("*MEMLEAKTEST* Inserting map trie created at [5] into vote manager storage")
                 InsertArrayCell(map_vote, 0, map);
@@ -3421,7 +3424,7 @@ public UMC_OnFormatTemplateString(String:template[], maxlen, Handle:kv, const St
     ReplaceString(template, maxlen, "{MAP}", map, false);
     
     decl String:nomString[16];
-    GetConVarString(cvar_nomdisp, nomString, sizeof(nomString));
+    GetConVarString(cvar_nommsg_disp, nomString, sizeof(nomString));
     ReplaceString(template, maxlen, "{NOMINATED}", nomString, false);
     
     //DEBUG_MESSAGE("OFTS End: %s", template)
@@ -5322,7 +5325,7 @@ bool:InternalNominateMap(Handle:kv, const String:map[], const String:group[], cl
     
     //Add the nomination to the nomination array.
     //DEBUG_MESSAGE("*MEMLEAKTEST* Adding new nomination made at [1] to nomination array")
-    if (GetConVarBool(cvar_nomination_display))
+    if (GetConVarBool(cvar_mapnom_display))
     {
         InsertArrayCell(nominations_arr, 0, nomination);
         //DEBUG_MESSAGE("Adding Nominated Map to start of options list...")
