@@ -570,8 +570,8 @@ new Handle:cvar_extend_command      = INVALID_HANDLE;
 new Handle:cvar_default_vm          = INVALID_HANDLE;
 new Handle:cvar_block_slots         = INVALID_HANDLE;
 new Handle:cvar_novote              = INVALID_HANDLE;
-new Handle:cvar_nommsg_disp             = INVALID_HANDLE;
-new Handle:cvar_mapnom_display  = INVALID_HANDLE;
+new Handle:cvar_nommsg_disp         = INVALID_HANDLE;
+new Handle:cvar_mapnom_display      = INVALID_HANDLE;
 
 //Stores the current category.
 new String:current_cat[MAP_LENGTH];
@@ -3084,7 +3084,7 @@ UMC_BuildOptionsError:BuildMapVoteItems(Handle:voteManager, Handle:result, Handl
                 
             // Depending on the cvar, we will display all nominations in the vote either at the top or at the bottom
             // Top of map vote (below any extend/don't display options
-            if (GetConVarBool(cvar_mapnom_display))
+            if (!GetConVarBool(cvar_mapnom_display))
             {
                 //DEBUG_MESSAGE("*MEMLEAKTEST* Inserting map trie created at [5] into vote manager storage")
                 InsertArrayCell(map_vote, 0, map);
@@ -5325,7 +5325,7 @@ bool:InternalNominateMap(Handle:kv, const String:map[], const String:group[], cl
     
     //Add the nomination to the nomination array.
     //DEBUG_MESSAGE("*MEMLEAKTEST* Adding new nomination made at [1] to nomination array")
-    if (GetConVarBool(cvar_mapnom_display))
+    if (!GetConVarBool(cvar_mapnom_display))
     {
         InsertArrayCell(nominations_arr, 0, nomination);
         //DEBUG_MESSAGE("Adding Nominated Map to start of options list...")
