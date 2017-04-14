@@ -107,6 +107,26 @@ public OnConfigsExecuted()
 //Execute pre-commands when map ends
 public OnMapEnd()
 {
+    if (strlen(group_command) == 0 || strlen(map_command) == 0)
+    {
+        new Handle:kv = GetKvFromFile("umc_mapcycle.txt", "umc_mapcycle");
+        decl String:CurrentMapGroup[ 64 ], String:CurrentMap[ 64 ];
+        
+        GetCurrentMap(CurrentMap, sizeof(CurrentMap));
+        KvFindGroupOfMap(kv, CurrentMap, CurrentMapGroup, sizeof(CurrentMapGroup));
+        
+        if (KvJumpToKey(kv, CurrentMapGroup))
+        {    
+            if (strlen( group_command ) == 0)
+                KvGetString(kv, COMMAND_KEY, group_command, sizeof(group_command), "");
+        
+            if (KvJumpToKey(kv, CurrentMap) && strlen( map_command ) == 0)
+                KvGetString(kv, COMMAND_KEY, map_command, sizeof(map_command), "");
+        }
+        
+        CloseHandle( kv );
+    }
+    
     DEBUG_MESSAGE("Executing MapCommands OnMapEnd")
     if (strlen(group_precommand) > 0)
     {
