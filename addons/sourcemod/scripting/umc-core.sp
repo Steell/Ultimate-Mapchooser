@@ -822,6 +822,7 @@ public OnPluginStart()
     HookEventEx("arena_win_panel",    Event_RoundEnd); //TF2
     HookEventEx("round_win",          Event_RoundEnd); //Nuclear Dawn
     HookEventEx("game_end",           Event_RoundEnd); //EmpiresMod
+    HookEventEx("game_round_restart", Event_RoundEnd); //ZPS
     
     //Initialize our vote arrays
     nominations_arr = CreateArray();

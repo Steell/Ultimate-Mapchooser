@@ -1,6 +1,14 @@
 # UMC
 Ultimate Map Chooser plugin
 
+3.5.1 Hotfix Commit (06-04-2017)
+-----------------
+- Added "game_round_restart" hook so that levels could be changed via rtv at the end of a round. 
+- Added logic to count only spectators, survivors, and zombies in votes (RTV, round-end, etc) for ZPS. This change effectively stops counting AFK players and does not allow them to vote if they are in the waiting room (team 0) or have somehow managed to change to team 4 (which is the cops team, something left over from another time).
+- Recompiled all plugins so that the changes made in umc_utils.inc would be applied. Please update all the plugins being used for your servers!
+- Special thanks to Tango and the Davidian guys for catching all of this. 
+- NOTE: Due to the changes for who gets counted in the votes, this may have unintended effects in other games if used there. I will begin working on a better/more logical way to handle AFK players and, perhaps, create a cvar to handle this functionality at a later date.
+
 3.5.1 Update Commit (03-28-2017)
 -----------------
 - Fixed a conflict in cvars for nomination display. This most likely caused a bug with both display of the message and the display on the vote menu.
