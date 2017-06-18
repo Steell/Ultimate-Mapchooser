@@ -1,6 +1,18 @@
 # UMC
 Ultimate Map Chooser plugin
 
+NOTE: You do not have to install ALL the plugins for this to work! Each one can be added or removed as necessary due to their modular nature (this is intentional). Just make sure to install the umc_core.smx and then install any subsequent plugins that you might need for mapvoting and such and go from there.
+
+Please read the documentation here on the plugin: 
+https://code.google.com/archive/p/sourcemod-ultimate-mapchooser/wikis
+http://www.vertigogaming.org/wiki/index.php/UMC_Plugin
+
+
+3.5.1 Hotfix Commit 2 (06-18-2017)
+-----------------
+- Rolled back changes for AFK players. There was a bug regarding it that caused an issue where 1 player decided the next map. This issue is a bit more involved to handle, so I suggest using an AFK manager to kick afk players.
+- Fixed a bug with nominated maps not displaying at the top of the mapvote correctly. Seems like an odd logic bug caused the issue.
+
 3.5.1 Hotfix Commit (06-04-2017)
 -----------------
 - Added "game_round_restart" hook so that levels could be changed via rtv at the end of a round. 

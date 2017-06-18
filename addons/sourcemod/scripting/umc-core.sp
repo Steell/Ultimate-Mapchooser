@@ -3084,15 +3084,15 @@ UMC_BuildOptionsError:BuildMapVoteItems(Handle:voteManager, Handle:result, Handl
             SetTrieValue(map, "mapcycle", mapMapcycle);
                 
             // Depending on the cvar, we will display all nominations in the vote either at the top or at the bottom
-            // Top of map vote (below any extend/don't display options
+            // Bottom of the map vote
             if (!GetConVarBool(cvar_mapnom_display))
             {
                 //DEBUG_MESSAGE("*MEMLEAKTEST* Inserting map trie created at [5] into vote manager storage")
                 InsertArrayCell(map_vote, 0, map);
                 InsertArrayString(map_vote_display, 0, display);
             }
-            // Wherever is available
-            else
+            // Top of the map vote
+            if (GetConVarBool(cvar_mapnom_display))
             {
                 //DEBUG_MESSAGE("Determining where to place the map in the vote.")
                 //Get the position in the vote array to add the map to.
@@ -5326,13 +5326,15 @@ bool:InternalNominateMap(Handle:kv, const String:map[], const String:group[], cl
     
     //Add the nomination to the nomination array.
     //DEBUG_MESSAGE("*MEMLEAKTEST* Adding new nomination made at [1] to nomination array")
+    // Display Bottom
     if (!GetConVarBool(cvar_mapnom_display))
     {
         InsertArrayCell(nominations_arr, 0, nomination);
         //DEBUG_MESSAGE("Adding Nominated Map to start of options list...")
     }
-    else
-    {
+    // Display Top
+    if (GetConVarBool(cvar_mapnom_display))
+    {   
         PushArrayCell(nominations_arr, nomination);
         //DEBUG_MESSAGE("Adding Nominated Map to the list...")
     }
