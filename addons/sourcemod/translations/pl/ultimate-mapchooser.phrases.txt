@@ -118,7 +118,7 @@
 
     "RTV Entered"
     {
-        "pl"    "{1} dał RTV i chce zmienia mapę."
+        "pl"    "{1} dał RTV i chce zmienić mapę."
     }
 
     "RTV Info Msg"
@@ -188,8 +188,8 @@
 
     "Default Warning"
     {
-        //Tu gdzie {TIME} zostanie wstawiona ilść sekund.
-        //Zostaw {TIME} w tej samej postaci - po angielsku- to nie jest błąd.
+        //Tu gdzie {TIME} zostanie wstawiona ilość sekund.
+        //Zostaw {TIME} w tej samej postaci - po angielsku - to nie jest błąd.
         "pl"    "{TIME} sekund do rozpoczęcia głosowania."
     }
     
