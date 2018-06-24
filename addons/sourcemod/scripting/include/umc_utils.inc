@@ -993,7 +993,7 @@ stock LogKv(Handle:kv, depth=0)
     decl String:space[whitespace];
     FillWhiteSpace(space, whitespace);
     
-    LogUMCMessage("%i: %s\"%s\"", depth+1, space, section);
+    //LogUMCMessage("%i: %s\"%s\"", depth+1, space, section);
     
     if (!KvGotoFirstSubKey(kv))
         return;
@@ -1031,7 +1031,7 @@ stock PrintNominationArray(Handle:array)
         nom = GetArrayCell(array, i);
         GetTrieString(nom, MAP_TRIE_MAP_KEY, map, sizeof(map));
         GetTrieString(nom, MAP_TRIE_GROUP_KEY, group, sizeof(group));
-        LogUMCMessage("%20s   |    %20s", map, group);
+        //LogUMCMessage("%20s   |    %20s", map, group);
     }
 }
 

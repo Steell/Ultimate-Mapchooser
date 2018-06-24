@@ -7,13 +7,19 @@ Please read the documentation here on the plugin:
 https://code.google.com/archive/p/sourcemod-ultimate-mapchooser/wikis
 http://www.vertigogaming.org/wiki/index.php/UMC_Plugin
 
+3.6.0 Update (06-11-2018)
+-----------------
+- Compiled/Updated codebase for SM 1.8
+- Added ZPS round end and round restart support. You can now use rounds instead of relying on a game timer!
+- Updated some of the code in core/utils for compatibility.
+- Removed changelog from UMC core code. Please see the original plugin code for all previous change log events made by the previous author!
 
-3.5.1 Hotfix Commit 2 (06-18-2017)
+3.5.1 Hotfix 2 (06-18-2017)
 -----------------
 - Rolled back changes for AFK players. There was a bug regarding it that caused an issue where 1 player decided the next map. This issue is a bit more involved to handle, so I suggest using an AFK manager to kick afk players.
 - Fixed a bug with nominated maps not displaying at the top of the mapvote correctly. Seems like an odd logic bug caused the issue.
 
-3.5.1 Hotfix Commit (06-04-2017)
+3.5.1 Hotfix (06-04-2017)
 -----------------
 - Added "game_round_restart" hook so that levels could be changed via rtv at the end of a round. 
 - Added logic to count only spectators, survivors, and zombies in votes (RTV, round-end, etc) for ZPS. This change effectively stops counting AFK players and does not allow them to vote if they are in the waiting room (team 0) or have somehow managed to change to team 4 (which is the cops team, something left over from another time).
@@ -21,7 +27,7 @@ http://www.vertigogaming.org/wiki/index.php/UMC_Plugin
 - Special thanks to Tango and the Davidian guys for catching all of this. 
 - NOTE: Due to the changes for who gets counted in the votes, this may have unintended effects in other games if used there. I will begin working on a better/more logical way to handle AFK players and, perhaps, create a cvar to handle this functionality at a later date.
 
-3.5.1 Update Commit (03-28-2017)
+3.5.1 Update (03-28-2017)
 -----------------
 - Fixed a conflict in cvars for nomination display. This most likely caused a bug with both display of the message and the display on the vote menu.
 - Created new config cvar sm_umc_nommsg_display for chat display of which maps were nominated
@@ -29,7 +35,7 @@ http://www.vertigogaming.org/wiki/index.php/UMC_Plugin
 - Fixed a logic error involving nominiation map display.
 - Recompiled plugins (still uses 1.7.3 Sourcemod) and added cvars to configuration file.
 
-3.5.0 Initial/Update Commits (10-16-2016)
+3.5.0 Initial/Update (10-16-2016)
 -----------------
 - Added a number of changes from 3.4.6-dev (done by powerlord) to the plugin (including 1.7.3 Sourcemod support). Original version by Steell.
 - Added ZPS support.

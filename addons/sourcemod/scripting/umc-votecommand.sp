@@ -115,12 +115,6 @@ public OnPluginStart()
         0, true, 0.0
     );
 
-    /*cvar_vote_flags = CreateConVar(
-        "sm_umc_vc_adminflags",
-        "",
-        "String of admin flags required for players to be able to vote in end-of-map\nvotes. If no flags are specified, all players can vote."
-    );*/
-
     cvar_vote_allowduplicates = CreateConVar(
         "sm_umc_vc_allowduplicates",
         "1",

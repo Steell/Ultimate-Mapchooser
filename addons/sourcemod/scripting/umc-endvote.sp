@@ -91,15 +91,11 @@ new Handle:vote_timer = INVALID_HANDLE; //Timer which handles end-of-map vote ba
 new Handle:cvar_maxrounds = INVALID_HANDLE; //Round limit cvar
 new Handle:cvar_fraglimit = INVALID_HANDLE; //Frag limit cvar
 new Handle:cvar_winlimit  = INVALID_HANDLE; //Win limit cvar
+new Handle:cvar_zpsmaxrnds = INVALID_HANDLE; // ZPS Survival
+new Handle:cvar_zpomaxrnds = INVALID_HANDLE; // ZPS Objective
 
 //CS:GO mp_match_can_clinch cvar
 new Handle:cvar_clinch = INVALID_HANDLE;
-
-//Used to hold original values for the limit cvars, in order to reset them to the correct value when
-//the map changes.
-//new maxrounds_mem;
-//new fraglimit_mem;
-//new bool:catch_change = false; //Flag used to ignore changes to the limit cvars.
 
 //Flags
 new bool:timer_alive;      //Is the time-based vote timer ticking?
@@ -120,6 +116,9 @@ new team_wincounts[MAXTEAMS];
 
 //Counts the number of available extensions.
 new extend_counter;
+
+// Name of current map. ZPS ONLY!
+new String:current_map_name[MAP_LENGTH];
 
 //Sounds to be played at the start and end of votes.
 new String:vote_start_sound[PLATFORM_MAX_PATH], String:vote_end_sound[PLATFORM_MAX_PATH],
@@ -210,12 +209,6 @@ public OnPluginStart()
         "Specifies the maximum number of maps to appear in a runoff vote.\n 1 or 0 sets no maximum.",
         0, true, 0.0
     );
-
-    /*cvar_vote_flags = CreateConVar(
-        "sm_umc_endvote_adminflags",
-        "",
-        "String of admin flags required for players to be able to vote in end-of-map\nvotes. If no flags are specified, all players can vote."
-    );*/
 
     cvar_vote_allowduplicates = CreateConVar(
         "sm_umc_endvote_allowduplicates",
@@ -367,6 +360,8 @@ public OnPluginStart()
     cvar_maxrounds = FindConVar("mp_maxrounds");
     cvar_fraglimit = FindConVar("mp_fraglimit");
     cvar_winlimit  = FindConVar("mp_winlimit");
+    cvar_zpsmaxrnds = FindConVar("zps_survival_rounds"); // ZPS only!
+    cvar_zpomaxrnds = FindConVar("zps_objective_rounds"); // ZPS only!
     
     //See if there is a clinch cvar
     cvar_clinch = FindConVar("mp_match_can_clinch");
@@ -380,6 +375,13 @@ public OnPluginStart()
         HookEventEx("teamplay_restart_round", Event_RestartRound); //TF2  
         HookEventEx("cs_match_end_restart",   Event_RestartRound); //CS:GO
         HookEventEx("round_win",              Event_RoundEnd); //Nuclear Dawn
+    }
+    
+    // ZPS Specific
+    if (cvar_zpomaxrnds != INVALID_HANDLE || cvar_zpsmaxrnds != INVALID_HANDLE)
+    {
+        HookEventEx("round_win",              Event_RoundEndZPS);
+        HookEventEx("game_round_restart",     Event_RestartRoundZPS); 
     }
     
     //Hook score.
@@ -439,10 +441,6 @@ public OnConfigsExecuted()
 {
     //DEBUG_MESSAGE("Executing EndVote OnConfigsExecuted")
     
-    //Set initial values for cvar value storage.
-    //maxrounds_mem = GetConVarInt(cvar_maxrounds);
-    //fraglimit_mem = GetConVarInt(cvar_fraglimit);
-    
     //Votes are not enabled.
     vote_enabled = false;
     vote_roundend = false;
@@ -475,21 +473,21 @@ public OnConfigsExecuted()
     SetupVoteSounds();
     
     //Grab the name of the current map.
-    decl String:mapName[MAP_LENGTH];
-    GetCurrentMap(mapName, sizeof(mapName));
+    //decl String:current_map_name[MAP_LENGTH];
+    GetCurrentMap(current_map_name, sizeof(current_map_name));
     
     decl String:groupName[MAP_LENGTH];
     UMC_GetCurrentMapGroup(groupName, sizeof(groupName));
     
     if (mapcycleLoaded && StrEqual(groupName, INVALID_GROUP, false))
     {
-        KvFindGroupOfMap(umc_mapcycle, mapName, groupName, sizeof(groupName));
+        KvFindGroupOfMap(umc_mapcycle, current_map_name, groupName, sizeof(groupName));
     }
     
     //Add the map to all the memory queues.
     new mapmem = GetConVarInt(cvar_vote_mem);
     new catmem = GetConVarInt(cvar_vote_catmem);
-    AddToMemoryArray(mapName, vote_mem_arr, mapmem);
+    AddToMemoryArray(current_map_name, vote_mem_arr, mapmem);
     AddToMemoryArray(groupName, vote_catmem_arr, (mapmem > catmem) ? mapmem : catmem);
     
     if (mapcycleLoaded)
@@ -616,6 +614,23 @@ public Event_RoundEndTF2(Handle:evnt, const String:name[], bool:dontBroadcast)
     }
 }
 
+//Called when a round ends in ZPS. 
+public Event_RoundEndZPS(Handle:evnt, const String:name[], bool:dontBroadcast)
+{
+    if (vote_roundend)
+    {
+        vote_roundend = false;
+        StartMapVoteRoundEnd();
+    }
+    
+    //Update the round "timer"
+    round_counter++;
+    
+    if (vote_enabled) 
+    {
+        CheckMaxRounds();
+    }
+}
 
 //Called when the map is restarted.
 public Event_RestartRound(Handle:evnt, const String:name[], bool:dontBroadcast)
@@ -639,6 +654,34 @@ public Event_RestartRound(Handle:evnt, const String:name[], bool:dontBroadcast)
         Call_PushCell(GetConVarInt(cvar_winlimit) - GetConVarInt(cvar_start_rounds));
         Call_PushCell(0);
         Call_Finish();
+    }
+}
+
+//Called when the map is restarted, ZPS specific
+public Event_RestartRoundZPS(Handle:evnt, const String:name[], bool:dontBroadcast)
+{
+    round_counter = 0;
+    
+    //Update our vote warnings.
+    // ZPO (Objective) maps
+    if (cvar_zpomaxrnds != INVALID_HANDLE && strncmp(current_map_name, "zpo_", 4) == 0)
+    {
+        //Update our vote warnings.
+        Call_StartForward(round_update_forward);
+        Call_PushCell(GetConVarInt(cvar_zpomaxrnds) - GetConVarInt(cvar_start_rounds));
+        Call_Finish();
+    }
+    // ZPS (Survival) maps
+    else if (cvar_zpsmaxrnds != INVALID_HANDLE && strncmp(current_map_name, "zps_", 4) == 0)
+    {
+        //Update our vote warnings.
+        Call_StartForward(round_update_forward);
+        Call_PushCell(GetConVarInt(cvar_zpsmaxrnds) - GetConVarInt(cvar_start_rounds));
+        Call_Finish();
+    }
+    else
+    {
+        // Do nothing...
     }
 }
 
@@ -728,6 +771,34 @@ UpdateOtherTimers()
     if (cvar_maxrounds != INVALID_HANDLE)
     {
         start = GetConVarInt(cvar_maxrounds) - GetConVarInt(cvar_start_rounds) - round_counter;
+        if (start > 0)
+            LogUMCMessage("End of map vote will appear after %i more rounds.", start);
+            
+        //Update our vote warnings.
+        //UpdateVoteWarnings(.round=warnings_round_enabled, .frag=warnings_frag_enabled);
+        Call_StartForward(round_update_forward);
+        Call_PushCell(start);
+        Call_Finish();
+    }
+    
+    // ZPS Objective Maps
+    if (cvar_zpomaxrnds != INVALID_HANDLE && strncmp(current_map_name, "zpo_", 4) == 0)
+    {
+        start = GetConVarInt(cvar_zpomaxrnds) - GetConVarInt(cvar_start_rounds) - round_counter;
+        if (start > 0)
+            LogUMCMessage("End of map vote will appear after %i more rounds.", start);
+            
+        //Update our vote warnings.
+        //UpdateVoteWarnings(.round=warnings_round_enabled, .frag=warnings_frag_enabled);
+        Call_StartForward(round_update_forward);
+        Call_PushCell(start);
+        Call_Finish();
+    }
+    
+    // ZPS Survival Maps
+    if (cvar_zpsmaxrnds != INVALID_HANDLE && strncmp(current_map_name, "zps_", 4) == 0)
+    {
+        start = GetConVarInt(cvar_zpsmaxrnds) - GetConVarInt(cvar_start_rounds) - round_counter;
         if (start > 0)
             LogUMCMessage("End of map vote will appear after %i more rounds.", start);
             
@@ -889,15 +960,6 @@ public Handle_FraglimitChange(Handle:convar, const String:oldVal[], const String
     //    fraglimit_mem = StringToInt(newVal);
 }
 
-
-//Reset all modified cvars to the stored values.
-/*RestoreCvars()
-{
-    SetConVarInt(cvar_maxrounds, maxrounds_mem);
-    SetConVarInt(cvar_fraglimit, fraglimit_mem);
-}*/
-
-
 //Called when the number of excluded previous maps from end-of-map votes has changed.
 public Handle_VoteMemoryChange(Handle:convar, const String:oldValue[], const String:newValue[])
 {
@@ -1025,9 +1087,24 @@ CheckWinLimit(winner_score, winning_team)
 //Starts a vote if the given round count is high enough
 CheckMaxRounds()
 {
-    if (cvar_maxrounds != INVALID_HANDLE)
+    if (cvar_maxrounds != INVALID_HANDLE || cvar_zpomaxrnds != INVALID_HANDLE || cvar_zpsmaxrnds != INVALID_HANDLE)
     {
-        new maxrounds = GetConVarInt(cvar_maxrounds);
+        new maxrounds; 
+        
+        // Look for ZPS specific rounds first, otherwise assume its mp_maxrounds
+        if (cvar_zpomaxrnds != INVALID_HANDLE && strncmp(current_map_name, "zpo_", 4) == 0)
+        {
+            maxrounds = GetConVarInt(cvar_zpomaxrnds);
+        }
+        else if (cvar_zpsmaxrnds != INVALID_HANDLE && strncmp(current_map_name, "zps_", 4) == 0)
+        {
+            maxrounds = GetConVarInt(cvar_zpsmaxrnds);
+        }
+        else
+        {
+            maxrounds = GetConVarInt(cvar_maxrounds);
+        }
+        
         if (maxrounds > 0)
         {
             new startRounds = GetConVarInt(cvar_start_rounds);
