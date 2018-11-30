@@ -22,10 +22,8 @@ along with this plugin.  If not, see <http://www.gnu.org/licenses/>.
 #include <sourcemod>
 #include <regex>
 #include <sdktools_sound>
-
 #include <umc-core>
 #include <umc_utils>
-
 #include <emitsoundany>
 
 public Plugin:myinfo =
@@ -70,11 +68,8 @@ new current_win;
 //  -Possible bug where warnings are never updated (vote timer activates before OnConfigsExecuted
 //      finishes) Possible solution is to update the warnings when the timer ticks (use flags so its
 //      only done when necessary).
-
 public OnPluginStart()
 {
-    ////DEBUG_MESSAGE("Loading plugin...")
-
     cvar_time = CreateConVar(
         "sm_umc_endvote_timewarnings",
         "addons/sourcemod/configs/vote_warnings.txt",
@@ -112,14 +107,15 @@ public OnPluginStart()
 
 public OnConfigsExecuted()
 {
-    ////DEBUG_MESSAGE("Executing Warnings OnConfigsExecuted")
-    
     //Clear warning arrays
     ClearHandleArray(time_array);
     ClearHandleArray(frag_array);
     ClearHandleArray(round_array);
     ClearHandleArray(win_array);
+}
 
+public OnMapStart()
+{
     //Store cvar values
     decl String:timefile[256], String:fragfile[256], String:roundfile[256], String:winfile[256];
     GetConVarString(cvar_time, timefile, sizeof(timefile));
@@ -133,13 +129,10 @@ public OnConfigsExecuted()
     round_enabled = strlen(roundfile) > 0 && FileExists(roundfile);
     win_enabled = strlen(winfile) > 0 && FileExists(winfile);
     
-    //Initialize warning variables if...
-    //    ...vote warnings are enabled.
+    //Initialize warning variables if vote warnings are enabled.
     if (time_enabled)
     {
-        ////DEBUG_MESSAGE("Fetching time-warnings...")
         GetVoteWarnings(timefile, time_array, current_time);
-        ////DEBUG_MESSAGE("Number of time warnings: %i", GetArraySize(time_array))
     }
     if (frag_enabled)
         GetVoteWarnings(fragfile, frag_array, current_frag);
@@ -152,11 +145,7 @@ public OnConfigsExecuted()
     frag_init = false;
     round_init = false;
     win_init = false;
-    
-    //Set the starting points.
-    //UpdateVoteWarnings(warnings_time_enabled, warnings_frag_enabled, warnings_round_enabled);
 }
-
 
 //Comparison function for vote warnings. Used for sorting.
 public CompareWarnings(index1, index2, Handle:array, Handle:hndl)
@@ -169,7 +158,6 @@ public CompareWarnings(index1, index2, Handle:array, Handle:hndl)
     GetTrieValue(warning, "time", time2);
     return time2 - time1;
 }
-
 
 //Parses the vote warning definitions file and returns an adt_array of vote warnings.
 GetVoteWarnings(const String:fileName[], Handle:warningArray, &next)
@@ -252,8 +240,7 @@ GetVoteWarnings(const String:fileName[], Handle:warningArray, &next)
         //Grab the name (time) of the warning.
         KvGetSectionName(kv, nameBuffer, sizeof(nameBuffer));
         
-        //Skip this warning if...
-        //    ...it is the default definition.
+        //Skip this warning if it is the default definition.
         if (StrEqual(nameBuffer, "default", false))
             continue;
             
@@ -263,8 +250,7 @@ GetVoteWarnings(const String:fileName[], Handle:warningArray, &next)
         KvGetString(kv, "sound", sound, sizeof(sound), dSound);
         KvGetString(kv, "adminflags", flags, sizeof(flags), dFlags);
         
-        //Prepare to handle sequence of warnings if...
-        //  ...a sequence is what was defined.
+        //Prepare to handle sequence of warnings if a sequence is what was defined.
         if (MatchRegex(re, nameBuffer) > 0)
         {
             //Get components of sequence
@@ -274,8 +260,8 @@ GetVoteWarnings(const String:fileName[], Handle:warningArray, &next)
             //Calculate sequence interval
             warningTime = StringToInt(sequence_start);
             interval = (warningTime - StringToInt(sequence_end)) + 1;
-            //Invert sequence if...
-            //  ...it was specified in the wrong order.
+            
+            //Invert sequence if it was specified in the wrong order.
             if (interval < 0)
             {
                 interval *= -1;
@@ -288,8 +274,7 @@ GetVoteWarnings(const String:fileName[], Handle:warningArray, &next)
             interval = 1;
         }
         
-        //Store a warning for...
-        //  ...each element in the interval.
+        //Store a warning for each element in the interval.
         for (new i = 0; i < interval; i++)
         {
             //Store everything in a trie which represents a warning object
@@ -298,10 +283,8 @@ GetVoteWarnings(const String:fileName[], Handle:warningArray, &next)
             SetTrieString(warning, "message", message);
             SetTrieString(warning, "notification", notification);
             SetTrieString(warning, "flags", flags);
-            ////DEBUG_MESSAGE("Warning time: %i, message: %s", warningTime - i, message)
             
-            //Insert correct time remaining if...
-            //    ...the message has a place to insert it.
+            //Insert correct time remaining if the message has a place to insert it.
             if (StrContains(sound, "{TIME}") != -1)
             {
                 IntToString(warningTime - i, timeString, sizeof(timeString));
@@ -324,8 +307,6 @@ GetVoteWarnings(const String:fileName[], Handle:warningArray, &next)
             
             //Increment the counter.
             warningCount++;
-            
-            ////DEBUG_MESSAGE("Number of warnings: %i", GetArraySize(warningArray))
         }
     } while(KvGotoNextKey(kv)); //Do this for every warning.
     
@@ -343,43 +324,31 @@ GetVoteWarnings(const String:fileName[], Handle:warningArray, &next)
     
         //Sort the array in descending order of time.
         SortADTArrayCustom(warningArray, CompareWarnings);
-        
         next = GetArraySize(warningArray);
-        
-        ////DEBUG_MESSAGE("Sorted Warnings: %i", GetArraySize(warningArray))
     }
 }
-
 
 UpdateWarnings(Handle:array, threshold, &warningTime)
 {
     //Storage variables.
-    //new Handle:warning = INVALID_HANDLE;
     new i, arraySize;
     
-    //Test if a warning is the next warning to be displayed for...
-    //  ...each warning in the warning array.
+    //Test if a warning is the next warning to be displayed for each warning in the warning array.
     arraySize = GetArraySize(array);
     for (i = 0; i < arraySize; i++)
     {
-        //warning = GetArrayCell(array, i);
         GetTrieValue(GetArrayCell(array, i), "time", warningTime);
         
-        //We found out answer if...
-        //    ...the trigger for the next warning hasn't passed.
+        //We found out answer if the trigger for the next warning hasn't passed.
         if (warningTime < threshold)
             break;
     }
     
-    ////DEBUG_MESSAGE("Next warning after update located at index %i", i)
-    
     return i;
 }
 
-
 UpdateWinWarnings(winsleft)
 {
-    ////DEBUG_MESSAGE("*UpdateWinWarnings*")
     new warningTime;
     current_win = UpdateWarnings(win_array, winsleft, warningTime);
     
@@ -393,10 +362,8 @@ UpdateWinWarnings(winsleft)
     }
 }
 
-
 UpdateFragWarnings(fragsleft)
 {
-    ////DEBUG_MESSAGE("*UpdateFragWarnings*")
     new warningTime;
     current_frag = UpdateWarnings(frag_array, fragsleft, warningTime);
     
@@ -410,23 +377,8 @@ UpdateFragWarnings(fragsleft)
     }
 }
 
-
 UpdateTimeWarnings(timeleft)
 {
-#if UMC_DEBUG
-    ////DEBUG_MESSAGE("*UpdateTimeWarnings*")
-    ////DEBUG_MESSAGE("Threshold: %i", timeleft)
-    new Handle:warning;
-    decl String:message[255];
-    for (new i = 0; i < GetArraySize(time_array); i++)
-    {
-        warning = GetArrayCell(time_array, i);
-        if (GetTrieString(warning, "message", message, sizeof(message)))
-        {
-            ////DEBUG_MESSAGE("%i: %s", i, message)
-        }
-    }
-#endif
     new warningTime;
     current_time = UpdateWarnings(time_array, timeleft, warningTime);
     
@@ -440,10 +392,8 @@ UpdateTimeWarnings(timeleft)
     }
 }
 
-
 UpdateRoundWarnings(roundsleft)
 {
-    ////DEBUG_MESSAGE("*UpdateRoundWarnings*")
     new warningTime;
     current_round = UpdateWarnings(round_array, roundsleft, warningTime);
     
@@ -457,12 +407,10 @@ UpdateRoundWarnings(roundsleft)
     }
 }
 
-
 //Perform a vote warning, does nothing if there is no warning defined for this time.
 stock DoVoteWarning(Handle:warningArray, &next, triggertime, param=0)
 {
-    //Do nothing if...
-    //    ...there are no more warnings to perform.
+    //Do nothing if there are no more warnings to perform.
     if (GetArraySize(warningArray) <= next)
         return;
 
@@ -473,12 +421,9 @@ stock DoVoteWarning(Handle:warningArray, &next, triggertime, param=0)
     new warningTime;
     GetTrieValue(warning, "time", warningTime);
     
-    //Display warning if...
-    //    ...the time to trigger it has come.
+    //Display warning if the time to trigger it has come.
     if (triggertime <= warningTime)
     {
-        ////DEBUG_MESSAGE("Displaying warning time: %i (trigger time: %i)", warningTime, triggertime)
-    
         DisplayVoteWarning(warning, param);
         
         //Move to the next warning.
@@ -489,13 +434,11 @@ stock DoVoteWarning(Handle:warningArray, &next, triggertime, param=0)
     }
 }
 
-
 TryDoTimeWarning(timeleft)
 {
     if (time_enabled)
         DoVoteWarning(time_array, current_time, timeleft);
 }
-
 
 TryDoRoundWarning(rounds)
 {
@@ -503,20 +446,17 @@ TryDoRoundWarning(rounds)
         DoVoteWarning(round_array, current_round, rounds);
 }
 
-
 TryDoFragWarning(frags, client)
 {
     if (frag_enabled)
         DoVoteWarning(frag_array, current_frag, frags, client);
 }
 
-
 TryDoWinWarning(wins, team)
 {
     if (win_enabled)
         DoVoteWarning(win_array, current_win, wins, team);
 }
-
 
 //Displays the given vote warning to the server
 DisplayVoteWarning(Handle:warning, param=0)
@@ -531,21 +471,18 @@ DisplayVoteWarning(Handle:warning, param=0)
     GetTrieString(warning, "notification", notification, sizeof(notification));
     GetTrieString(warning, "sound", sound, sizeof(sound));
     
-    //Emit the warning sound if...
-    //    ...the sound is defined.
+    //Emit the warning sound if the sound is defined.
     if (strlen(sound) > 0)
         EmitSoundToAllAny(sound);
     
-    //Stop here if...
-    //  ...there is nothing to display.
+    //Stop here if there is nothing to display.
     if (strlen(message) == 0 || strlen(notification) == 0)
         return;
         
     //Buffer to store string replacements in the message.
     decl String:sBuffer[5];
     
-    //Insert correct time remaining if...
-    //    ...the message has a place to insert it.
+    //Insert correct time remaining if the message has a place to insert it.
     if (StrContains(message, "{TIME}") != -1)
     {
         IntToString(time, sBuffer, sizeof(sBuffer));
@@ -559,11 +496,8 @@ DisplayVoteWarning(Handle:warning, param=0)
         FormatEx(sBuffer, sizeof(sBuffer), "%N", param);
         ReplaceString(message, sizeof(message), "{PLAYER}", sBuffer, false);
     }
-    
-    //TODO: Insert team replacement
-    
-    //Insert a newline character if...
-    //    ...the message has a place to insert it.
+
+    //Insert a newline character if the message has a place to insert it.
     if (StrContains(message, "\\n") != -1)
     {
         FormatEx(sBuffer, sizeof(sBuffer), "%c", 13);
@@ -574,41 +508,34 @@ DisplayVoteWarning(Handle:warning, param=0)
     DisplayServerMessage(message, notification);
 }
 
-
 //************************************************************************************************//
 //                                   UMC END OF MAP VOTE EVENTS                                   //
 //************************************************************************************************//
-
 public UMC_OnNextmapSet(Handle:kv, const String:map[], const String:group[], const String:display[])
 {
     //Stop displaying any warnings.
     DisplayServerMessage("", "");
 }
 
-
 public UMC_EndVote_OnTimeTimerUpdated(timeleft)
 {
     UpdateTimeWarnings(timeleft);
 }
-
 
 public UMC_EndVote_OnRoundTimerUpdated(roundsleft)
 {
     UpdateRoundWarnings(roundsleft);
 }
 
-
 public UMC_EndVote_OnFragTimerUpdated(fragsleft, client)
 {
     UpdateFragWarnings(fragsleft);
 }
 
-
 public UMC_EndVote_OnWinTimerUpdated(winsleft, team)
 {
     UpdateWinWarnings(winsleft);
 }
-
 
 public UMC_EndVote_OnTimeTimerTicked(timeleft)
 {
@@ -617,14 +544,12 @@ public UMC_EndVote_OnTimeTimerTicked(timeleft)
     TryDoTimeWarning(timeleft);
 }
 
-
 public UMC_EndVote_OnRoundTimerTicked(roundsleft)
 {
     if (!round_init)
         UpdateRoundWarnings(roundsleft);
     TryDoRoundWarning(roundsleft);
 }
-
 
 public UMC_EndVote_OnFragTimerTicked(fragsleft, client)
 {
@@ -633,11 +558,9 @@ public UMC_EndVote_OnFragTimerTicked(fragsleft, client)
     TryDoFragWarning(fragsleft, client);
 }
 
-
 public UMC_EndVote_OnWinTimerTicked(winsleft, team)
 {
     if (!win_init)
         UpdateWinWarnings(winsleft);
     TryDoWinWarning(winsleft, team);
 }
-

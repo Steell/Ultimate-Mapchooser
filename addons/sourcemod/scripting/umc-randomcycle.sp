@@ -35,26 +35,13 @@ public Plugin:myinfo =
     url         = "http://forums.alliedmods.net/showthread.php?t=134190"
 };
 
-//Changelog:
-/*
-3.3.2 (3/4/2012)
-Added ability for Random Mapcycle to select the next map at the start of the game.
--New cvar "sm_umc_randcycle_start" to control this ability
-Updated UMC Logging functionality
-Added ability to view the current mapcycle of all modules
-
-3.3.1 (12/13/11)
-Updated sm_umc_rtv_postvoteaction cvar to allow for normal RTV votes after a vote has taken place.
-
-*/
-
-        ////----CONVARS-----/////
+////----CONVARS-----/////
 new Handle:cvar_filename        = INVALID_HANDLE;
 new Handle:cvar_randnext        = INVALID_HANDLE;
 new Handle:cvar_randnext_mem    = INVALID_HANDLE;
 new Handle:cvar_randnext_catmem = INVALID_HANDLE;
 new Handle:cvar_start            = INVALID_HANDLE;
-        ////----/CONVARS-----/////
+////----/CONVARS-----/////
 
 //Mapcycle KV
 new Handle:map_kv = INVALID_HANDLE;   
@@ -74,11 +61,9 @@ new bool:intermission_called;
 //Flag
 new bool:setting_map; //Are we setting the nextmap at the end of this map?
 
-
 //************************************************************************************************//
 //                                        SOURCEMOD EVENTS                                        //
 //************************************************************************************************//
-
 public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
 {
     MarkNativeAsOptional("GetUserMessageType");
@@ -164,19 +149,15 @@ public OnPluginStart()
 //************************************************************************************************//
 //                                           GAME EVENTS                                          //
 //************************************************************************************************//
-
 //Called after all config files were executed.
 public OnConfigsExecuted()
 {
-    ////DEBUG_MESSAGE("Executing RandomCycle OnConfigsExecuted")
-    
     intermission_called = false;
     setting_map = ReloadMapcycle();
     
     //Grab the name of the current map.
     decl String:mapName[MAP_LENGTH];
     GetCurrentMap(mapName, sizeof(mapName));
-    
     decl String:groupName[MAP_LENGTH];
     UMC_GetCurrentMapGroup(groupName, sizeof(groupName));
     
@@ -184,8 +165,6 @@ public OnConfigsExecuted()
     {
         KvFindGroupOfMap(umc_mapcycle, mapName, groupName, sizeof(groupName));
     }
-    
-    ////DEBUG_MESSAGE("Current Map: %s -- %s", mapName, groupName)
     
     SetupNextRandGroup(mapName, groupName);
     
@@ -204,7 +183,6 @@ public OnConfigsExecuted()
         DoRandomNextMap();
     }
 }
-
 
 //Called when intermission window is active. Necessary for mods without "game_end" event.
 public Action:_VGuiMenu(UserMsg:msg_id, Handle:bf, const players[], playersNum, bool:reliable,
@@ -247,7 +225,6 @@ public Action:_VGuiMenu(UserMsg:msg_id, Handle:bf, const players[], playersNum, 
     }
 }
 
-
 //Called when the game ends. Used to trigger random selection of the next map.
 public Event_GameEnd(Handle:evnt, const String:name[], bool:dontBroadcast)
 {
@@ -262,11 +239,9 @@ public Event_GameEnd(Handle:evnt, const String:name[], bool:dontBroadcast)
     }
 }
 
-
 //************************************************************************************************//
 //                                              SETUP                                             //
 //************************************************************************************************//
-
 //Fetches the set next group for the given map and group in the mapcycle.
 SetupNextRandGroup(const String:map[], const String:group[])
 {
@@ -291,10 +266,7 @@ SetupNextRandGroup(const String:map[], const String:group[])
         }
         KvGoBack(umc_mapcycle);   
     }
-    
-    ////DEBUG_MESSAGE("Next Random Mapgroup: %s", next_rand_cat)
 }
-
 
 //Parses the mapcycle file and returns a KV handle representing the mapcycle.
 Handle:GetMapcycle()
@@ -306,8 +278,7 @@ Handle:GetMapcycle()
     //Get the kv handle from the file.
     new Handle:result = GetKvFromFile(filename, "umc_rotation");
     
-    //Log an error and return empty handle if...
-    //    ...the mapcycle file failed to parse.
+    //Log an error and return empty handle if the mapcycle file failed to parse.
     if (result == INVALID_HANDLE)
     {
         LogError("SETUP: Mapcycle failed to load!");
@@ -317,7 +288,6 @@ Handle:GetMapcycle()
     //Success!
     return result;
 }
-
 
 //Reloads the mapcycle. Returns true on success, false on failure.
 bool:ReloadMapcycle()
@@ -337,8 +307,6 @@ bool:ReloadMapcycle()
     return umc_mapcycle != INVALID_HANDLE;
 }
 
-
-//
 RemovePreviousMapsFromCycle()
 {
     map_kv = CreateKeyValues("umc_rotation");
@@ -347,26 +315,20 @@ RemovePreviousMapsFromCycle()
                              GetConVarInt(cvar_randnext_catmem));
 }
 
-
 //************************************************************************************************//
 //                                          CVAR CHANGES                                          //
 //************************************************************************************************//
-
-//Called when the number of excluded previous maps from random selection of the next map has
-//changed.
+//Called when the number of excluded previous maps from random selection of the next map has changed.
 public Handle_RandNextMemoryChange(Handle:convar, const String:oldValue[], const String:newValue[])
 {
     //Trim the memory array for random selection of the next map.
-        //We pass 1 extra to the argument in order to account for the current map, which should 
-        //always be excluded.
+    //We pass 1 extra to the argument in order to account for the current map, which should always be excluded.
     TrimArray(randnext_mem_arr, StringToInt(newValue));
 }
-
 
 //************************************************************************************************//
 //                                            COMMANDS                                            //
 //************************************************************************************************//
-
 //Called when the command to pick a random nextmap is called
 public Action:Command_Random(client, args)
 {
@@ -381,20 +343,16 @@ public Action:Command_Random(client, args)
     return Plugin_Handled;
 }
 
-
 //************************************************************************************************//
 //                                         RANDOM NEXTMAP                                         //
 //************************************************************************************************//
-
 //Sets a random next map. Returns true on success.
 DoRandomNextMap() 
 {    
-    ////DEBUG_MESSAGE("next_rand_cat: %s", next_rand_cat)
     decl String:nextMap[MAP_LENGTH], String:nextGroup[MAP_LENGTH];
     if (UMC_GetRandomMap(map_kv, umc_mapcycle, next_rand_cat, nextMap, sizeof(nextMap), nextGroup,
                          sizeof(nextGroup), false, true))
     {
-        ////DEBUG_MESSAGE("Random map: %s %s", nextMap, nextGroup)
         UMC_SetNextMap(map_kv, nextMap, nextGroup, ChangeMapTime_MapEnd);
     }
     else
@@ -403,18 +361,15 @@ DoRandomNextMap()
     }
 }
 
-
 //************************************************************************************************//
 //                                   ULTIMATE MAPCHOOSER EVENTS                                   //
 //************************************************************************************************//
-
 //Called when UMC has set a next map.
 public UMC_OnNextmapSet(Handle:kv, const String:map[], const String:group[], const String:display[])
 {
     LogUMCMessage("Disabling random nextmap selection.");
     setting_map = false;
 }
-
 
 //Called when UMC requests that the mapcycle should be reloaded.
 public UMC_RequestReloadMapcycle()
@@ -424,7 +379,6 @@ public UMC_RequestReloadMapcycle()
         RemovePreviousMapsFromCycle();
     setting_map = reloaded && setting_map;
 }
-
 
 //Called when UMC requests that the mapcycle is printed to the console.
 public UMC_DisplayMapCycle(client, bool:filtered)
@@ -443,4 +397,3 @@ public UMC_DisplayMapCycle(client, bool:filtered)
         PrintKvToConsole(umc_mapcycle, client);
     }
 }
-

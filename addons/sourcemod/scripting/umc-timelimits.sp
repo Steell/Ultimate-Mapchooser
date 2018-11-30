@@ -42,7 +42,6 @@ public Plugin:myinfo =
 
 new Handle:cvar_nom_ignore = INVALID_HANDLE;
 new Handle:cvar_display_ignore = INVALID_HANDLE;
-// new Handle:cvar_template_format = INVALID_HANDLE;
 
 public OnPluginStart()
 {
@@ -59,25 +58,6 @@ public OnPluginStart()
         "Determines if maps being displayed are exempt from being excluded due to Time Limits.",
         0, true, 0.0, true, 1.0
     );
-    
-    /* decl String:minString[18], String:maxString[18];
-    strcopy(minString, sizeof(minString), TIMELIMIT_KEY_MAP_MIN);
-    strcopy(maxString, sizeof(maxString), TIMELIMIT_KEY_MAP_MAX);
-    StringToUpper(minString);
-    StringToUpper(maxString);
-    
-    decl String:description[128];
-    Format(
-        description, sizeof(description),
-        "Format string for the {%s} and {%s} display-template strings.",
-        minString, maxString
-    );
-    
-    cvar_template_format = CreateConVar(
-        "sm_umc_timelimits_template_format",
-        "%H:%M",
-        description
-    ); */
     
     AutoExecConfig(true, "umc-timelimits");
 }
@@ -116,10 +96,8 @@ public Action:UMC_OnDetermineMapExclude(Handle:kv, const String:map[], const Str
     if (IsTimeBetween(min, max))
         return Plugin_Continue;
     
-    //DEBUG_MESSAGE("Map %s is excluded due to Time Limits. Min: %i, Max: %i", map, min, max)
     return Plugin_Stop;
 }
-
 
 //Display Template
 public UMC_OnFormatTemplateString(String:template[], maxlen, Handle:kv, const String:map[], 
@@ -154,7 +132,6 @@ public UMC_OnFormatTemplateString(String:template[], maxlen, Handle:kv, const St
     ReplaceString(template, maxlen, minSearch, minString, false);
     ReplaceString(template, maxlen, maxSearch, maxString, false);
 }
-
 
 stock TL_FormatTime(String:buffer[], maxlen, time)
 {

@@ -23,7 +23,6 @@ along with this plugin.  If not, see <http://www.gnu.org/licenses/>.
 #include <sdktools_sound>
 #include <umc-core>
 #include <umc_utils>
-
 #include <emitsoundany>
 
 #undef REQUIRE_PLUGIN
@@ -49,17 +48,7 @@ public Plugin:myinfo =
     url         = "http://forums.alliedmods.net/showthread.php?t=134190"
 };
 
-//Changelog:
-/*
-3.3.2 (3/4/2012)
-Updated UMC Logging functionality
-Added ability to view the current mapcycle of all modules
-*/
-
-//TODO: Cvar to control what to do if a vote has already occured.
-
-
-        ////----CONVARS-----/////
+////----CONVARS-----/////
 new Handle:cvar_filename             = INVALID_HANDLE;
 new Handle:cvar_scramble             = INVALID_HANDLE;
 new Handle:cvar_vote_time            = INVALID_HANDLE;
@@ -81,10 +70,9 @@ new Handle:cvar_vote_type            = INVALID_HANDLE;
 new Handle:cvar_dontchange           = INVALID_HANDLE;
 new Handle:cvar_startsound           = INVALID_HANDLE;
 new Handle:cvar_endsound             = INVALID_HANDLE;
-//new Handle:cvar_postvote             = INVALID_HANDLE;
 new Handle:cvar_flags                = INVALID_HANDLE;
-        ////----/CONVARS-----/////
 
+////----/CONVARS-----/////
 //Mapcycle KV
 new Handle:map_kv = INVALID_HANDLE;    
 new Handle:umc_mapcycle = INVALID_HANDLE;
@@ -105,7 +93,6 @@ new String:vote_start_sound[PLATFORM_MAX_PATH], String:vote_end_sound[PLATFORM_M
 new String:vote_group[MAP_LENGTH];
 
 new bool:validity_enabled;
-//new bool:vote_inprogress;
 
 //************************************************************************************************//
 //                                        SOURCEMOD EVENTS                                        //
@@ -114,13 +101,6 @@ new bool:validity_enabled;
 //Called when the plugin is finished loading.
 public OnPluginStart()
 {
-    /*cvar_postvote = CreateConVar(
-        "sm_umc_playerlimit_postvote",
-        "0",
-        "What action to take after another UMC vote has completed.\n 0 - Change Instantly,\n 1 - Run Yes/No Vote to Change,\n 2 - Do Nothing",
-        0, true, 0.0, true, 2.0
-    );*/
-
     cvar_flags = CreateConVar(
         "sm_umc_playerlimit_adminflags",
         "",
@@ -285,18 +265,13 @@ public OnPluginStart()
 //************************************************************************************************//
 //                                           GAME EVENTS                                          //
 //************************************************************************************************//
-
 //Called after all config files were executed.
 public OnConfigsExecuted()
 {
-    //DEBUG_MESSAGE("Executing PlayerCountMonitor OnConfigsExecuted")
-    
     validity_enabled = false;
     
     //Set triggers for min and max number of players.
-    new bool:setup = ReloadMapcycle();
-        
-    SetupVoteSounds();
+    new bool:setup = ReloadMapcycle();    
     
     //Grab the name of the current map.
     decl String:mapName[MAP_LENGTH], String:groupName[MAP_LENGTH];
@@ -321,31 +296,33 @@ public OnConfigsExecuted()
     }
 }
 
+public OnMapStart()
+{
+    SetupVoteSounds();
+}
 
-//Called when a client enters the server.
-//Required for checking for min/max players and updating the RTV threshold.
+
+// Called when a client enters the server.
+// Required for checking for min/max players and updating the RTV threshold.
 public OnClientPutInServer(client)
 {
     //Get the number of players.
     new clientCount = GetRealClientCount();
         
-    //Change the map if...
+    // Change the map if...
     //    ...the flag to perform the min/max player check is enabled AND
     //    ...the cvar to check for max players is enabled AND
     //    ...the number of players on the server exceeds the limit set by the map.
-    if (validity_enabled && clientCount > map_max_players
-        && GetConVarInt(cvar_invalid_max) != _:PLAction_Nothing)
+    if (validity_enabled && clientCount > map_max_players && GetConVarInt(cvar_invalid_max) != _:PLAction_Nothing)
     {
-        LogUMCMessage("Number of clients above player threshold. %i clients, %i max.",
-            clientCount, map_max_players);
+        LogUMCMessage("Number of clients above player threshold. %i clients, %i max.", clientCount, map_max_players);
         PrintToChatAll("\x03[UMC]\x01 %t", "Too Many Players", map_max_players);
         ChangeToValidMap(cvar_invalid_max);
     }
 }
 
-
-//Called after a client has left the server.
-//Needed to update RTV and the check that the server has the required number of players for the map.
+// Called after a client has left the server.
+// Needed to update RTV and the check that the server has the required number of players for the map.
 public OnClientDisconnect_Post(client)
 {
     //Get the number of players.
@@ -364,11 +341,9 @@ public OnClientDisconnect_Post(client)
     }
 }
 
-
 //************************************************************************************************//
 //                                              SETUP                                             //
 //************************************************************************************************//
-
 //Parses the mapcycle file and returns a KV handle representing the mapcycle.
 Handle:GetMapcycle()
 {
@@ -379,8 +354,7 @@ Handle:GetMapcycle()
     //Get the kv handle from the file.
     new Handle:result = GetKvFromFile(filename, "umc_rotation");
     
-    //Log an error and return empty handle if...
-    //    ...the mapcycle file failed to parse.
+    //Log an error and return empty handle if the mapcycle file failed to parse.
     if (result == INVALID_HANDLE)
     {
         LogError("SETUP: Mapcycle failed to load!");
@@ -390,7 +364,6 @@ Handle:GetMapcycle()
     //Success!
     return result;
 }
-
 
 //Sets up the vote sounds.
 SetupVoteSounds()
@@ -406,7 +379,6 @@ SetupVoteSounds()
     CacheSound(runoff_sound);
 }
 
-
 //Sets the min and max player values for the current map.
 SetupMinMaxPlayers(const String:map[], const String:group[])
 {
@@ -417,21 +389,18 @@ SetupMinMaxPlayers(const String:map[], const String:group[])
     KvRewind(umc_mapcycle); //rewind the mapcycle handle
     new dmin, dmax; //variables to store default values for the category.
     
-    //Set appropriate min and max player variables if...
-    //    ...we can reach the current category in the mapcycle OR
-    //    ...we can jump to the map somewhere in the mapcycle
+    //Set appropriate min and max player variables if we can reach the current 
+    // category in the mapcycle OR we can jump to the map somewhere in the mapcycle
     if (!StrEqual(group, INVALID_GROUP) && KvJumpToKey(umc_mapcycle, group))
     {
         //Store defaults for the category
         dmin = KvGetNum(umc_mapcycle, PLAYERLIMIT_KEY_GROUP_MIN, 0);
         dmax = KvGetNum(umc_mapcycle, PLAYERLIMIT_KEY_GROUP_MAX, MaxClients);
         
-        //Set the map's min and max player variables if...
-        //    ...we can reach the current map in the mapcycle.
+        //Set the map's min and max player variables if we can reach the current map in the mapcycle.
         if (KvJumpToKey(umc_mapcycle, map))
         {
-            //Set variables for min and max players, using the category defaults if they are not
-            //available.
+            //Set variables for min and max players, using the category defaults if they are not available.
             map_min_players = KvGetNum(umc_mapcycle, PLAYERLIMIT_KEY_MAP_MIN, dmin);
             map_max_players = KvGetNum(umc_mapcycle, PLAYERLIMIT_KEY_MAP_MAX, dmax);
             
@@ -455,7 +424,6 @@ SetupMinMaxPlayers(const String:map[], const String:group[])
     LogUMCMessage("Min Players: %i, Max Players: %i", map_min_players, map_max_players);
 }
 
-
 //Reloads the mapcycle. Returns true on success, false on failure.
 bool:ReloadMapcycle()
 {
@@ -474,8 +442,6 @@ bool:ReloadMapcycle()
     return umc_mapcycle != INVALID_HANDLE;
 }
 
-
-//
 RemovePreviousMapsFromCycle()
 {
     map_kv = CreateKeyValues("umc_rotation");
@@ -483,11 +449,9 @@ RemovePreviousMapsFromCycle()
     FilterMapcycleFromArrays(map_kv, vote_mem_arr, vote_catmem_arr, GetConVarInt(cvar_catmem));
 }
 
-
 //************************************************************************************************//
 //                                          PLAYER LIMITS                                         //
 //************************************************************************************************//
-
 //Creates the timer to check for when the amount of players is within the min and max bounds.
 MakePlayerLimitCheckTimer()
 {
@@ -508,20 +472,16 @@ MakePlayerLimitCheckTimer()
     );
 }
 
-
-//Callback for the min and max player check timer. Once the timer ends, we begin testing for valid
-//amounts of players.
+// Callback for the min and max player check timer. Once the timer ends, we begin testing for valid amounts of players.
 public Action:Handle_PlayerLimitTimer(Handle:Timer)
 {
     //We are now checking for valid player amounts.
     validity_enabled = true;
-    
     LogUMCMessage("Server is now watching for inproper number of players.");
     
     //Check player limits now.
     RunPlayerLimitCheck();
 }
-
 
 //Checks to see if the amount of players on the server is withing the required bounds set by the
 //map. Changes to a map that does satisfy the requirement if this map doesn't.
@@ -558,7 +518,6 @@ public RunPlayerLimitCheck()
     }
 }
 
-
 //Handles changing to a map in the event the number of players on the server is outside of the 
 //bounds defined by the map.
 //    cvar:    the cvar defining what action to take in this event.
@@ -571,8 +530,7 @@ ChangeToValidMap(Handle:cvar)
         case PLAction_Now: //Pick a map and change to it.
         {
             //Log message
-            LogUMCMessage("Changing to a map that can support %i players.",
-                GetRealClientCount());
+            LogUMCMessage("Changing to a map that can support %i players.", GetRealClientCount());
             
             //Get the picked map.
             decl String:map[MAP_LENGTH], String:group[MAP_LENGTH];
@@ -594,8 +552,7 @@ ChangeToValidMap(Handle:cvar)
             {
                 LogUMCMessage("Perfoming YES/NO vote to change the map to '%s'", map);
             
-                //Run the yes/no vote if...
-                //    ...there isn't already a vote in progress.
+                //Run the yes/no vote if there isn't already a vote in progress.
                 if (!IsVoteInProgress() && !UMC_IsVoteInProgress("core"))
                 {
                     //Initialize the menu.
@@ -618,8 +575,7 @@ ChangeToValidMap(Handle:cvar)
                     //Display it.
                     VoteMenuToAllWithFlags(menu, GetConVarInt(cvar_vote_time), flags);
                     
-                    //Play the vote start sound if...
-                    //  ...the vote start sound is defined.
+                    //Play the vote start sound if the vote start sound is defined.
                     if (strlen(vote_start_sound) > 0)
                         EmitSoundToAllAny(vote_start_sound);
                 }
@@ -635,12 +591,9 @@ ChangeToValidMap(Handle:cvar)
             LogUMCMessage("Performing map vote to change to a map that can support %i players.",
                 GetRealClientCount());
         
-            //Run the mapvote if...
-            //    ...there isn't already a vote in progress.
+            //Run the mapvote if there isn't already a vote in progress.
             if (!IsVoteInProgress())
             {
-                //vote_inprogress = true;
-            
                 decl String:flags[64];
                 GetConVarString(cvar_flags, flags, sizeof(flags));
                 
@@ -685,7 +638,6 @@ ChangeToValidMap(Handle:cvar)
     }
 }
 
-
 //Handles actions from the yes/no map vote.
 public Handle_YesNoVoteMenu(Handle:menu, MenuAction:action, param1, param2)
 {
@@ -721,13 +673,11 @@ public Handle_YesNoVoteMenu(Handle:menu, MenuAction:action, param1, param2)
     return 0;
 }
 
-
 //Called at the end of a yes/no map vote.
 public Handle_YesNoMapVote(Handle:menu, num_votes, num_clients, const client_info[][2], num_items,
                            const item_info[][2])
 {
-    //Play the vote completed sound if...
-    //  ...the vote completed sound is defined.
+    //Play the vote completed sound if the vote completed sound is defined.
     if (strlen(vote_end_sound) > 0)
         EmitSoundToAllAny(vote_end_sound);
     
@@ -735,9 +685,7 @@ public Handle_YesNoMapVote(Handle:menu, num_votes, num_clients, const client_inf
     decl String:map[MAP_LENGTH];
     GetMenuItem(menu, 0, map, sizeof(map));
     
-    //Change the map if...
-    //    ...the answer wasn't No OR
-    //    ...there was a tie.
+    //Change the map if the answer wasn't No OR there was a tie.
     if (item_info[0][VOTEINFO_ITEM_INDEX] == 1 && 
         (num_votes <= 1 || item_info[0][VOTEINFO_ITEM_VOTES] != item_info[1][VOTEINFO_ITEM_VOTES]))
     {
@@ -766,20 +714,14 @@ public Handle_YesNoMapVote(Handle:menu, num_votes, num_clients, const client_inf
     }
 }
 
-
 //************************************************************************************************//
 //                                   ULTIMATE MAPCHOOSER EVENTS                                   //
 //************************************************************************************************//
-
 //Called when UMC has set a next map.
 public UMC_OnNextmapSet(Handle:kv, const String:map[], const String:group[], const String:display[])
 {
-    //TODO: Eventually handle what to do with Player Limits when a nextmap has already been set.
-    
-    //Disable checking.
     validity_enabled = false;
 }
-
 
 //Called when UMC requests that the mapcycle should be reloaded.
 public UMC_RequestReloadMapcycle()
@@ -789,7 +731,6 @@ public UMC_RequestReloadMapcycle()
     else
         RemovePreviousMapsFromCycle();
 }
-
 
 //Called when UMC requests that the mapcycle is printed to the console.
 public UMC_DisplayMapCycle(client, bool:filtered)
@@ -808,4 +749,3 @@ public UMC_DisplayMapCycle(client, bool:filtered)
         PrintKvToConsole(umc_mapcycle, client);
     }
 }
-

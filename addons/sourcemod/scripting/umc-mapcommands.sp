@@ -36,13 +36,8 @@ public Plugin:myinfo =
 #define PRE_COMMAND_KEY      "pre-command"
 #define POSTVOTE_COMMAND_KEY "postvote-command"
 
-//Changelog:
-/*
-*/
-
 new String:map_command[256];
 new String:group_command[256];
-
 new String:map_precommand[256];
 new String:group_precommand[256];
 
@@ -69,7 +64,6 @@ public OnConfigsExecuted()
         CloseHandle( kv );
     }
     
-    //DEBUG_MESSAGE("Executing MapCommands OnConfigsExecuted")
     if (strlen(group_command) > 0)
     {
         LogUMCMessage("SETUP: Executing map group command: '%s'", group_command);
@@ -89,7 +83,6 @@ public OnConfigsExecuted()
 //Execute pre-commands when map ends
 public OnMapEnd()
 {
-    //DEBUG_MESSAGE("Executing MapCommands OnMapEnd")
     if (strlen(group_precommand) > 0)
     {
         LogUMCMessage("SETUP: Executing map group pre-command: '%s'", group_precommand);

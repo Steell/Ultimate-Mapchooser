@@ -7,6 +7,18 @@ Please read the documentation here on the plugin:
 https://code.google.com/archive/p/sourcemod-ultimate-mapchooser/wikis
 http://www.vertigogaming.org/wiki/index.php/UMC_Plugin
 
+3.6.2 Update (11-29-2018)
+-----------------
+- Compiled/Updated codebase for SM 1.9
+- Fixed Issue #2 with adminvotes not displaying properly (Solves Issue: https://github.com/Silenci0/UMC/issues/2 )
+- Fixed (hopefully) an issue with sound precaching causing crashes in CS:GO by moving sound precaching to OnMapStart. This issue was reported in this thread: https://forums.alliedmods.net/showthread.php?t=310602
+- Regarding Issue #1 ( https://github.com/Silenci0/UMC/issues/1 ):
+    * This is not a bug so much as it is intentional. The umc-playerlimits.smx module is necessary for some tiered voting and groupings depending on the options used.
+- Regarding Issue #3 ( https://github.com/Silenci0/UMC/issues/3 ):
+    * The crashing/server lagging is mostly due to using a multitude of options with a sizeable list of maps, primarily the Display option which changes the name of the maps in the UMC voting list.
+    * If possible, review your UMC mapcycle file and either 1.) remove the diplay option 2.) Remove duplicate map entries and/or 3.) Consolidate maps into fewer group categories to read from.
+    * This is more of a plugin design flaw due to how the UMC plugins/modules handles a certain amount of complexities in its mapcycle file. Generally, keeping things simple will lessen the likelihood of crashes/lag from this plugin. so it
+
 3.6.0 Update (06-11-2018)
 -----------------
 - Compiled/Updated codebase for SM 1.8

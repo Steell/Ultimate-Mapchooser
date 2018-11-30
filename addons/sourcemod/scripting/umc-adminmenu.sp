@@ -80,21 +80,7 @@ public Plugin:myinfo =
     url         = "http://forums.alliedmods.net/showthread.php?t=134190"
 };
 
-//Changelog:
-/*
-3.3.2 (3/4/2012)
-Updated UMC Logging functionality
-Added ability to view the current mapcycle of all modules
-*/
-
-/* IDEAS:
-    Votes:
-        Semi-auto mode: plugin picks the map, user has to confirm if he wants it
-        in the vote. If he answers no, then it goes in the exclusion array.
-*/
-
-
-        ////----CONVARS-----/////
+////----CONVARS-----/////
 new Handle:cvar_filename             = INVALID_HANDLE;
 new Handle:cvar_scramble             = INVALID_HANDLE;
 new Handle:cvar_vote_time            = INVALID_HANDLE;
@@ -118,7 +104,7 @@ new Handle:cvar_dontchange           = INVALID_HANDLE;
 new Handle:cvar_defaultsflags        = INVALID_HANDLE;
 new Handle:cvar_flags                = INVALID_HANDLE;
 new Handle:cvar_ignoreexcludeflags   = INVALID_HANDLE;
-        ////----/CONVARS-----/////
+////----/CONVARS-----/////
 
 //Mapcycle KV
 new Handle:map_kv = INVALID_HANDLE;
@@ -155,7 +141,6 @@ new Handle:threshold_regex = INVALID_HANDLE;
 //************************************************************************************************//
 //                                        SOURCEMOD EVENTS                                        //
 //************************************************************************************************//
-
 //Called when the plugin is finished loading.
 public OnPluginStart()
 {
@@ -197,12 +182,6 @@ public OnPluginStart()
         "Specifies the maximum number of maps to appear in a runoff vote.\n 1 or 0 sets no maximum.",
         0, true, 0.0
     );
-
-    /*cvar_vote_flags = CreateConVar(
-        "sm_umc_am_adminflags",
-        "",
-        "String of admin flags required for players to be able to vote in end-of-map\nvotes. If no flags are specified, all players can vote."
-    );*/
 
     cvar_vote_allowduplicates = CreateConVar(
         "sm_umc_am_allowduplicates",
@@ -345,16 +324,12 @@ public OnPluginStart()
     LoadTranslations("ultimate-mapchooser-adminmenu.phrases");
 }
 
-
 //************************************************************************************************//
 //                                           GAME EVENTS                                          //
 //************************************************************************************************//
-
 //Called after all config files were executed.
 public OnConfigsExecuted()
 {
-    //DEBUG_MESSAGE("Executing AdminMenu OnConfigsExecuted")
-    
     can_vote = ReloadMapcycle();
     
     //Grab the name of the current map.
@@ -378,16 +353,18 @@ public OnConfigsExecuted()
     
     if (can_vote)
         RemovePreviousMapsFromCycle();
-    
-    SetupVoteSounds();
+
 }
 
+public OnMapStart()
+{
+    SetupVoteSounds();
+}
 
 //Called when a player types in chat
 public Action:OnPlayerChat(client, const String:command[], argc)
 {
-    //Return immediately if...
-    //    ...nothing was typed.
+    //Return immediately if nothing was typed.
     if (argc == 0) return Plugin_Continue;
 
     //Get what was typed.
@@ -403,11 +380,9 @@ public Action:OnPlayerChat(client, const String:command[], argc)
     return Plugin_Continue;
 }
 
-
 //************************************************************************************************//
 //                                              SETUP                                             //
 //************************************************************************************************//
-
 //Parses the mapcycle file and returns a KV handle representing the mapcycle.
 Handle:GetMapcycle()
 {
@@ -430,7 +405,6 @@ Handle:GetMapcycle()
     return result;
 }
 
-
 //Reloads the mapcycle. Returns true on success, false on failure.
 bool:ReloadMapcycle()
 {
@@ -449,15 +423,12 @@ bool:ReloadMapcycle()
     return umc_mapcycle != INVALID_HANDLE;
 }
 
-
-//
 RemovePreviousMapsFromCycle()
 {
     map_kv = CreateKeyValues("umc_rotation");
     KvCopySubkeys(umc_mapcycle, map_kv);
     FilterMapcycleFromArrays(map_kv, vote_mem_arr, vote_catmem_arr, GetConVarInt(cvar_vote_catmem));
 }
-
 
 //Sets up the vote sounds.
 SetupVoteSounds()
@@ -473,11 +444,9 @@ SetupVoteSounds()
     CacheSound(runoff_sound);
 }
 
-
 //************************************************************************************************//
 //                                           ADMIN MENU                                           //
 //************************************************************************************************//
-
 //Sets up the admin menu when it is ready to be set up.
 public OnAdminMenuReady(Handle:topmenu)
 {
@@ -509,7 +478,6 @@ public OnAdminMenuReady(Handle:topmenu)
     );
 }
 
-
 //Handles the UMC category in the admin menu.
 public Adm_CategoryHandler(Handle:topmenu, TopMenuAction:action, TopMenuObject:object_id, param,
                            String:buffer[], maxlength)
@@ -519,7 +487,6 @@ public Adm_CategoryHandler(Handle:topmenu, TopMenuAction:action, TopMenuObject:o
         strcopy(buffer, maxlength, "Ultimate Mapchooser");
     }
 }
-
 
 //Handles the Change Map option in the menu.
 public UMCMenu_ChangeMap(Handle:topmenu, TopMenuAction:action, TopMenuObject:objectID, client,
@@ -535,7 +502,6 @@ public UMCMenu_ChangeMap(Handle:topmenu, TopMenuAction:action, TopMenuObject:obj
     }
 }
 
-
 //Handles the Change Map option in the menu.
 public UMCMenu_NextMap(Handle:topmenu, TopMenuAction:action, TopMenuObject:objectID, client,
                        String:buffer[], maxlength)
@@ -549,7 +515,6 @@ public UMCMenu_NextMap(Handle:topmenu, TopMenuAction:action, TopMenuObject:objec
         CreateAMNextMap(client);
     }
 }
-
 
 //Handles the Change Map option in the menu.
 public UMCMenu_MapVote(Handle:topmenu, TopMenuAction:action, TopMenuObject:objectID, client,
@@ -621,8 +586,6 @@ public UMCMenu_MapVote(Handle:topmenu, TopMenuAction:action, TopMenuObject:objec
     }
 }
 
-
-//
 Handle:CreateVoteMenuTrie(client)
 {
     new Handle:trie = CreateTrie();
@@ -647,8 +610,6 @@ Handle:CreateVoteMenuTrie(client)
     return trie;
 }
 
-
-//
 DisplayVoteTypeMenu(client)
 {
     new Handle:menu = CreateMenu(HandleMV_VoteType, MenuAction_DisplayItem|MenuAction_Display);
@@ -661,8 +622,6 @@ DisplayVoteTypeMenu(client)
     DisplayMenu(menu, client, 0);
 }
 
-
-//
 public Handle_MenuTranslation(Handle:menu, MenuAction:action, client, param2)
 {
     switch(action)
@@ -699,8 +658,6 @@ public Handle_MenuTranslation(Handle:menu, MenuAction:action, client, param2)
     return 0;
 }
 
-
-//
 public HandleMV_VoteType(Handle:menu, MenuAction:action, param1, param2)
 {
     switch (action)
@@ -722,8 +679,6 @@ public HandleMV_VoteType(Handle:menu, MenuAction:action, param1, param2)
     return Handle_MenuTranslation(menu, action, param1, param2);
 }
 
-
-//
 DisplayAutoManualMenu(client)
 {
     new Handle:menu = CreateAutoManualMenu(HandleMV_AutoManual, "AM Populate Vote");
@@ -731,8 +686,6 @@ DisplayAutoManualMenu(client)
     DisplayMenu(menu, client, 0);
 }
 
-
-//
 public HandleMV_AutoManual(Handle:menu, MenuAction:action, param1, param2)
 {
     switch (action)
@@ -772,15 +725,11 @@ public HandleMV_AutoManual(Handle:menu, MenuAction:action, param1, param2)
     return Handle_MenuTranslation(menu, action, param1, param2);
 }
 
-
-//
 AutoBuildVote(client, bool:value)
 {
     SetTrieValue(menu_tries[client], "auto", value);
 }
 
-
-//
 CloseClientVoteTrie(client)
 {
     new Handle:trie = menu_tries[client];
@@ -794,8 +743,6 @@ CloseClientVoteTrie(client)
     CloseHandle(trie);
 }
 
-
-//
 DisplayGroupSelectMenu(client)
 {
     new bool:ignoreLimits;
@@ -811,8 +758,6 @@ DisplayGroupSelectMenu(client)
     DisplayMenu(menu, client, 0);
 }
 
-
-//
 public HandleMV_Groups(Handle:menu, MenuAction:action, param1, param2)
 {
     switch (action)
@@ -862,23 +807,10 @@ public HandleMV_Groups(Handle:menu, MenuAction:action, param1, param2)
         {
             CloseHandle(menu);
         }
-        //TODO
-        /*case MenuAction_DisplayItem:
-        {
-            decl String:group[MAP_LENGTH];
-            GetMenuItem(menu, param2, group, sizeof(group));
-            
-            if (StrEqual(group, VOTE_POP_STOP_INFO))
-            {
-                return Handle_MenuTranslation(menu, action, param1, param2);
-            }
-        }*/
     }    
     return 0;
 }
 
-
-//
 DisplayMapSelectMenu(client, const String:group[])
 {
     new bool:ignoreLimits;
@@ -888,8 +820,6 @@ DisplayMapSelectMenu(client, const String:group[])
     DisplayMenu(newMenu, client, 0);
 }
 
-
-//
 public HandleMV_Maps(Handle:menu, MenuAction:action, param1, param2)
 {
     switch (action)
@@ -926,8 +856,6 @@ public HandleMV_Maps(Handle:menu, MenuAction:action, param1, param2)
     }
 }
 
-
-//
 AddToVoteList(client, const String:map[], const String:group[])
 {
     new Handle:mapTrie = CreateMapTrie(map, group);
@@ -936,8 +864,6 @@ AddToVoteList(client, const String:map[], const String:group[])
     PushArrayCell(mapList, mapTrie);
 }
 
-
-//
 DisplayDefaultsMenu(client)
 {
     new Handle:menu = CreateMenu(HandleMV_Defaults, MenuAction_DisplayItem|MenuAction_Display);
@@ -951,8 +877,6 @@ DisplayDefaultsMenu(client)
     DisplayMenu(menu, client, 0);
 }
 
-
-//
 public HandleMV_Defaults(Handle:menu, MenuAction:action, param1, param2)
 {
     switch (action)
@@ -995,8 +919,6 @@ public HandleMV_Defaults(Handle:menu, MenuAction:action, param1, param2)
     return Handle_MenuTranslation(menu, action, param1, param2);
 }
 
-
-//
 UseVoteDefaults(client)
 {
     new Handle:trie = menu_tries[client];
@@ -1016,8 +938,6 @@ UseVoteDefaults(client)
     SetTrieString(trie, "flags", flags);
 }
 
-
-//
 bool:VoteAutoPopulated(client)
 {
     new bool:autoPop;
@@ -1026,8 +946,6 @@ bool:VoteAutoPopulated(client)
     return autoPop;
 }
 
-
-//
 DisplayScrambleMenu(client)
 {
     new Handle:menu = CreateMenu(HandleMV_Scramble, MenuAction_DisplayItem|MenuAction_Display);
@@ -1049,8 +967,6 @@ DisplayScrambleMenu(client)
     DisplayMenu(menu, client, 0);
 }
 
-
-//
 public HandleMV_Scramble(Handle:menu, MenuAction:action, param1, param2)
 {
     switch (action)
@@ -1093,8 +1009,6 @@ public HandleMV_Scramble(Handle:menu, MenuAction:action, param1, param2)
     return Handle_MenuTranslation(menu, action, param1, param2);
 }
 
-
-//
 DisplayThresholdMenu(client)
 {
     threshold_trigger[client] = true;
@@ -1123,8 +1037,6 @@ DisplayThresholdMenu(client)
     DisplayMenu(menu, client, 0);
 }
 
-
-//
 public HandleMV_Threshold(Handle:menu, MenuAction:action, param1, param2)
 {
     switch (action)
@@ -1206,8 +1118,6 @@ public HandleMV_Threshold(Handle:menu, MenuAction:action, param1, param2)
     return 0;
 }
 
-
-//
 bool:ProcessThresholdText(client, const String:text[])
 {
     decl String:num[20];
@@ -1228,8 +1138,6 @@ bool:ProcessThresholdText(client, const String:text[])
     return false;
 }
 
-
-//
 CancelThresholdMenu(client)
 {
     threshold_menu_trigger[client] = true;
@@ -1237,8 +1145,6 @@ CancelThresholdMenu(client)
     threshold_menu_trigger[client] = false;
 }
 
-
-//
 DisplayFailActionMenu(client)
 {
     new Handle:menu = CreateMenu(HandleMV_FailAction, MenuAction_DisplayItem|MenuAction_Display);
@@ -1260,8 +1166,6 @@ DisplayFailActionMenu(client)
     DisplayMenu(menu, client, 0);
 }
 
-
-//
 public HandleMV_FailAction(Handle:menu, MenuAction:action, param1, param2)
 {
     switch (action)
@@ -1301,8 +1205,6 @@ public HandleMV_FailAction(Handle:menu, MenuAction:action, param1, param2)
     return Handle_MenuTranslation(menu, action, param1, param2);
 }
 
-
-//
 DisplayMaxRunoffMenu(client)
 {
     runoff_trigger[client] = true;
@@ -1332,8 +1234,6 @@ DisplayMaxRunoffMenu(client)
     DisplayMenu(menu, client, 0);
 }
 
-
-//
 public HandleMV_MaxRunoff(Handle:menu, MenuAction:action, param1, param2)
 {
     switch (action)
@@ -1419,8 +1319,6 @@ public HandleMV_MaxRunoff(Handle:menu, MenuAction:action, param1, param2)
     return 0;
 }
 
-
-//
 bool:ProcessRunoffText(client, const String:text[])
 {
     decl String:num[20];
@@ -1441,8 +1339,6 @@ bool:ProcessRunoffText(client, const String:text[])
     return false;
 }
 
-
-//
 CancelRunoffMenu(client)
 {
     runoff_menu_trigger[client] = true;
@@ -1450,8 +1346,6 @@ CancelRunoffMenu(client)
     runoff_menu_trigger[client] = false;        
 }
 
-
-//
 DisplayRunoffFailActionMenu(client)
 {
     new Handle:menu = CreateMenu(HandleMV_RunoffFailAction, MenuAction_DisplayItem|MenuAction_Display);
@@ -1473,8 +1367,6 @@ DisplayRunoffFailActionMenu(client)
     DisplayMenu(menu, client, 0);
 }
 
-
-//
 public HandleMV_RunoffFailAction(Handle:menu, MenuAction:action, param1, param2)
 {
     switch (action)
@@ -1504,8 +1396,6 @@ public HandleMV_RunoffFailAction(Handle:menu, MenuAction:action, param1, param2)
     return Handle_MenuTranslation(menu, action, param1, param2);
 }
 
-
-//
 DisplayExtendMenu(client)
 {
     new Handle:menu = CreateMenu(HandleMV_Extend, MenuAction_DisplayItem|MenuAction_Display);
@@ -1527,8 +1417,6 @@ DisplayExtendMenu(client)
     DisplayMenu(menu, client, 0);
 }
 
-
-//
 public HandleMV_Extend(Handle:menu, MenuAction:action, param1, param2)
 {
     switch (action)
@@ -1561,8 +1449,6 @@ public HandleMV_Extend(Handle:menu, MenuAction:action, param1, param2)
     return Handle_MenuTranslation(menu, action, param1, param2);
 }
 
-
-//
 bool:RunoffIsEnabled(client)
 {
     new UMC_VoteFailAction:failAction;
@@ -1571,8 +1457,6 @@ bool:RunoffIsEnabled(client)
     return failAction == VoteFailAction_Runoff;
 }
 
-
-//
 DisplayDontChangeMenu(client)
 {
     new Handle:menu = CreateMenu(HandleMV_DontChange, MenuAction_DisplayItem|MenuAction_Display);
@@ -1594,8 +1478,6 @@ DisplayDontChangeMenu(client)
     DisplayMenu(menu, client, 0);
 }
 
-
-//
 public HandleMV_DontChange(Handle:menu, MenuAction:action, param1, param2)
 {
     switch (action)
@@ -1638,8 +1520,6 @@ public HandleMV_DontChange(Handle:menu, MenuAction:action, param1, param2)
     return Handle_MenuTranslation(menu, action, param1, param2);
 }
 
-
-//
 SkipAdminFlags(client)
 {
     new Handle:trie = menu_tries[client];
@@ -1647,16 +1527,12 @@ SkipAdminFlags(client)
     SetTrieValue(trie, "skip_admin", true);
 }
 
-
-//
 bool:SkippingAdminFlags(client)
 {
     new bool:result;
     return GetTrieValue(menu_tries[client], "skip_admin", result) && result;
 }
 
-
-//
 DisplayAdminFlagsMenu(client)
 {
     new Handle:menu = CreateMenu(HandleMV_AdminFlags, MenuAction_DisplayItem|MenuAction_Display);
@@ -1673,8 +1549,6 @@ DisplayAdminFlagsMenu(client)
     DisplayMenu(menu, client, 0);
 }
 
-
-//
 public HandleMV_AdminFlags(Handle:menu, MenuAction:action, param1, param2)
 {
     switch (action)
@@ -1707,8 +1581,6 @@ public HandleMV_AdminFlags(Handle:menu, MenuAction:action, param1, param2)
     return Handle_MenuTranslation(menu, action, param1, param2);
 }
 
-
-//
 DisplayChangeWhenMenu(client)
 {
     new Handle:menu = CreateMenu(HandleMV_When, MenuAction_DisplayItem|MenuAction_Display);
@@ -1731,8 +1603,6 @@ DisplayChangeWhenMenu(client)
     DisplayMenu(menu, client, 0);
 }
 
-
-//
 public HandleMV_When(Handle:menu, MenuAction:action, param1, param2)
 {
     switch (action)
@@ -1743,8 +1613,6 @@ public HandleMV_When(Handle:menu, MenuAction:action, param1, param2)
             GetMenuItem(menu, param2, info, sizeof(info));
             
             SetTrieValue(menu_tries[param1], "when", StringToInt(info));
-            
-            //DEBUG_MESSAGE("Change When Selection: %s", info)
             
             DoMapVote(param1);
         }
@@ -1798,8 +1666,6 @@ public HandleMV_When(Handle:menu, MenuAction:action, param1, param2)
     return Handle_MenuTranslation(menu, action, param1, param2);
 }
 
-
-//
 bool:UsingDefaults(client)
 {
     new bool:defaults;
@@ -1808,14 +1674,9 @@ bool:UsingDefaults(client)
     return defaults;
 }
 
-
-//
 DoMapVote(client)
 {
-    //DEBUG_MESSAGE("Starting Map Vote")
-
     new Handle:trie = menu_tries[client];
-    
     new Handle:selectedMaps;
     
     new UMC_VoteType:type, bool:scramble, bool:extend, bool:dontChange, Float:threshold,
@@ -1827,16 +1688,12 @@ DoMapVote(client)
     new bool:ignoreExclusion;
         
     GetTrieValue(trie, "maps", selectedMaps);
-    
-    //DEBUG_MESSAGE("Creating vote mapcycle")
-    
+
     new bool:autoPop = VoteAutoPopulated(client);
     new Handle:mapcycle = autoPop
         ? map_kv
         : CreateVoteKV(selectedMaps);
-    
-    //DEBUG_MESSAGE("Fetching vote parameters")
-    
+
     GetTrieValue(trie, "type",               type);
     GetTrieValue(trie, "scramble",           scramble);
     GetTrieValue(trie, "extend",             extend);
@@ -1856,11 +1713,7 @@ DoMapVote(client)
     GetTrieValue(trie, "ignore_exclusion", ignoreExclusion);
     
     CloseClientVoteTrie(client);
-    
-    //DEBUG_MESSAGE("Change When Value: %i", when)
-    
-    //DEBUG_MESSAGE("Calling native")
-    
+
     UMC_StartVote(
         "core",
         mapcycle, umc_mapcycle, type, GetConVarInt(cvar_vote_time), scramble, vote_start_sound,
@@ -1871,28 +1724,21 @@ DoMapVote(client)
         numClients, !ignoreExclusion
     );
     
-    //DEBUG_MESSAGE("Cleanup")
-    
     if (!autoPop)
         CloseHandle(mapcycle);
 }
 
-
-//
 Handle:CreateVoteKV(Handle:maps)
 {
-    //DEBUG_MESSAGE("Copying mapcycle")
     new Handle:result = CreateKeyValues("umc_rotation");
     KvRewind(map_kv);
     KvCopySubkeys(map_kv, result);
     
     if (!KvGotoFirstSubKey(result))
     {
-        //DEBUG_MESSAGE("Cannot find any groups, returning empty mapcycle.")
         return result;
     }
     
-    //DEBUG_MESSAGE("Starting group traversal")
     decl String:group[MAP_LENGTH];
     decl String:map[MAP_LENGTH];
     new bool:goBackMap;
@@ -1907,27 +1753,21 @@ Handle:CreateVoteKV(Handle:maps)
         
         if (!KvGotoFirstSubKey(result))
         {
-            //DEBUG_MESSAGE("No maps in group %s", group)
             if (!KvGotoNextKey(result))
             {
-                //DEBUG_MESSAGE("End of group traversal.")
                 break;
             }
             continue;
         }
-        
-        //DEBUG_MESSAGE("Starting map traversal")
-        
+ 
         for ( ; ; )
         {
             KvGetSectionName(result, map, sizeof(map));
             
             if (!FindMapInList(maps, map, group))
             {
-                //DEBUG_MESSAGE("Map wasn't found in selected list. Deleting.")
                 if (KvDeleteThis(result) == -1)
                 {
-                    //DEBUG_MESSAGE("Last map in group deleted")
                     goBackMap = false;
                     break;
                 }
@@ -1941,23 +1781,19 @@ Handle:CreateVoteKV(Handle:maps)
             
             if (!KvGotoNextKey(result))
             {
-                //DEBUG_MESSAGE("End of map traversal, found %i maps.", groupMapCount)
                 break;
             }
         }
         
         if (goBackMap)
         {
-            //DEBUG_MESSAGE("Returning to group level")
             KvGoBack(result);
         }
         
         if (!KvGotoFirstSubKey(result))
         {
-            //DEBUG_MESSAGE("All maps have been removed from group. Deleting group.")
             if (KvDeleteThis(result) == -1)
             {
-                //DEBUG_MESSAGE("Last map group deleted")
                 goBackGroup = false;
                 break;
             }
@@ -1966,29 +1802,24 @@ Handle:CreateVoteKV(Handle:maps)
         }
         else
         {
-            //DEBUG_MESSAGE("Setting maps_invote for group.")
             KvGoBack(result);
             KvSetNum(result, "maps_invote", groupMapCount);
         }
             
         if (!KvGotoNextKey(result))
         {
-            //DEBUG_MESSAGE("End of group traversal.")
             break;
         }
     }
     
     if (goBackGroup)
     {
-        //DEBUG_MESSAGE("Returning to mapcycle root level")
         KvGoBack(result);
     }
     
     return result;
 }
 
-
-//
 bool:FindMapInList(Handle:maps, const String:map[], const String:group[])
 {
     decl String:gBuffer[MAP_LENGTH], String:mBuffer[MAP_LENGTH];
@@ -2008,24 +1839,18 @@ bool:FindMapInList(Handle:maps, const String:map[], const String:group[])
     return false;
 }
 
-
-//
 CreateAMNextMap(client)
 {
     new Handle:menu = CreateAutoManualMenu(HandleAM_NextMap, "Select A Map");
     DisplayMenu(menu, client, 0);
 }
 
-
-//
 CreateAMChangeMap(client)
 {
     new Handle:menu = CreateAutoManualMenu(HandleAM_ChangeMap, "Select A Map");
     DisplayMenu(menu, client, 0);
 }
 
-
-//
 public HandleAM_ChangeMap(Handle:menu, MenuAction:action, param1, param2)
 {
     switch (action)
@@ -2052,8 +1877,6 @@ public HandleAM_ChangeMap(Handle:menu, MenuAction:action, param1, param2)
     return Handle_MenuTranslation(menu, action, param1, param2);
 }
 
-
-//
 ManualChangeMap(client)
 {
     menu_tries[client] = CreateTrie();
@@ -2076,8 +1899,6 @@ ManualChangeMap(client)
     DisplayMenu(menu, client, 0);
 }
 
-
-//
 public HandleGM_ChangeMap(Handle:menu, MenuAction:action, param1, param2)
 {
     switch (action)
@@ -2128,8 +1949,6 @@ public HandleGM_ChangeMap(Handle:menu, MenuAction:action, param1, param2)
     }
 }
 
-
-//
 public HandleMM_ChangeMap(Handle:menu, MenuAction:action, param1, param2)
 {
     switch (action)
@@ -2180,8 +1999,6 @@ public HandleMM_ChangeMap(Handle:menu, MenuAction:action, param1, param2)
     }
 }
 
-
-//
 ManualChangeMapWhen(client)
 {
     new Handle:menu = CreateMenu(Handle_ManualChangeWhenMenu, MenuAction_DisplayItem|MenuAction_Display);
@@ -2200,8 +2017,6 @@ ManualChangeMapWhen(client)
     DisplayMenu(menu, client, 0);
 }
 
-
-//
 public Handle_ManualChangeWhenMenu(Handle:menu, MenuAction:action, param1, param2)
 {
     switch (action)
@@ -2212,9 +2027,6 @@ public Handle_ManualChangeWhenMenu(Handle:menu, MenuAction:action, param1, param
             GetMenuItem(menu, param2, info, sizeof(info));
             
             SetTrieValue(menu_tries[param1], "when", StringToInt(info));
-            
-            //DEBUG_MESSAGE("Change When Selection: %s", info)
-            
             DoManualMapChange(param1);
         }
         case MenuAction_Cancel:
@@ -2251,8 +2063,6 @@ public Handle_ManualChangeWhenMenu(Handle:menu, MenuAction:action, param1, param
     return Handle_MenuTranslation(menu, action, param1, param2);
 }
 
-
-//
 DoManualMapChange(client)
 {
     new Handle:trie = menu_tries[client];
@@ -2269,8 +2079,6 @@ DoManualMapChange(client)
     DoMapChange(client, UMC_ChangeMapTime:when, nextMap, nextGroup);
 }
 
-
-//
 AutoChangeMap(client)
 {
     new Handle:menu = CreateMenu(Handle_AutoChangeWhenMenu, MenuAction_DisplayItem|MenuAction_Display);
@@ -2289,8 +2097,6 @@ AutoChangeMap(client)
     DisplayMenu(menu, client, 0);
 }
 
-
-//
 public Handle_AutoChangeWhenMenu(Handle:menu, MenuAction:action, param1, param2)
 {
     switch (action)
@@ -2301,8 +2107,6 @@ public Handle_AutoChangeWhenMenu(Handle:menu, MenuAction:action, param1, param2)
             GetMenuItem(menu, param2, info, sizeof(info));
             
             DoAutoMapChange(param1, UMC_ChangeMapTime:StringToInt(info));
-            
-            //DEBUG_MESSAGE("Change When Selection: %s", info)
         }
         case MenuAction_Cancel:
         {
@@ -2319,8 +2123,6 @@ public Handle_AutoChangeWhenMenu(Handle:menu, MenuAction:action, param1, param2)
     return Handle_MenuTranslation(menu, action, param1, param2);
 }
 
-
-//
 DoAutoMapChange(client, UMC_ChangeMapTime:when)
 {
     decl String:nextMap[MAP_LENGTH], String:nextGroup[MAP_LENGTH];
@@ -2335,16 +2137,12 @@ DoAutoMapChange(client, UMC_ChangeMapTime:when)
     }
 }
 
-
-//
 DoMapChange(client, UMC_ChangeMapTime:when, const String:map[], const String:group[])
 {
     UMC_SetNextMap(map_kv, map, group, when);
     LogUMCMessage("%L set the next map to %s from group %s.", client, map, group);
 }
 
-
-//
 public HandleAM_NextMap(Handle:menu, MenuAction:action, param1, param2)
 {
     switch (action)
@@ -2371,8 +2169,6 @@ public HandleAM_NextMap(Handle:menu, MenuAction:action, param1, param2)
     return Handle_MenuTranslation(menu, action, param1, param2);
 }
 
-
-//
 ManualNextMap(client)
 {
     menu_tries[client] = CreateTrie();
@@ -2395,8 +2191,6 @@ ManualNextMap(client)
     DisplayMenu(menu, client, 0);
 }
 
-
-//
 public HandleGM_NextMap(Handle:menu, MenuAction:action, param1, param2)
 {
     switch (action)
@@ -2447,8 +2241,6 @@ public HandleGM_NextMap(Handle:menu, MenuAction:action, param1, param2)
     }
 }
 
-
-//
 public HandleMM_NextMap(Handle:menu, MenuAction:action, param1, param2)
 {
     switch (action)
@@ -2499,8 +2291,6 @@ public HandleMM_NextMap(Handle:menu, MenuAction:action, param1, param2)
     }
 }
 
-
-//
 DoManualNextMap(client)
 {
     new Handle:trie = menu_tries[client];
@@ -2514,8 +2304,6 @@ DoManualNextMap(client)
     DoMapChange(client, ChangeMapTime_MapEnd, nextMap, nextGroup);
 }
 
-
-//
 AutoNextMap(client)
 {
     decl String:nextMap[MAP_LENGTH], String:nextGroup[MAP_LENGTH];
@@ -2530,8 +2318,6 @@ AutoNextMap(client)
     }
 }
 
-
-//
 stock Handle:FetchGroupNames(Handle:kv)
 {
     new Handle:result = CreateArray(ByteCountToCells(MAP_LENGTH));
@@ -2553,8 +2339,6 @@ stock Handle:FetchGroupNames(Handle:kv)
     return result;
 }
 
-
-//
 stock Handle:FetchMapsFromGroup(Handle:kv, const String:group[])
 {
     new Handle:mapcycle = CreateKeyValues("umc_rotation");
@@ -2595,8 +2379,6 @@ stock Handle:FetchMapsFromGroup(Handle:kv, const String:group[])
     return result;
 }
 
-
-//
 FilterGroupArrayForAdmin(Handle:groups, admin)
 {
     new userflags = GetUserFlagBits(admin);
@@ -2639,7 +2421,6 @@ FilterGroupArrayForAdmin(Handle:groups, admin)
     }
 }
 
-
 //Builds and returns a map group selection menu.
 Handle:CreateGroupMenu(MenuHandler:handler, bool:limits, client)
 {
@@ -2666,8 +2447,7 @@ Handle:CreateGroupMenu(MenuHandler:handler, bool:limits, client)
     
     new size = GetArraySize(groupArray);
     
-    //Log an error and return nothing if...
-    //    ...the number of maps available to be nominated
+    //Log an error and return nothing if the number of maps available to be nominated
     if (size == 0)
     {
         LogError("No map groups available to build menu.");
@@ -2714,7 +2494,6 @@ Handle:CreateGroupMenu(MenuHandler:handler, bool:limits, client)
     //Success!
     return menu;
 }
-
 
 //Builds and returns a map selection menu.
 Handle:CreateMapMenu(MenuHandler:handler, const String:group[], bool:limits, client)
@@ -2770,26 +2549,17 @@ Handle:CreateMapMenu(MenuHandler:handler, const String:group[], bool:limits, cli
         GetTrieValue(mapTrie, "excluded", excluded);
         
         KvJumpToKey(umc_mapcycle, groupBuff);
-        //KvGetString(umc_mapcycle, "display-template", gDisp, sizeof(gDisp), "{MAP}");
         KvGetString(umc_mapcycle, ADMINMENU_ADMINFLAG_KEY, gAdminFlags, sizeof(gAdminFlags), "");
         KvJumpToKey(umc_mapcycle, mapBuff);
 
         //Get the name of the current map.
         KvGetSectionName(umc_mapcycle, mapBuff, sizeof(mapBuff));
-        
         KvGetString(umc_mapcycle, ADMINMENU_ADMINFLAG_KEY, mAdminFlags, sizeof(mAdminFlags), gAdminFlags);
         
         if (!ClientHasAdminFlags(client, mAdminFlags))
             continue;
             
         UMC_FormatDisplayString(display, sizeof(display), dispKV, mapBuff, groupBuff);
-        
-        /* KvGetString(umc_mapcycle, "display", display, sizeof(display), gDisp);
-                    
-        if (strlen(display) == 0)
-            display = mapBuff;
-        else
-            ReplaceString(display, sizeof(display), "{MAP}", mapBuff, false); */
             
         if (UMC_IsMapNominated(mapBuff, groupBuff))
         {
@@ -2830,7 +2600,6 @@ Handle:CreateMapMenu(MenuHandler:handler, const String:group[], bool:limits, cli
     return menu;
 }
 
-
 //Builds a menu with Auto and Manual options.
 Handle:CreateAutoManualMenu(MenuHandler:handler, const String:title[])
 {
@@ -2843,11 +2612,9 @@ Handle:CreateAutoManualMenu(MenuHandler:handler, const String:title[])
     return menu;
 }
 
-
 //************************************************************************************************//
 //                                   ULTIMATE MAPCHOOSER EVENTS                                   //
 //************************************************************************************************//
-
 //Called when UMC requests that the mapcycle should be reloaded.
 public UMC_RequestReloadMapcycle()
 {
@@ -2855,7 +2622,6 @@ public UMC_RequestReloadMapcycle()
     if (can_vote)
         RemovePreviousMapsFromCycle();
 }
-
 
 //Called when UMC requests that the mapcycle is printed to the console.
 public UMC_DisplayMapCycle(client, bool:filtered)
@@ -2874,5 +2640,3 @@ public UMC_DisplayMapCycle(client, bool:filtered)
         PrintKvToConsole(umc_mapcycle, client);
     }
 }
-
-

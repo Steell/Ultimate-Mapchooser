@@ -73,8 +73,6 @@ public OnPluginStart()
 //Called when UMC has set the next map.
 public UMC_OnNextmapSet(Handle:kv, const String:map[], const String:group[], const String:display[])
 {
-    //DEBUG_MESSAGE("Map changed, displaying message...")
-
     new bool:disp = !GetConVarBool(cvar_display);
 
     if (GetConVarBool(cvar_center))
@@ -84,20 +82,17 @@ public UMC_OnNextmapSet(Handle:kv, const String:map[], const String:group[], con
             Format(msg, sizeof(msg), "[UMC] %t", "Next Map", display);
         else
             Format(msg, sizeof(msg), "[UMC] %t", "Next Map", map);
-        //DEBUG_MESSAGE("Attempting to display center message: \"%s\"", msg)
+            
         DisplayServerMessage(msg, "C");
-        //PrintCenterTextAll("[UMC] %t", "Next Map", map);
     }
     if (GetConVarBool(cvar_hint))
     {
         if (disp && strlen(display) > 0)
         {
-            //DEBUG_MESSAGE("Attempting to display hint message: \"%s\"", display)
             PrintHintTextToAll("[UMC] %t", "Next Map", display);
         }
         else
         {
-            //DEBUG_MESSAGE("Attempting to display hint message: \"%s\"", map)
             PrintHintTextToAll("[UMC] %t", "Next Map", map);
         }
     }

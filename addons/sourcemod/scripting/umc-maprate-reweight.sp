@@ -41,7 +41,6 @@ public Plugin:myinfo =
 #define SQL_STATEMENT "SELECT map, AVG(rating) FROM %s GROUP BY map HAVING COUNT(rating) >= %i"
 
 /******** GLOBALS *********/
-
 //Cvar
 new Handle:cvar_min_votes = INVALID_HANDLE;
 new Handle:cvar_scale     = INVALID_HANDLE;
@@ -58,8 +57,6 @@ new Handle:map_ratings = INVALID_HANDLE;
 new bool:reweight = false;
 
 /* ********************** */
-
-
 //Initialize the cache.
 public OnPluginStart()
 {
@@ -115,11 +112,9 @@ public Action:Command_TestReweight(client, args)
     return Plugin_Handled;
 }
 
-
 //Repopulate the cache on each map start.
 public OnConfigsExecuted()
 {
-    //DEBUG_MESSAGE("Executing MapRateReweight OnConfigsExecuted")
     new Handle:cvarTable = FindConVar("maprate_table");
     if (cvarTable == INVALID_HANDLE)
         cvarTable = FindConVar("sm_maprate_table");
@@ -145,7 +140,6 @@ public OnConfigsExecuted()
     }
 }
 
-
 //Handles the database connection
 public Handle_SQLConnect(Handle:owner, Handle:db, const String:error[], any:data)
 {
@@ -166,7 +160,6 @@ public Handle_SQLConnect(Handle:owner, Handle:db, const String:error[], any:data
     
     CloseHandle(db);
 }
-
 
 //Handles the results of the query
 public Handle_MapRatingQuery(Handle:owner, Handle:hQuery, const String:error[], any:data)
@@ -189,8 +182,6 @@ public Handle_MapRatingQuery(Handle:owner, Handle:hQuery, const String:error[], 
     reweight = true;  
 }
 
-
-//
 Float:FetchMapWeight(const String:map[])
 {
     new Float:weight;
@@ -204,7 +195,6 @@ Float:FetchMapWeight(const String:map[])
     }
 }
 
-
 //Reweights a map when UMC requests,
 public UMC_OnReweightMap(Handle:kv, const String:map[], const String:group[])
 {
@@ -213,12 +203,7 @@ public UMC_OnReweightMap(Handle:kv, const String:map[], const String:group[])
     
     new Float:weight = FetchMapWeight(map);
     UMC_AddWeightModifier(weight);
-    
-#if UMC_DEBUG
-    LogUMCMessage("Map %s was reweighted by %f", map, weight);
-#endif
 }
-
 
 //Display String for Map
 public UMC_OnFormatTemplateString(String:template[], maxlen, Handle:kv, const String:map[],

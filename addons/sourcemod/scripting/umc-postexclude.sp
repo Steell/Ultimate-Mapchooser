@@ -39,7 +39,6 @@ public Plugin:myinfo =
 
 new Handle:cvar_nom_ignore = INVALID_HANDLE;
 new Handle:cvar_display_ignore = INVALID_HANDLE;
-
 new Handle:time_played_trie = INVALID_HANDLE;
 new Handle:time_played_groups_trie = INVALID_HANDLE;
 
@@ -72,12 +71,8 @@ public OnPluginStart()
     time_played_groups_trie = CreateTrie();
 }
 
-
-//
 public OnConfigsExecuted()
 {
-    //DEBUG_MESSAGE("Executing PostExclude OnConfigsExecuted")
-    
     decl String:map[MAP_LENGTH], String:group[MAP_LENGTH];
     GetCurrentMap(map, sizeof(map));
     UMC_GetCurrentMapGroup(group, sizeof(group));
@@ -94,8 +89,6 @@ public OnConfigsExecuted()
     time_penalty = 0;
 }
 
-
-//
 bool:IsMapStillDelayed(const String:map[], const String:group[], minsDelayedMap, minsDelayedGroup)
 {
     new Handle:groupMaps;
@@ -103,6 +96,7 @@ bool:IsMapStillDelayed(const String:map[], const String:group[], minsDelayedMap,
         return false;
     new timePlayedMap;
     decl String:resolvedMap[MAP_LENGTH];
+    
     // SM 1.7.3
     if (GetFeatureStatus(FeatureType_Native, "FindMap") == FeatureStatus_Available)
     {
@@ -130,7 +124,6 @@ bool:IsMapStillDelayed(const String:map[], const String:group[], minsDelayedMap,
     return minsSinceMapPlayed <= minsDelayedMap
         || minsSinceGroupPlayed <= minsDelayedGroup;
 }
-
 
 //Called when UMC wants to know if this map is excluded
 public Action:UMC_OnDetermineMapExclude(Handle:kv, const String:map[], const String:group[],
@@ -172,7 +165,6 @@ public Action:UMC_OnDetermineMapExclude(Handle:kv, const String:map[], const Str
     return Plugin_Continue;
 }
 
-
 //Called when UMC has set the next map
 public UMC_OnNextmapSet(Handle:kv, const String:map[], const String:group[], 
                         const String:display[])
@@ -202,4 +194,3 @@ public UMC_OnNextmapSet(Handle:kv, const String:map[], const String:group[],
     new penalty = (gDef - gVal) * 60;
     time_penalty = penalty > 0 ? penalty : 0;
 }
-

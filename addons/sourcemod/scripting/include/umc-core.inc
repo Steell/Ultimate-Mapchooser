@@ -22,7 +22,7 @@ along with this plugin.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma semicolon 1
 
-#define PL_VERSION "3.6.0"
+#define PL_VERSION "3.6.2"
 #define UMC_DEBUG 1
 #define AUTOUPDATE_ENABLE 0
 #define AUTOUPDATE_DEV 0
@@ -51,7 +51,6 @@ public __pl_umccore_SetNTVOptional()
     MarkNativeAsOptional("UMC_CreateValidMapArray");
     MarkNativeAsOptional("UMC_CreateValidMapGroupArray");
     MarkNativeAsOptional("UMC_IsMapValid");
-    //MarkNativeAsOptional("UMC_IsGroupValid");
     MarkNativeAsOptional("UMC_FilterMapcycle");
     MarkNativeAsOptional("UMC_IsVoteInProgress");
     MarkNativeAsOptional("UMC_StopVote");

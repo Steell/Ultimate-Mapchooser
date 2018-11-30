@@ -33,14 +33,7 @@ public Plugin:myinfo =
     url         = "http://forums.alliedmods.net/showthread.php?t=134190"
 };
 
-//Changelog:
-/*
-3.3.2 (3/4/2012)
-Updated UMC Logging functionality
-Added ability to view the current mapcycle of all modules
-*/
-
-        ////----CONVARS-----/////
+////----CONVARS-----/////
 new Handle:cvar_filename             = INVALID_HANDLE;
 new Handle:cvar_scramble             = INVALID_HANDLE;
 new Handle:cvar_vote_time            = INVALID_HANDLE;
@@ -63,7 +56,7 @@ new Handle:cvar_vote_endsound        = INVALID_HANDLE;
 new Handle:cvar_vote_catmem          = INVALID_HANDLE;
 new Handle:cvar_dontchange           = INVALID_HANDLE;
 new Handle:cvar_flags                = INVALID_HANDLE;
-        ////----/CONVARS-----/////
+////----/CONVARS-----/////
 
 //Mapcycle KV
 new Handle:map_kv = INVALID_HANDLE;
@@ -80,11 +73,9 @@ new String:vote_start_sound[PLATFORM_MAX_PATH], String:vote_end_sound[PLATFORM_M
 //Can we start a vote (is the mapcycle valid?)
 new bool:can_vote;
 
-
 //************************************************************************************************//
 //                                        SOURCEMOD EVENTS                                        //
 //************************************************************************************************//
-
 //Called when the plugin is finished loading.
 public OnPluginStart()
 {
@@ -257,20 +248,14 @@ public OnPluginStart()
 //************************************************************************************************//
 //                                           GAME EVENTS                                          //
 //************************************************************************************************//
-
 //Called after all config files were executed.
 public OnConfigsExecuted()
 {
-    //DEBUG_MESSAGE("Executing VoteCommand OnConfigsExecuted")
-    
-    can_vote = ReloadMapcycle();
-    
-    SetupVoteSounds();
+    can_vote = ReloadMapcycle();   
     
     //Grab the name of the current map.
     decl String:mapName[MAP_LENGTH];
     GetCurrentMap(mapName, sizeof(mapName));
-    
     decl String:groupName[MAP_LENGTH];
     UMC_GetCurrentMapGroup(groupName, sizeof(groupName));
     
@@ -289,11 +274,14 @@ public OnConfigsExecuted()
         RemovePreviousMapsFromCycle();
 }
 
+public OnMapStart()
+{
+    SetupVoteSounds();
+}
 
 //************************************************************************************************//
 //                                              SETUP                                             //
 //************************************************************************************************//
-
 //Parses the mapcycle file and returns a KV handle representing the mapcycle.
 Handle:GetMapcycle()
 {
@@ -316,7 +304,6 @@ Handle:GetMapcycle()
     return result;
 }
 
-
 //Reloads the mapcycle. Returns true on success, false on failure.
 bool:ReloadMapcycle()
 {
@@ -335,15 +322,12 @@ bool:ReloadMapcycle()
     return umc_mapcycle != INVALID_HANDLE;
 }
 
-
-//
 RemovePreviousMapsFromCycle()
 {
     map_kv = CreateKeyValues("umc_rotation");
     KvCopySubkeys(umc_mapcycle, map_kv);
     FilterMapcycleFromArrays(map_kv, vote_mem_arr, vote_catmem_arr, GetConVarInt(cvar_vote_catmem));
 }
-
 
 //Sets up the vote sounds.
 SetupVoteSounds()
@@ -359,11 +343,9 @@ SetupVoteSounds()
     CacheSound(runoff_sound);
 }
 
-
 //************************************************************************************************//
 //                                            COMMANDS                                            //
 //************************************************************************************************//
-
 //Called when the command to start a map vote is called
 public Action:Command_Vote(client, args)
 {
@@ -432,11 +414,9 @@ public Action:Command_Vote(client, args)
     return Plugin_Handled;
 }
 
-
 //************************************************************************************************//
 //                                   ULTIMATE MAPCHOOSER EVENTS                                   //
 //************************************************************************************************//
-
 //Called when UMC requests that the mapcycle should be reloaded.
 public UMC_RequestReloadMapcycle()
 {
@@ -444,7 +424,6 @@ public UMC_RequestReloadMapcycle()
     if (can_vote)
         RemovePreviousMapsFromCycle();
 }
-
 
 //Called when UMC requests that the mapcycle is printed to the console.
 public UMC_DisplayMapCycle(client, bool:filtered)
@@ -463,5 +442,3 @@ public UMC_DisplayMapCycle(client, bool:filtered)
         PrintKvToConsole(umc_mapcycle, client);
     }
 }
-
-

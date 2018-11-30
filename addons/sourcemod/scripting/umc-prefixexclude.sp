@@ -37,7 +37,6 @@ new Handle:cvar_nom_ignore = INVALID_HANDLE;
 new Handle:cvar_display_ignore = INVALID_HANDLE;
 new Handle:cvar_prev = INVALID_HANDLE;
 new Handle:cvar_amt = INVALID_HANDLE;
-
 new Handle:prefix_array = INVALID_HANDLE;
 
 public OnPluginStart()
@@ -77,13 +76,10 @@ public OnPluginStart()
 
 public OnConfigsExecuted()
 {
-    //DEBUG_MESSAGE("Executing PrefixExclude OnConfigsExecuted")
-
     decl String:prefix[MAP_LENGTH];
     GetCurrentMapPrefix(prefix, sizeof(prefix));
     AddToMemoryArray(prefix, prefix_array, GetConVarInt(cvar_prev));
 }
-
 
 GetCurrentMapPrefix(String:buffer[], maxlen)
 {
@@ -92,7 +88,6 @@ GetCurrentMapPrefix(String:buffer[], maxlen)
     
     GetMapPrefix(currentMap, buffer, maxlen);
 }
-
 
 stock GetMapPrefix(const String:map[], String:buffer[], maxlen)
 {
@@ -105,7 +100,6 @@ stock GetMapPrefix(const String:map[], String:buffer[], maxlen)
     else
         strcopy(buffer, maxlen, "");
 }
-
 
 //Called when UMC wants to know if this map is excluded
 public Action:UMC_OnDetermineMapExclude(Handle:kv, const String:map[], const String:group[],
@@ -135,7 +129,6 @@ public Action:UMC_OnDetermineMapExclude(Handle:kv, const String:map[], const Str
         GetArrayString(prefix_array, i, prefix, sizeof(prefix));
         if (StrEqual(mapPrefix, prefix, false) && (--amt == 0))
         {
-            //DEBUG_MESSAGE("Map %s is excluded due to Prefix Exclusion.")
             return Plugin_Stop;
         }
     }

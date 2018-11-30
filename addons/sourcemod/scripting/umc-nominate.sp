@@ -77,11 +77,9 @@ new bool:can_nominate;
 //
 //      New map option called "nomination_group" that sets the "real" map group to be used when
 //      the map is nominated for a vote. Useful for tiered nomination menu.
-
 //************************************************************************************************//
 //                                        SOURCEMOD EVENTS                                        //
 //************************************************************************************************//
-
 //Called when the plugin is finished loading.
 public OnPluginStart()
 {
@@ -212,16 +210,15 @@ public OnConfigsExecuted()
         RemovePreviousMapsFromCycle();
 }
 
-
 //Called when a player types in chat.
 //Required to handle user commands.
 public Action:OnPlayerChat(client, const String:command[], argc)
 {
-    //Return immediately if...
-    //    ...nothing was typed.
-    if (argc == 0) return Plugin_Continue;
-    
-    //DEBUG_MESSAGE("Checking for chat command...")
+    //Return immediately if nothing was typed.
+    if (argc == 0)
+    {
+        return Plugin_Continue;
+    }
     
     if (!GetConVarBool(cvar_nominate))
     {
@@ -232,28 +229,21 @@ public Action:OnPlayerChat(client, const String:command[], argc)
     decl String:text[80];
     GetCmdArg(1, text, sizeof(text));
     TrimString(text);
-    
     decl String:arg[MAP_LENGTH];
-    
     new next = BreakString(text, arg, sizeof(arg));
     
     if (StrEqual(arg, "nominate", false))
     {
-        //DEBUG_MESSAGE("Chat command registered!")
-    
         if (vote_completed || !can_nominate)
         {
             PrintToChat(client, "\x03[UMC]\x01 %t", "No Nominate Nextmap");
         }
         else //Otherwise, let them nominate.
         {
-            //DEBUG_MESSAGE("Checking for argument...")
             if (next != -1)
             {
                 BreakString(text[next], arg, sizeof(arg));
-                
-                //DEBUG_MESSAGE("Argument found! '%s'", arg)
-                
+
                 //Get the selected map.
                 decl String:groupName[MAP_LENGTH], String:nomGroup[MAP_LENGTH];
                 
@@ -294,8 +284,6 @@ public Action:OnPlayerChat(client, const String:command[], argc)
                     }
                     else
                     {
-                        //DEBUG_MESSAGE("Nomination via extra arg -- chat.")
-                        
                         //Nominate it.
                         UMC_NominateMap(map_kv, arg, groupName, client, nomGroup);
                     
@@ -310,7 +298,6 @@ public Action:OnPlayerChat(client, const String:command[], argc)
             }
             else
             {
-                //DEBUG_MESSAGE("No argument! Displaying menu.")
                 if (!DisplayNominationMenu(client))
                     PrintToChat(client, "\x03[UMC]\x01 %t", "No Nominate Nextmap");
             }                
@@ -319,11 +306,9 @@ public Action:OnPlayerChat(client, const String:command[], argc)
     return Plugin_Continue;
 }
 
-
 //************************************************************************************************//
 //                                              SETUP                                             //
 //************************************************************************************************//
-
 //Parses the mapcycle file and returns a KV handle representing the mapcycle.
 Handle:GetMapcycle()
 {
@@ -334,8 +319,7 @@ Handle:GetMapcycle()
     //Get the kv handle from the file.
     new Handle:result = GetKvFromFile(filename, "umc_rotation");
     
-    //Log an error and return empty handle if...
-    //    ...the mapcycle file failed to parse.
+    //Log an error and return empty handle if the mapcycle file failed to parse.
     if (result == INVALID_HANDLE)
     {
         LogError("SETUP: Mapcycle failed to load!");
@@ -345,7 +329,6 @@ Handle:GetMapcycle()
     //Success!
     return result;
 }
-
 
 //Reloads the mapcycle. Returns true on success, false on failure.
 bool:ReloadMapcycle()
@@ -365,8 +348,6 @@ bool:ReloadMapcycle()
     return umc_mapcycle != INVALID_HANDLE;
 }
 
-
-//
 RemovePreviousMapsFromCycle()
 {
     map_kv = CreateKeyValues("umc_rotation");
@@ -374,11 +355,9 @@ RemovePreviousMapsFromCycle()
     FilterMapcycleFromArrays(map_kv, vote_mem_arr, vote_catmem_arr, GetConVarInt(cvar_mem_group));
 }
 
-
 //************************************************************************************************//
 //                                            COMMANDS                                            //
 //************************************************************************************************//
-
 //sm_nominate
 public Action:Command_Nominate(client, args)
 {
@@ -440,9 +419,7 @@ public Action:Command_Nominate(client, args)
                 {
                     //Nominate it.
                     UMC_NominateMap(map_kv, arg, groupName, client, nomGroup);
-                    
-                    //DEBUG_MESSAGE("Nomination via extra arg -- command.")
-                
+
                     //Display a message.
                     decl String:clientName[MAX_NAME_LENGTH];
                     GetClientName(client, clientName, sizeof(clientName));
@@ -461,11 +438,9 @@ public Action:Command_Nominate(client, args)
     return Plugin_Handled;
 }
 
-
 //************************************************************************************************//
 //                                           NOMINATIONS                                          //
 //************************************************************************************************//
-
 //Displays a nomination menu to the given client.
 bool:DisplayNominationMenu(client)
 {
@@ -479,21 +454,13 @@ bool:DisplayNominationMenu(client)
                         ? BuildTieredNominationMenu(client)
                         : BuildNominationMenu(client);
     
-    //Display the menu if...
-    //    ...the menu was built successfully.
+    //Display the menu if the menu was built successfully.
     if (menu != INVALID_HANDLE)
     {
-#if UMC_DEBUG
-        new bool:result = DisplayMenu(menu, client, 0);
-        //DEBUG_MESSAGE("Displaying nomination menu to client. (%i)", result)
-        return result;
-#else
         return DisplayMenu(menu, client, 0);
-#endif
     }
     return false;
 }
-
 
 //Creates and returns the Nomination menu for the given client.
 Handle:BuildNominationMenu(client, const String:cat[]=INVALID_GROUP)
@@ -585,14 +552,7 @@ Handle:BuildNominationMenu(client, const String:cat[]=INVALID_GROUP)
         
         //Get the display string.
         UMC_FormatDisplayString(display, sizeof(display), dispKV, mapBuff, groupBuff);
-        
-        /* KvGetString(map_kv, "display", display, sizeof(display), gDisp);
-                    
-        if (strlen(display) == 0)
-            display = mapBuff;
-        else
-            ReplaceString(display, sizeof(display), "{MAP}", mapBuff, false); */
-                
+  
         //Add map data to the arrays.
         PushArrayString(menuItems, mapBuff);
         PushArrayString(menuItemDisplay, display);
@@ -618,7 +578,6 @@ Handle:BuildNominationMenu(client, const String:cat[]=INVALID_GROUP)
     return menu;
 }
 
-
 //Creates the first part of a tiered Nomination menu.
 Handle:BuildTieredNominationMenu(client)
 {
@@ -632,8 +591,7 @@ Handle:BuildTieredNominationMenu(client)
 
     new size = GetArraySize(groupArray);
     
-    //Log an error and return nothing if...
-    //    ...the number of maps available to be nominated
+    //Log an error and return nothing if the number of maps available to be nominated
     if (size == 0)
     {
         LogError("No maps available to be nominated.");
@@ -699,8 +657,7 @@ Handle:BuildTieredNominationMenu(client)
     return menu;
 }
 
-
-//Called when the client has picked an item in the nomination menu.
+// Called when the client has picked an item in the nomination menu.
 public Handle_NominationMenu(Handle:menu, MenuAction:action, client, param2)
 {
     switch (action)
@@ -712,7 +669,6 @@ public Handle_NominationMenu(Handle:menu, MenuAction:action, client, param2)
             GetMenuItem(menu, param2, map, sizeof(map));
             GetArrayString(nom_menu_groups[client], param2, group, sizeof(group));
             GetArrayString(nom_menu_nomgroups[client], param2, nomGroup, sizeof(nomGroup));
-            
             KvRewind(map_kv);
             
             //Nominate it.
@@ -721,7 +677,6 @@ public Handle_NominationMenu(Handle:menu, MenuAction:action, client, param2)
             //Display a message.
             decl String:clientName[MAX_NAME_LENGTH];
             GetClientName(client, clientName, sizeof(clientName));
-            //DEBUG_MESSAGE("Nomination via menu.")
             PrintToChatAll("\x03[UMC]\x01 %t", "Player Nomination", clientName, map);
             LogUMCMessage("%s has nominated '%s' from group '%s'", clientName, map, group);
             
@@ -739,10 +694,8 @@ public Handle_NominationMenu(Handle:menu, MenuAction:action, client, param2)
         case MenuAction_Display: //the menu is being displayed
         {
             new Handle:panel = Handle:param2;
-            
             decl String:buffer[255];
             FormatEx(buffer, sizeof(buffer), "%T", "Nomination Menu Title", client);
-            
             SetPanelTitle(panel, buffer);
         }
         case MenuAction_Cancel:
@@ -752,15 +705,13 @@ public Handle_NominationMenu(Handle:menu, MenuAction:action, client, param2)
                 //Build the menu
                 new Handle:newmenu = BuildTieredNominationMenu(client);
                 
-                //Display the menu if...
-                //    ..the menu was built successfully.
+                //Display the menu if the menu was built successfully.
                 if (newmenu != INVALID_HANDLE)
                     DisplayMenu(newmenu, client, 20);
             }
         }
     }
 }
-
 
 //Handles the first-stage tiered nomination menu.
 public Handle_TieredNominationMenu(Handle:menu, MenuAction:action, client, param2)
@@ -773,8 +724,7 @@ public Handle_TieredNominationMenu(Handle:menu, MenuAction:action, client, param
         //Build the menu
         new Handle:newmenu = BuildNominationMenu(client, cat);
     
-        //Display the menu if...
-        //    ..the menu was built successfully.
+        //Display the menu if the menu was built successfully.
         if (newmenu != INVALID_HANDLE)
         {  
             DisplayMenu(newmenu, client, 20);
@@ -784,11 +734,9 @@ public Handle_TieredNominationMenu(Handle:menu, MenuAction:action, client, param
         Handle_NominationMenu(menu, action, client, param2);
 }
 
-
 //************************************************************************************************//
 //                                   ULTIMATE MAPCHOOSER EVENTS                                   //
 //************************************************************************************************//
-
 //Called when UMC requests that the mapcycle should be reloaded.
 public UMC_RequestReloadMapcycle()
 {
@@ -809,7 +757,6 @@ public UMC_OnMapExtended()
 {
     vote_completed = false;
 }
-
 
 //Called when UMC requests that the mapcycle is printed to the console.
 public UMC_DisplayMapCycle(client, bool:filtered)
@@ -835,4 +782,3 @@ public UMC_DisplayMapCycle(client, bool:filtered)
         PrintKvToConsole(umc_mapcycle, client);
     }
 }
-

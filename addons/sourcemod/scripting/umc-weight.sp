@@ -59,8 +59,6 @@ public Action:UMC_OnDetermineMapExclude(Handle:kv, const String:map[], const Str
     return Plugin_Continue;
 }
 
-
-
 //Reweights a map when UMC requests.
 public UMC_OnReweightMap(Handle:kv, const String:map[], const String:group[])
 {
@@ -78,7 +76,6 @@ public UMC_OnReweightMap(Handle:kv, const String:map[], const String:group[])
         KvGoBack(kv);
     }
 }
-
 
 //Reweights a group when UMC requests.
 public UMC_OnReweightGroup(Handle:kv, const String:group[])
