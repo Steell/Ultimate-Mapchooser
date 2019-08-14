@@ -26,7 +26,7 @@ along with this plugin.  If not, see <http://www.gnu.org/licenses/>.
 public Plugin:myinfo =
 {
     name = "[UMC] Map Commands",
-    author = "Steell",
+    author = "Previous:Steell,Powerlord - Current: Mr.Silence",
     description = "Allows users to specify commands to be executed for maps and map groups.",
     version = PL_VERSION,
     url = "http://forums.alliedmods.net/showthread.php?t=134190"
@@ -53,14 +53,16 @@ public OnConfigsExecuted()
         KvFindGroupOfMap(kv, CurrentMap, CurrentMapGroup, sizeof(CurrentMapGroup));
         
         if (KvJumpToKey(kv, CurrentMapGroup))
-        {    
-        	if (strlen(group_command) == 0)
+        {
+            if (strlen(group_command) == 0)
+            {
                 KvGetString(kv, COMMAND_KEY, group_command, sizeof(group_command), "");
-        
-        	if (KvJumpToKey(kv, CurrentMap) && strlen(map_command) == 0)
+            }
+            if (KvJumpToKey(kv, CurrentMap) && strlen(map_command) == 0)
+            {
                 KvGetString(kv, COMMAND_KEY, map_command, sizeof(map_command), "");
+            }
         }
-        
         CloseHandle( kv );
     }
     
@@ -103,7 +105,9 @@ public OnMapEnd()
 public UMC_OnNextmapSet(Handle:kv, const String:map[], const String:group[], const String:display[])
 {
     if (kv == INVALID_HANDLE)
+    {
         return;
+    }
     
     decl String:gPVCommand[256], String:mPVCommand[256];
 

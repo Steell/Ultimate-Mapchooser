@@ -27,7 +27,7 @@ along with this plugin.  If not, see <http://www.gnu.org/licenses/>.
 public Plugin:myinfo =
 {
     name        = "[UMC] Rock The Vote",
-    author      = "Steell",
+    author      = "Previous:Steell,Powerlord - Current: Mr.Silence",
     description = "Extends Ultimate Mapchooser to provide RTV map voting.",
     version     = PL_VERSION,
     url         = "http://forums.alliedmods.net/showthread.php?t=134190"
@@ -368,7 +368,9 @@ public OnConfigsExecuted()
     AddToMemoryArray(groupName, vote_catmem_arr, (mapmem > catmem) ? mapmem : catmem);
     
     if (reloaded)
+    {
         RemovePreviousMapsFromCycle();
+    }
 }
 
 public OnMapStart()
@@ -382,24 +384,26 @@ public OnClientPutInServer(client)
 {
     //Update the RTV threshold if RTV is enabled.
     if (GetConVarBool(cvar_rtv_enable))
+    {
         UpdateRTVThreshold();
+    }
 }
 
 //Called when a player types in chat. Required to handle user commands.
 public Action:OnPlayerChat(client, const String:command[], argc)
 {
     //Return immediately if nothing was typed.
-    if (argc == 0) return Plugin_Continue;
-
+    if (argc == 0) 
+    {
+        return Plugin_Continue;
+    }
+    
     //Get what was typed.
     decl String:text[13];
     GetCmdArg(1, text, sizeof(text));
     
-    //Handle RTV client-command if...
-    //    ...RTV is enabled AND
-    //    ...the client typed a valid RTV command AND
-    //    ...the required number of clients for RTV hasn't been reached already AND
-    //    ...the client isn't the console.
+    // Handle RTV client-command if RTV is enabled AND the client typed a valid RTV command AND
+    // the required number of clients for RTV hasn't been reached already AND the client isn't the console.
     if (StrEqual(text, "rtv", false) || StrEqual(text, "rockthevote", false))
     {
         AttemptRTV(client);
@@ -416,17 +420,17 @@ public OnClientDisconnect_Post(client)
     new index;
     //Remove the client from the RTV array if the client is in the array to begin with.
     while ((index = FindValueInArray(rtv_clients, client)) != -1)
+    {
         RemoveFromArray(rtv_clients, index);
-
+    }
+    
     //Recalculate the RTV threshold.
     UpdateRTVThreshold();
     
-    //Start RTV if...
-    //    ...we haven't had an RTV already AND
-    //    ...the new amount of players on the server as passed the required threshold.
+    //Start RTV if we haven't had an RTV already AND the new amount of players on the server as passed the required threshold.
     if (!rtv_completed && GetArraySize(rtv_clients) >= rtv_threshold)
     {
-        PrintToChatAll("\x03[UMC]\x01 %t", "Player Disconnect RTV");
+        PrintToChatAll("[UMC] %t", "Player Disconnect RTV");
         StartRTV();
     }
 }
@@ -520,15 +524,16 @@ public Handle_RTVChange(Handle:convar, const String:oldVal[], const String:newVa
     //If the new value is 0, we ignore the change until next map.
     //Update (in this case set) the RTV threshold if the new value of the changed cvar is 1.
     if (StringToInt(newVal) == 1)
+    {
         UpdateRTVThreshold();
+    }
 }
 
 //Called when the number of excluded previous maps from RTVs has changed.
 public Handle_RTVMemoryChange(Handle:convar, const String:oldValue[], const String:newValue[])
 {
     //Trim the memory array for RTVs.
-        //We pass 1 extra to the argument in order to account for the current map, which should 
-        //always be excluded.
+    //We pass 1 extra to the argument in order to account for the current map, which should always be excluded.
     TrimArray(vote_mem_arr, StringToInt(newValue));
 }
 
@@ -540,7 +545,9 @@ public Handle_ThresholdChange(Handle:cvar, const String:oldVal[], const String:n
     
     //Start an RTV if the amount of clients who have RTVd is greater than the new RTV threshold.
     if (GetArraySize(rtv_clients) >= rtv_threshold)
+    {
         StartRTV();
+    }
 }
 
 //************************************************************************************************//
@@ -553,47 +560,38 @@ AttemptRTV(client)
     new size = GetArraySize(rtv_clients);
 
     if (!rtv_enabled || !GetConVarBool(cvar_rtv_enable) || size >= rtv_threshold || client == 0)
+    {
         return;
-        
+    }
+    
     decl String:flags[64];
     GetConVarString(cvar_enterflags, flags, sizeof(flags));
     
     if (!ClientHasAdminFlags(client, flags))
     {
-        PrintToChat(
-            client,
-            "\x03[UMC]\x01 %t",
-            "No RTV Admin"
-        );
+        PrintToChat(client, "[UMC] %t","No RTV Admin");
         return;
     }
         
     new clients = GetRealClientCount();
     new minPlayers = GetConVarInt(cvar_rtv_minplayers);
 
-    //Print a message if...
-    //    ...an RTV has already been completed OR
-    //    ...a vote has already been completed and RTVs after votes aren't allowed.
+    //Print a message if an RTV has already been completed OR a vote has already been completed and RTVs after votes aren't allowed.
     if (rtv_completed || (vote_completed && GetConVarInt(cvar_rtv_postaction) == 1))
     {
-        PrintToChat(client, "\x03[UMC]\x01 %t", "No RTV Nextmap");
+        PrintToChat(client, "[UMC] %t", "No RTV Nextmap");
         return;
     }
     //Otherwise, print a message if the number of players on the server is less than the minimum required to RTV.
     else if (clients < minPlayers)
     {
-        PrintToChat(
-            client,
-            "\x03[UMC]\x01 %t",
-            "No RTV Player Count",
-                minPlayers - clients
-        );
+        PrintToChat(client, "[UMC] %t", "No RTV Player Count", minPlayers - clients);
         return;
     }
     //Otherwise, print a message if it is too early to RTV.
     else if (rtv_delaystart > 0)
     {
-        PrintToChat(client, "\x03[UMC]\x01 %t", "No RTV Time", rtv_delaystart);
+        PrintToChat(client, "[UMC] %t", "No RTV Time", rtv_delaystart);
         return;
     }
     //Otherwise, accept RTV command if the client hasn't already RTV'd.
@@ -603,9 +601,7 @@ AttemptRTV(client)
         GetConVarString(cvar_enterbonusflags, flags, sizeof(flags));
         
         //Calc the amount of entrance points for this user
-        new amt = strlen(flags) > 0 && ClientHasAdminFlags(client, flags)
-            ? GetConVarInt(cvar_enterbonusamt)
-            : 1;
+        new amt = strlen(flags) > 0 && ClientHasAdminFlags(client, flags) ? GetConVarInt(cvar_enterbonusamt) : 1;
 
         //Apply entrance points
         size += amt;
@@ -631,7 +627,7 @@ AttemptRTV(client)
                     rtv_message[i] = true;
                     PrintToChat(
                         i, 
-                        "\x03[UMC]\x01 %t %t (%t)",
+                        "[UMC] %t %t (%t)",
                         "RTV Entered",
                             name,
                         "RTV Info Msg",
@@ -643,7 +639,7 @@ AttemptRTV(client)
                 {
                     PrintToChat(
                         i,
-                        "\x03[UMC]\x01 %t (%t)",
+                        "[UMC] %t (%t)",
                         "RTV Entered",
                             name,
                         "More Required",
@@ -659,12 +655,12 @@ AttemptRTV(client)
             //Start the vote if there isn't one happening already.
             if (UMC_IsNewVoteAllowed("core"))
             {
-                PrintToChatAll("\x03[UMC]\x01 %t", "RTV Start");
+                PrintToChatAll("[UMC] %t", "RTV Start");
                 StartRTV();
             }
             else //Otherwise, display a message.
             {
-                PrintToChat(client, "\x03[UMC]\x01 %t", "Vote In Progress");
+                PrintToChat(client, "[UMC] %t", "Vote In Progress");
                 MakeRetryVoteTimer(StartRTV);
             }
         }
@@ -674,7 +670,7 @@ AttemptRTV(client)
     {
         PrintToChat(
             client,
-            "\x03[UMC]\x01 %t (%t)",
+            "[UMC] %t (%t)",
             "RTV Already Entered",
             "More Required",
                 rtv_threshold - size
@@ -694,12 +690,7 @@ MakeRTVTimer()
         LogUMCMessage("RTV will be made available in %.f seconds.", rtv_delaystart);
         
         //Create timer that lasts every second.
-        CreateTimer(
-            1.0,
-            Handle_RTVTimer,
-            INVALID_HANDLE,
-            TIMER_FLAG_NO_MAPCHANGE | TIMER_REPEAT
-        );
+        CreateTimer(1.0, Handle_RTVTimer, INVALID_HANDLE, TIMER_FLAG_NO_MAPCHANGE | TIMER_REPEAT);
     }
     else
     {
@@ -713,8 +704,10 @@ public Action:Handle_RTVTimer(Handle:timer)
 {
     //Continue ticking if there is still time left on the counter.
     if (--rtv_delaystart >= 0.0)
+    {
         return Plugin_Continue;
-
+    }
+    
     LogUMCMessage("RTV is now available.");
     return Plugin_Stop;
 }
@@ -725,9 +718,7 @@ UpdateRTVThreshold()
     decl String:flags[64];
     GetConVarString(cvar_voteflags, flags, sizeof(flags));
     new count = GetClientWithFlagsCount(flags);
-    rtv_threshold = (count > 1)
-                    ? RoundToCeil(float(count) * GetConVarFloat(cvar_rtv_needed))
-                    : 1;
+    rtv_threshold = (count > 1) ? RoundToCeil(float(count) * GetConVarFloat(cvar_rtv_needed)) : 1;
 }
 
 //Starts an RTV.
@@ -740,9 +731,8 @@ public StartRTV()
     rtv_completed = true;
     new postAction = GetConVarInt(cvar_rtv_postaction);
     
-    //Change the map immediately if...
-    //    ...there has already been an end-of-map vote AND
-    //    ...the cvar that handles RTV actions after end-of-map votes specifies to change the map.
+    //Change the map immediately if there has already been an end-of-map vote AND
+    //the cvar that handles RTV actions after end-of-map votes specifies to change the map.
     if (vote_completed && postAction == 0)
     {
         //Get the next map set by the vote.
@@ -834,9 +824,13 @@ public UMC_OnNextmapSet(Handle:kv, const String:map[], const String:group[], con
 public UMC_RequestReloadMapcycle()
 {
     if (!ReloadMapcycle())
+    {
         rtv_enabled = false;
+    }
     else
+    {
         RemovePreviousMapsFromCycle();
+    }
 }
 
 //Called when UMC requests that the mapcycle is printed to the console.
@@ -845,9 +839,7 @@ public UMC_DisplayMapCycle(client, bool:filtered)
     PrintToConsole(client, "Module: Rock The Vote");
     if (filtered)
     {
-        new Handle:filteredMapcycle = UMC_FilterMapcycle(
-            map_kv, umc_mapcycle, false, true
-        );
+        new Handle:filteredMapcycle = UMC_FilterMapcycle(map_kv, umc_mapcycle, false, true);
         PrintKvToConsole(filteredMapcycle, client);
         CloseHandle(filteredMapcycle);
     }

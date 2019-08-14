@@ -8,6 +8,27 @@ https://github.com/Silenci0/UMC/wiki
 
 
 # Changelog
+3.7.0 Update (08-14-2019)
+-----------------
+- Restored 3.4.6's GetMapDisplayName code to UMC for better workshop support. This was taken out initially due to an incompatibility with ZPS 2.4 (back when this fork of the plugin was being used exclusively for that game).
+    * Currently, workshop support should work in CS:GO for Windows, however TF2 (all platforms) and CS:GO Linux will not work at this time.
+    * For more information on workshop support, formatting, and current status/info see the FAQ wiki page: https://github.com/Silenci0/UMC/wiki/FAQ
+- Added sm_umc_nominate_duration cvar to umc-nominate plugin to determine how long the menu display can stay open for. This addresses this issue: https://github.com/Silenci0/UMC/issues/8
+    * Added the cvar to the umc-nominate.cfg config file for convenience purposes.
+- Added French translation by nobody-x (From pull request on Steell's plugin here: https://github.com/Steell/Ultimate-Mapchooser/pull/43)
+- Added Polish language fix by Nerus87 (From pull request on Steell's plugin here: https://github.com/Steell/Ultimate-Mapchooser/pull/51)
+- Added an updated umc-nativevotes plugin and the associated nativevotes files/plugins to UMC. 
+    * Native votes will only work with TF2 at this time (this was where it was tested). I believe it might work with ZPS, L4D, and L4D2 but it WILL NOT WORK with CS:GO currently.
+    * Native votes for UMC utilizes the latest plugin files from https://github.com/powerlord/sourcemod-nativevotes
+    * For convenience purposes, only the necessary nativevotes files from the above repo (script files, plugins, and configurations) are included.
+    * Please be aware that, unlike old style menus, native votes only provides 5 options in the vote selection when the actual voting process begins.
+    * If you want to have old style menus or are running a game that does not use fancy vote panels, simply remove the nativevotes plugins (umc-nativevotes.smx and nativevotes.smx). No recompiling/coding necessary!
+- Updated umc chat command in umc-core to only print to the player instead of to everyone on the server when invoked (From pull request on Steell's plugin here: https://github.com/Steell/Ultimate-Mapchooser/pull/47).
+- Updated all UMC configuration files and the umc_mapcycle.txt file with updated links to the wiki: https://github.com/Silenci0/UMC/wiki 
+- Removed the color codes (ie: \x03 and \x01) from the [UMC] tags for all modules. This is to make more generalized messages without color codes added to them. 
+- General code clean up of all includes/source files. Attempting to keep things more readable/consistent in the code.
+- Recompiled all plugins for the latest version of UMC.
+
 3.6.2 Wiki Update (01-23-2019)
 -----------------
 - No code changes, just updated the wiki and README.md file with proper links.

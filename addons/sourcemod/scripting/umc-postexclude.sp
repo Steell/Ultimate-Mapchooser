@@ -26,7 +26,7 @@ along with this plugin.  If not, see <http://www.gnu.org/licenses/>.
 public Plugin:myinfo =
 {
     name = "[UMC] Post-Played Exclusion",
-    author = "Sazpaimon and Steell",
+    author = "Previous:Steell,Powerlord - Current: Mr.Silence",
     description = "Allows users to specify an amount of time after a map is played that it should be excluded.",
     version = PL_VERSION,
     url = "http://forums.alliedmods.net/showthread.php?t=134190"
@@ -43,11 +43,6 @@ new Handle:time_played_trie = INVALID_HANDLE;
 new Handle:time_played_groups_trie = INVALID_HANDLE;
 
 new time_penalty;
-
-public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
-{
-    MarkNativeAsOptional("FindMap");
-}
 
 public OnPluginStart()
 {
@@ -93,50 +88,57 @@ bool:IsMapStillDelayed(const String:map[], const String:group[], minsDelayedMap,
 {
     new Handle:groupMaps;
     if (!GetTrieValue(time_played_trie, group, groupMaps))
+    {
         return false;
+    }
+    
     new timePlayedMap;
     decl String:resolvedMap[MAP_LENGTH];
     
-    // SM 1.7.3
-    if (GetFeatureStatus(FeatureType_Native, "FindMap") == FeatureStatus_Available)
-    {
-        FindMap(map, resolvedMap, sizeof(resolvedMap));
-    }
-    else
-    {
-        strcopy(resolvedMap, sizeof(resolvedMap), map);
-    }
+    FindMap(map, resolvedMap, sizeof(resolvedMap));
+    
     if (!GetTrieValue(groupMaps, resolvedMap, timePlayedMap))
+    {
         return false;
+    }
+    
     new minsSinceMapPlayed = GetTime() - timePlayedMap / 60;
     
     new timePlayedGroup;
     if (!GetTrieValue(time_played_groups_trie, group, timePlayedGroup))
+    {
         return false;
+    }
     
     new minsSinceGroupPlayed = GetTime() - timePlayedGroup / 60;
     
     if (timePlayedMap == timePlayedGroup)
     {
         if (minsDelayedMap < minsDelayedGroup)
+        {
             return minsSinceMapPlayed <= minsDelayedMap;
+        }
     }
-    return minsSinceMapPlayed <= minsDelayedMap
-        || minsSinceGroupPlayed <= minsDelayedGroup;
+    return minsSinceMapPlayed <= minsDelayedMap || minsSinceGroupPlayed <= minsDelayedGroup;
 }
 
 //Called when UMC wants to know if this map is excluded
-public Action:UMC_OnDetermineMapExclude(Handle:kv, const String:map[], const String:group[],
-                                        bool:isNom, bool:forMapChange)
+public Action:UMC_OnDetermineMapExclude(Handle:kv, const String:map[], const String:group[], bool:isNom, bool:forMapChange)
 {
     if (isNom && GetConVarBool(cvar_nom_ignore))
+    {    
         return Plugin_Continue;
-        
+    }
+    
     if (!forMapChange && GetConVarBool(cvar_display_ignore))
+    {
         return Plugin_Continue;
-
+    }
+    
     if (kv == INVALID_HANDLE)
+    {
         return Plugin_Continue;
+    }
     
     new def, val;
     new gDef;
@@ -160,17 +162,20 @@ public Action:UMC_OnDetermineMapExclude(Handle:kv, const String:map[], const Str
     }
     
     if (IsMapStillDelayed(map, group, val, gDef))
+    {
         return Plugin_Stop;
+    }
     
     return Plugin_Continue;
 }
 
 //Called when UMC has set the next map
-public UMC_OnNextmapSet(Handle:kv, const String:map[], const String:group[], 
-                        const String:display[])
+public UMC_OnNextmapSet(Handle:kv, const String:map[], const String:group[], const String:display[])
 {
     if (kv == INVALID_HANDLE)
+    {
         return;
+    }
     
     new gDef, gVal;
 

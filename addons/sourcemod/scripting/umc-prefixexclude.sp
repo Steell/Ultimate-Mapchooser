@@ -27,7 +27,7 @@ along with this plugin.  If not, see <http://www.gnu.org/licenses/>.
 public Plugin:myinfo =
 {
     name = "[UMC] Prefix Exclusion",
-    author = "Steell",
+    author = "Previous:Steell,Powerlord - Current: Mr.Silence",
     description = "Excludes maps with the same prefix from being played consecutively.",
     version = PL_VERSION,
     url = "http://forums.alliedmods.net/showthread.php?t=134190"
@@ -93,32 +93,41 @@ stock GetMapPrefix(const String:map[], String:buffer[], maxlen)
 {
     static Handle:re = INVALID_HANDLE;
     if (re == INVALID_HANDLE)
+    {
         re = CompileRegex("^([a-zA-Z0-9]*)_(.*)$");
-        
+    }
+    
     if (MatchRegex(re, map) > 1)
+    {
         GetRegexSubString(re, 1, buffer, maxlen);
+    }
     else
+    {
         strcopy(buffer, maxlen, "");
+    }
 }
 
 //Called when UMC wants to know if this map is excluded
-public Action:UMC_OnDetermineMapExclude(Handle:kv, const String:map[], const String:group[],
-                                        bool:isNomination, bool:forMapChange)
+public Action:UMC_OnDetermineMapExclude(Handle:kv, const String:map[], const String:group[], bool:isNomination, bool:forMapChange)
 {
     new size = GetArraySize(prefix_array);
     
     if (size == 0 || GetConVarInt(cvar_prev) == 0)
+    {
         return Plugin_Continue;
-
+    }
     if (isNomination && GetConVarBool(cvar_nom_ignore))
+    {
         return Plugin_Continue;
-        
+    }
     if (!forMapChange && GetConVarBool(cvar_display_ignore))
+    {
         return Plugin_Continue;
-        
+    }
     if (kv == INVALID_HANDLE)
+    {
         return Plugin_Continue;
-    
+    }
     decl String:mapPrefix[MAP_LENGTH];
     GetMapPrefix(map, mapPrefix, sizeof(mapPrefix));
     

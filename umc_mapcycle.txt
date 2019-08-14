@@ -1,5 +1,5 @@
 // Mapcycle definition for Ultimate Mapchooser v3.1 by Steell
-
+// For more information on UMC, please see the wiki: https://github.com/Silenci0/UMC/wiki
 ///////////////////////////////////////////////////////////////////////////////
 //***************************************************************************//
 //**                           ULTIMATE MAPCHOOSER                         **//

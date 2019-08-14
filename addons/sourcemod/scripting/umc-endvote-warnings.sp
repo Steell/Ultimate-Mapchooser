@@ -29,7 +29,7 @@ along with this plugin.  If not, see <http://www.gnu.org/licenses/>.
 public Plugin:myinfo =
 {
     name = "[UMC] End of Map Vote Warnings",
-    author = "Steell",
+    author = "Previous:Steell,Powerlord - Current: Mr.Silence",
     description = "Adds vote warnings to UMC End of Map Votes.",
     version = PL_VERSION,
     url = "http://forums.alliedmods.net/showthread.php?t=134190"
@@ -135,12 +135,18 @@ public OnMapStart()
         GetVoteWarnings(timefile, time_array, current_time);
     }
     if (frag_enabled)
+    {
         GetVoteWarnings(fragfile, frag_array, current_frag);
+    }
     if (round_enabled)
+    {
         GetVoteWarnings(roundfile, round_array, current_round);
+    }
     if (win_enabled)
+    {
         GetVoteWarnings(winfile, win_array, current_win);
-        
+    }
+    
     time_init = false;
     frag_init = false;
     round_init = false;
@@ -165,8 +171,7 @@ GetVoteWarnings(const String:fileName[], Handle:warningArray, &next)
     //Get our warnings file as a Kv file.
     new Handle:kv = GetKvFromFile(fileName, "vote_warnings", false);
     
-    //Do nothing if...
-    //  ...we can't find the warning definitions.
+    //Do nothing if we can't find the warning definitions.
     if (kv == INVALID_HANDLE)
     {
         LogUMCMessage("Unable to parse warning file '%s', no vote warnings created.", fileName);
@@ -195,9 +200,8 @@ GetVoteWarnings(const String:fileName[], Handle:warningArray, &next)
         KvRewind(kv);
     }
     
-    //Log an error and return nothing if...
-    //    ...it cannot find any defined warnings. If the default definition is found, this code block
-    //       will not execute. We will catch this case after we attempt to parse the file.
+    //Log an error and return nothing if it cannot find any defined warnings. 
+    // If the default definition is found, this code block will not execute. We will catch this case after we attempt to parse the file.
     if (!KvGotoFirstSubKey(kv))
     {
         LogUMCMessage("No vote warnings defined, vote warnings were not created.");
@@ -226,7 +230,9 @@ GetVoteWarnings(const String:fileName[], Handle:warningArray, &next)
     //Regex to store sequence pattern in.
     static Handle:re = INVALID_HANDLE;
     if (re == INVALID_HANDLE)
+    {
         re = CompileRegex("^([0-9]+)\\s*(?:(?:\\.\\.\\.)|-)\\s*([0-9]+)$");
+    }
     
     //Variables to store sequence definition
     decl String:sequence_start[10], String:sequence_end[10];
@@ -242,8 +248,10 @@ GetVoteWarnings(const String:fileName[], Handle:warningArray, &next)
         
         //Skip this warning if it is the default definition.
         if (StrEqual(nameBuffer, "default", false))
+        {
             continue;
-            
+        }
+        
         //Store warning info into variables.
         KvGetString(kv, "message", message, sizeof(message), dMessage);
         KvGetString(kv, "notification", notification, sizeof(notification), dNotification);
@@ -313,11 +321,12 @@ GetVoteWarnings(const String:fileName[], Handle:warningArray, &next)
     //We no longer need the kv.
     CloseHandle(kv);
     
-    //Log an error and return nothing if...
-    //    ...no vote warnings were found. This accounts for the case where the default definition was
-    //       provided, but not actual warnings.
+    //Log an error and return nothing if no vote warnings were found. 
+    // This accounts for the case where the default definition was provided, but not actual warnings.
     if (warningCount < 1)
+    {
         LogUMCMessage("No vote warnings defined, vote warnings were not created.");
+    }
     else //Otherwise, log a success!
     {
         LogUMCMessage("Successfully parsed and set up %i vote warnings.", warningCount);
@@ -341,7 +350,9 @@ UpdateWarnings(Handle:array, threshold, &warningTime)
         
         //We found out answer if the trigger for the next warning hasn't passed.
         if (warningTime < threshold)
+        {
             break;
+        }
     }
     
     return i;
@@ -355,10 +366,7 @@ UpdateWinWarnings(winsleft)
     if (current_win < GetArraySize(win_array))
     {
         win_init = true;
-        LogUMCMessage(
-            "First win-warning will appear at %i wins before the end of the map.",
-            warningTime
-        );
+        LogUMCMessage("First win-warning will appear at %i wins before the end of the map.", warningTime);
     }
 }
 
@@ -370,10 +378,7 @@ UpdateFragWarnings(fragsleft)
     if (current_round < GetArraySize(round_array))
     {
         frag_init = true;
-        LogUMCMessage(
-            "First frag-warning will appear at %i frags before the end of map vote.",
-            warningTime
-        );
+        LogUMCMessage("First frag-warning will appear at %i frags before the end of map vote.", warningTime);
     }
 }
 
@@ -385,10 +390,7 @@ UpdateTimeWarnings(timeleft)
     if (current_time < GetArraySize(time_array))
     {
         time_init = true;
-        LogUMCMessage(
-            "First time-warning will appear %i seconds before the end of map vote.",
-            warningTime
-        );
+        LogUMCMessage("First time-warning will appear %i seconds before the end of map vote.", warningTime);
     }
 }
 
@@ -400,10 +402,7 @@ UpdateRoundWarnings(roundsleft)
     if (current_round < GetArraySize(round_array))
     {
         round_init = true;
-        LogUMCMessage(
-            "First round-warning will appear at %i rounds before the end of map vote.",
-            warningTime
-        );
+        LogUMCMessage("First round-warning will appear at %i rounds before the end of map vote.", warningTime );
     }
 }
 
@@ -412,8 +411,10 @@ stock DoVoteWarning(Handle:warningArray, &next, triggertime, param=0)
 {
     //Do nothing if there are no more warnings to perform.
     if (GetArraySize(warningArray) <= next)
+    {
         return;
-
+    }
+    
     //Get the current warning.
     new Handle:warning = GetArrayCell(warningArray, next);
     
@@ -437,25 +438,33 @@ stock DoVoteWarning(Handle:warningArray, &next, triggertime, param=0)
 TryDoTimeWarning(timeleft)
 {
     if (time_enabled)
+    {
         DoVoteWarning(time_array, current_time, timeleft);
+    }
 }
 
 TryDoRoundWarning(rounds)
 {
     if (round_enabled)
+    {    
         DoVoteWarning(round_array, current_round, rounds);
+    }
 }
 
 TryDoFragWarning(frags, client)
 {
     if (frag_enabled)
+    {
         DoVoteWarning(frag_array, current_frag, frags, client);
+    }
 }
 
 TryDoWinWarning(wins, team)
 {
     if (win_enabled)
+    {
         DoVoteWarning(win_array, current_win, wins, team);
+    }
 }
 
 //Displays the given vote warning to the server
@@ -467,18 +476,22 @@ DisplayVoteWarning(Handle:warning, param=0)
     decl String:notification[2];
     decl String:sound[PLATFORM_MAX_PATH];
     GetTrieValue(warning, "time", time);
-    GetTrieString(warning, "message", message, sizeof(message));
+    GetTrieString(warning, "message", message, sizeof(message));
     GetTrieString(warning, "notification", notification, sizeof(notification));
     GetTrieString(warning, "sound", sound, sizeof(sound));
     
     //Emit the warning sound if the sound is defined.
     if (strlen(sound) > 0)
+    {
         EmitSoundToAllAny(sound);
+    }
     
     //Stop here if there is nothing to display.
     if (strlen(message) == 0 || strlen(notification) == 0)
+    {
         return;
-        
+    }
+    
     //Buffer to store string replacements in the message.
     decl String:sBuffer[5];
     
@@ -489,8 +502,7 @@ DisplayVoteWarning(Handle:warning, param=0)
         ReplaceString(message, sizeof(message), "{TIME}", sBuffer, false);
     }
     
-    //Insert correct time remaining if...
-    //    ...the message has a place to insert it.
+    //Insert correct time remaining if the message has a place to insert it.
     if (StrContains(message, "{PLAYER}") != -1)
     {
         FormatEx(sBuffer, sizeof(sBuffer), "%N", param);
@@ -540,27 +552,35 @@ public UMC_EndVote_OnWinTimerUpdated(winsleft, team)
 public UMC_EndVote_OnTimeTimerTicked(timeleft)
 {
     if (!time_init)
+    {
         UpdateTimeWarnings(timeleft);
+    }
     TryDoTimeWarning(timeleft);
 }
 
 public UMC_EndVote_OnRoundTimerTicked(roundsleft)
 {
     if (!round_init)
+    {
         UpdateRoundWarnings(roundsleft);
+    }
     TryDoRoundWarning(roundsleft);
 }
 
 public UMC_EndVote_OnFragTimerTicked(fragsleft, client)
 {
     if (!frag_init)
+    {
         UpdateFragWarnings(fragsleft);
+    }
     TryDoFragWarning(fragsleft, client);
 }
 
 public UMC_EndVote_OnWinTimerTicked(winsleft, team)
 {
     if (!win_init)
+    {
         UpdateWinWarnings(winsleft);
+    }
     TryDoWinWarning(winsleft, team);
 }

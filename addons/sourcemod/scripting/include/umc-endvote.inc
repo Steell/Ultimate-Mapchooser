@@ -105,7 +105,6 @@ forward UMC_EndVote_OnWinTimerTicked(winsleft, team);
 forward UMC_EndVote_OnFragTimerTicked(fragsleft, client);
 
 
-
 //SourceMod Malarky
 public SharedPlugin:__pl_umc_endvote =
 {
@@ -120,5 +119,5 @@ public SharedPlugin:__pl_umc_endvote =
 
 public __pl_umc_endvote_SetNTVOptional()
 {
-    
+
 }

@@ -25,7 +25,7 @@ along with this plugin.  If not, see <http://www.gnu.org/licenses/>.
 public Plugin:myinfo =
 {
     name = "[UMC] Map Weight",
-    author = "Steell",
+    author = "Previous:Steell,Powerlord - Current: Mr.Silence",
     description = "Allows users to specify weights for maps and groups, making them more or less likely to be picked randomly.",
     version = PL_VERSION,
     url = "http://forums.alliedmods.net/showthread.php?t=134190"
@@ -38,8 +38,10 @@ public Plugin:myinfo =
 public Action:UMC_OnDetermineMapExclude(Handle:kv, const String:map[], const String:group[], bool:isNom, bool:forMapChange)
 {
     if (kv == INVALID_HANDLE)
+    {
         return Plugin_Continue;
-
+    }
+    
     KvRewind(kv);
     
     if (KvJumpToKey(kv, group))
@@ -63,8 +65,10 @@ public Action:UMC_OnDetermineMapExclude(Handle:kv, const String:map[], const Str
 public UMC_OnReweightMap(Handle:kv, const String:map[], const String:group[])
 {
     if (kv == INVALID_HANDLE)
+    {
         return;
-
+    }
+    
     KvRewind(kv);
     if (KvJumpToKey(kv, group))
     {
@@ -81,8 +85,10 @@ public UMC_OnReweightMap(Handle:kv, const String:map[], const String:group[])
 public UMC_OnReweightGroup(Handle:kv, const String:group[])
 {
     if (kv == INVALID_HANDLE)
+    {
         return;
-
+    }
+    
     KvRewind(kv);
     if (KvJumpToKey(kv, group))
     {

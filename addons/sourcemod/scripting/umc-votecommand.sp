@@ -27,7 +27,7 @@ along with this plugin.  If not, see <http://www.gnu.org/licenses/>.
 public Plugin:myinfo =
 {
     name        = "[UMC] Vote Command",
-    author      = "Steell",
+    author      = "Previous:Steell,Powerlord - Current: Mr.Silence",
     description = "Extends Ultimate Mapchooser to allow admins to spawn votes.",
     version     = PL_VERSION,
     url         = "http://forums.alliedmods.net/showthread.php?t=134190"
@@ -232,12 +232,7 @@ public OnPluginStart()
     AutoExecConfig(true, "umc-votecommand");
     
     //Admin command to immediately start a mapvote.
-    RegAdminCmd(
-        "sm_umc_mapvote",
-        Command_Vote,
-        ADMFLAG_CHANGEMAP,
-        "Starts an Ultimate Mapchooser map vote."
-    );
+    RegAdminCmd("sm_umc_mapvote", Command_Vote, ADMFLAG_CHANGEMAP, "Starts an Ultimate Mapchooser map vote.");
     
     //Initialize our memory arrays
     new numCells = ByteCountToCells(MAP_LENGTH);
@@ -271,7 +266,9 @@ public OnConfigsExecuted()
     AddToMemoryArray(groupName, vote_catmem_arr, (mapmem > catmem) ? mapmem : catmem);
     
     if (can_vote)
+    {
         RemovePreviousMapsFromCycle();
+    }
 }
 
 public OnMapStart()
@@ -292,8 +289,7 @@ Handle:GetMapcycle()
     //Get the kv handle from the file.
     new Handle:result = GetKvFromFile(filename, "umc_rotation");
     
-    //Log an error and return empty handle if...
-    //    ...the mapcycle file failed to parse.
+    //Log an error and return empty handle if the mapcycle file failed to parse.
     if (result == INVALID_HANDLE)
     {
         LogError("SETUP: Mapcycle failed to load!");
@@ -351,13 +347,13 @@ public Action:Command_Vote(client, args)
 {
     if (!can_vote)
     {
-        ReplyToCommand(client, "\x03[UMC]\x01 Mapcycle is invalid, cannot start a vote.");
+        ReplyToCommand(client, "[UMC] Mapcycle is invalid, cannot start a vote.");
         return Plugin_Handled;
     }
     
     if (args < 1)
     {
-        ReplyToCommand(client, "\x03[UMC]\x01 Usage: sm_umc_mapvote <0|1|2>\n 0: Change now, 1: Change at end of round, 2: Change at end of map.");
+        ReplyToCommand(client, "[UMC] Usage: sm_umc_mapvote <0|1|2>\n 0: Change now, 1: Change at end of round, 2: Change at end of map.");
         return Plugin_Handled;
     }
     
@@ -367,7 +363,7 @@ public Action:Command_Vote(client, args)
     
     if (changeTime < 0 || changeTime > 2)
     {
-        ReplyToCommand(client, "\x03[UMC]\x01 Usage: sm_umc_mapvote <0|1|2>\n 0: Change now, 1: Change at end of round, 2: Change at end of map.");
+        ReplyToCommand(client, "[UMC] Usage: sm_umc_mapvote <0|1|2>\n 0: Change now, 1: Change at end of round, 2: Change at end of map.");
         return Plugin_Handled;
     }
     
@@ -407,10 +403,13 @@ public Action:Command_Vote(client, args)
     );
     
     if (result)
-        ReplyToCommand(client, "\x03[UMC]\x01 Started Vote.");
+    {
+        ReplyToCommand(client, "[UMC] Started Vote.");
+    }
     else
-        ReplyToCommand(client, "\x03[UMC]\x01 Could not start vote. See log for details.");
-    
+    {    
+        ReplyToCommand(client, "[UMC] Could not start vote. See log for details.");
+    }
     return Plugin_Handled;
 }
 
@@ -422,7 +421,9 @@ public UMC_RequestReloadMapcycle()
 {
     can_vote = ReloadMapcycle();
     if (can_vote)
+    {
         RemovePreviousMapsFromCycle();
+    }
 }
 
 //Called when UMC requests that the mapcycle is printed to the console.
@@ -431,9 +432,7 @@ public UMC_DisplayMapCycle(client, bool:filtered)
     PrintToConsole(client, "Module: Vote Command");
     if (filtered)
     {
-        new Handle:filteredMapcycle = UMC_FilterMapcycle(
-            map_kv, umc_mapcycle, false, true
-        );
+        new Handle:filteredMapcycle = UMC_FilterMapcycle(map_kv, umc_mapcycle, false, true);
         PrintKvToConsole(filteredMapcycle, client);
         CloseHandle(filteredMapcycle);
     }

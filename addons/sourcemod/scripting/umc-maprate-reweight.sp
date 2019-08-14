@@ -32,7 +32,7 @@ along with this plugin.  If not, see <http://www.gnu.org/licenses/>.
 public Plugin:myinfo =
 {
     name = "[UMC] Map Rate Reweight",
-    author = "Steell",
+    author = "Previous:Steell,Powerlord - Current: Mr.Silence",
     description = "Reweights maps in UMC based off of their average rating in Map Rate.",
     version = PL_VERSION,
     url = "http://forums.alliedmods.net/showthread.php?t=134190"
@@ -96,7 +96,7 @@ public Action:Command_TestReweight(client, args)
 {
     if (args < 1)
     {
-        ReplyToCommand(client, "\x03[UMC]\x01 Usage: sm_umc_maprate_testreweight <map>");
+        ReplyToCommand(client, "[UMC] Usage: sm_umc_maprate_testreweight <map>");
     }
     else
     {
@@ -105,7 +105,7 @@ public Action:Command_TestReweight(client, args)
         
         ReplyToCommand(
             client,
-            "\x03[UMC]\x01 Map %s will be reweighted by a factor of %f",
+            "[UMC] Map %s will be reweighted by a factor of %f",
             map, FetchMapWeight(map)
         );
     }
@@ -117,21 +117,29 @@ public OnConfigsExecuted()
 {
     new Handle:cvarTable = FindConVar("maprate_table");
     if (cvarTable == INVALID_HANDLE)
+    {
         cvarTable = FindConVar("sm_maprate_table");
+    }
     
     new Handle:cvarDbConfig = FindConVar("maprate_db_config");
     if (cvarDbConfig == INVALID_HANDLE)
+    {
         cvarDbConfig = FindConVar("sm_maprate_db_config");
-        
+    }
+    
     if (cvarTable != INVALID_HANDLE && cvarDbConfig != INVALID_HANDLE)
     {
         GetConVarString(cvarTable, table_name, sizeof(table_name));
         GetConVarString(cvarDbConfig, db_name, sizeof(db_name));
     
         if (SQL_CheckConfig(db_name))
+        {
             SQL_TConnect(Handle_SQLConnect, db_name);
+        }
         else
+        {
             LogError("Database configuration \"%s\" does not exist.", db_name);
+        }
     }
     else
     {
@@ -206,8 +214,7 @@ public UMC_OnReweightMap(Handle:kv, const String:map[], const String:group[])
 }
 
 //Display String for Map
-public UMC_OnFormatTemplateString(String:template[], maxlen, Handle:kv, const String:map[],
-                                  const String:group[])
+public UMC_OnFormatTemplateString(String:template[], maxlen, Handle:kv, const String:map[], const String:group[])
 {
     new Float:weight;
     if (!GetTrieValue(map_ratings, map, weight))

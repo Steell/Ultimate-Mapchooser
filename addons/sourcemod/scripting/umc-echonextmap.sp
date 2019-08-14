@@ -26,7 +26,7 @@ along with this plugin.  If not, see <http://www.gnu.org/licenses/>.
 public Plugin:myinfo =
 {
     name = "[UMC] Echo Nextmap",
-    author = "Steell",
+    author = "Previous:Steell,Powerlord - Current: Mr.Silence",
     description = "Displays messages to the server when the next map is set.",
     version = PL_VERSION,
     url = "http://forums.alliedmods.net/showthread.php?t=134190"
@@ -79,10 +79,13 @@ public UMC_OnNextmapSet(Handle:kv, const String:map[], const String:group[], con
     {
         new String:msg[256];
         if (disp && strlen(display) > 0)
+        {
             Format(msg, sizeof(msg), "[UMC] %t", "Next Map", display);
+        }
         else
+        {
             Format(msg, sizeof(msg), "[UMC] %t", "Next Map", map);
-            
+        }
         DisplayServerMessage(msg, "C");
     }
     if (GetConVarBool(cvar_hint))

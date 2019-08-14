@@ -26,7 +26,7 @@ along with this plugin.  If not, see <http://www.gnu.org/licenses/>.
 public Plugin:myinfo =
 {
     name = "[UMC] Time Limits",
-    author = "Steell",
+    author = "Previous:Steell,Powerlord - Current: Mr.Silence",
     description = "Allows users to specify time limits for maps.",
     version = PL_VERSION,
     url = "http://forums.alliedmods.net/showthread.php?t=134190"
@@ -63,17 +63,22 @@ public OnPluginStart()
 }
 
 //Called when UMC wants to know if this map is excluded
-public Action:UMC_OnDetermineMapExclude(Handle:kv, const String:map[], const String:group[],
-                                        bool:isNom, bool:forMapChange)
+public Action:UMC_OnDetermineMapExclude(Handle:kv, const String:map[], const String:group[], bool:isNom, bool:forMapChange)
 {
     if (isNom && GetConVarBool(cvar_nom_ignore))
+    {
         return Plugin_Continue;
-        
+    }
+    
     if (!forMapChange && GetConVarBool(cvar_display_ignore))
+    {
         return Plugin_Continue;
-        
+    }
+    
     if (kv == INVALID_HANDLE)
+    {
         return Plugin_Continue;
+    }
     
     new defaultMin, defaultMax;
     new min, max;
@@ -94,14 +99,15 @@ public Action:UMC_OnDetermineMapExclude(Handle:kv, const String:map[], const Str
     }
     
     if (IsTimeBetween(min, max))
+    {
         return Plugin_Continue;
+    }
     
     return Plugin_Stop;
 }
 
 //Display Template
-public UMC_OnFormatTemplateString(String:template[], maxlen, Handle:kv, const String:map[], 
-                                  const String:group[])
+public UMC_OnFormatTemplateString(String:template[], maxlen, Handle:kv, const String:map[], const String:group[])
 {
     new defaultMin, defaultMax;
     new min, max;

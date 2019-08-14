@@ -29,7 +29,7 @@ along with this plugin.  If not, see <http://www.gnu.org/licenses/>.
 public Plugin:myinfo =
 {
     name        = "[UMC] Random Cycle",
-    author      = "Steell",
+    author      = "Previous:Steell,Powerlord - Current: Mr.Silence",
     description = "Extends Ultimate Mapchooser to provide random selecting of the next map.",
     version     = PL_VERSION,
     url         = "http://forums.alliedmods.net/showthread.php?t=134190"
@@ -175,8 +175,10 @@ public OnConfigsExecuted()
     AddToMemoryArray(groupName, randnext_catmem_arr, (mapmem > catmem) ? mapmem : catmem);
     
     if (setting_map)
+    {
         RemovePreviousMapsFromCycle();
-        
+    }
+    
     if (!GetConVarBool(cvar_start))
     {
         LogUMCMessage("Selecting random next map due to map starting.");
@@ -190,8 +192,10 @@ public Action:_VGuiMenu(UserMsg:msg_id, Handle:bf, const players[], playersNum, 
 {
     //Do nothing if we have already seen the intermission.
     if (intermission_called)
+    {
         return;
-
+    }
+    
     new bool:protoBuf = GetFeatureStatus(FeatureType_Native, "GetUserMessageType") == FeatureStatus_Available && GetUserMessageType() == UM_Protobuf;
 
     new String:type[10];
@@ -228,10 +232,8 @@ public Action:_VGuiMenu(UserMsg:msg_id, Handle:bf, const players[], playersNum, 
 //Called when the game ends. Used to trigger random selection of the next map.
 public Event_GameEnd(Handle:evnt, const String:name[], bool:dontBroadcast)
 {
-    //Select and change to a random map if...
-    //    ...the cvar to do so is enabled AND
-    //    ...we haven't completed an end-of-map vote AND
-    //    ...we haven't completed an RTV.
+    //Select and change to a random map if the cvar to do so is enabled AND
+    //we haven't completed an end-of-map vote AND we haven't completed an RTV.
     if (GetConVarBool(cvar_start) && GetConVarBool(cvar_randnext) && setting_map)
     {
         LogUMCMessage("Selecting random next map due to map ending.");
@@ -256,12 +258,10 @@ SetupNextRandGroup(const String:map[], const String:group[])
     KvRewind(umc_mapcycle);
     if (KvJumpToKey(umc_mapcycle, group))
     {
-        KvGetString(umc_mapcycle, NEXT_MAPGROUP_KEY, gNextGroup, sizeof(gNextGroup), 
-                    INVALID_GROUP);
+        KvGetString(umc_mapcycle, NEXT_MAPGROUP_KEY, gNextGroup, sizeof(gNextGroup), INVALID_GROUP);
         if (KvJumpToKey(umc_mapcycle, map))
         {
-            KvGetString(umc_mapcycle, NEXT_MAPGROUP_KEY, next_rand_cat, sizeof(next_rand_cat), 
-                        gNextGroup);
+            KvGetString(umc_mapcycle, NEXT_MAPGROUP_KEY, next_rand_cat, sizeof(next_rand_cat), gNextGroup);
             KvGoBack(umc_mapcycle);
         }
         KvGoBack(umc_mapcycle);   
@@ -311,8 +311,7 @@ RemovePreviousMapsFromCycle()
 {
     map_kv = CreateKeyValues("umc_rotation");
     KvCopySubkeys(umc_mapcycle, map_kv);
-    FilterMapcycleFromArrays(map_kv, randnext_mem_arr, randnext_catmem_arr,
-                             GetConVarInt(cvar_randnext_catmem));
+    FilterMapcycleFromArrays(map_kv, randnext_mem_arr, randnext_catmem_arr, GetConVarInt(cvar_randnext_catmem));
 }
 
 //************************************************************************************************//
@@ -338,8 +337,10 @@ public Action:Command_Random(client, args)
         DoRandomNextMap();
     }
     else
-        ReplyToCommand(client, "\x03[UMC]\x01 Mapcycle is invalid, cannot pick a map.");
-        
+    {
+        ReplyToCommand(client, "[UMC] Mapcycle is invalid, cannot pick a map.");
+    }
+    
     return Plugin_Handled;
 }
 
@@ -350,8 +351,7 @@ public Action:Command_Random(client, args)
 DoRandomNextMap() 
 {    
     decl String:nextMap[MAP_LENGTH], String:nextGroup[MAP_LENGTH];
-    if (UMC_GetRandomMap(map_kv, umc_mapcycle, next_rand_cat, nextMap, sizeof(nextMap), nextGroup,
-                         sizeof(nextGroup), false, true))
+    if (UMC_GetRandomMap(map_kv, umc_mapcycle, next_rand_cat, nextMap, sizeof(nextMap), nextGroup, sizeof(nextGroup), false, true))
     {
         UMC_SetNextMap(map_kv, nextMap, nextGroup, ChangeMapTime_MapEnd);
     }
@@ -376,7 +376,10 @@ public UMC_RequestReloadMapcycle()
 {
     new bool:reloaded = ReloadMapcycle();
     if (reloaded)
+    {
         RemovePreviousMapsFromCycle();
+    }
+    
     setting_map = reloaded && setting_map;
 }
 
@@ -386,9 +389,7 @@ public UMC_DisplayMapCycle(client, bool:filtered)
     PrintToConsole(client, "Module: Random Mapcycle");
     if (filtered)
     {
-        new Handle:filteredMapcycle = UMC_FilterMapcycle(
-            map_kv, umc_mapcycle, false, true
-        );
+        new Handle:filteredMapcycle = UMC_FilterMapcycle(map_kv, umc_mapcycle, false, true);
         PrintKvToConsole(filteredMapcycle, client);
         CloseHandle(filteredMapcycle);
     }

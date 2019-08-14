@@ -29,29 +29,22 @@ along with this plugin.  If not, see <http://www.gnu.org/licenses/>.
 public Plugin:myinfo =
 {
     name        = "[UMC] Nominations",
-    author      = "Steell",
+    author      = "Previous:Steell,Powerlord - Current: Mr.Silence",
     description = "Extends Ultimate Mapchooser to allow players to nominate maps.",
     version     = PL_VERSION,
     url         = "http://forums.alliedmods.net/showthread.php?t=134190"
 };
 
-//Changelog:
-/*
- 3.3.2 (3/4/2012)
- Updated UMC Logging functionality
- Added ability to view the current mapcycle of all modules
-*/
-
-        ////----CONVARS-----/////
+////----CONVARS-----/////
 new Handle:cvar_filename        = INVALID_HANDLE;
 new Handle:cvar_nominate        = INVALID_HANDLE;
 new Handle:cvar_nominate_tiered = INVALID_HANDLE;
 new Handle:cvar_mem_map         = INVALID_HANDLE;
 new Handle:cvar_mem_group       = INVALID_HANDLE;
 new Handle:cvar_sort            = INVALID_HANDLE;
-//new Handle:cvar_nominate_limit  = INVALID_HANDLE;
 new Handle:cvar_flags           = INVALID_HANDLE;
-        ////----/CONVARS-----/////
+new Handle:cvar_nominate_time   = INVALID_HANDLE;
+////----/CONVARS-----/////
 
 //Mapcycle
 new Handle:map_kv = INVALID_HANDLE;
@@ -83,13 +76,6 @@ new bool:can_nominate;
 //Called when the plugin is finished loading.
 public OnPluginStart()
 {
-    /*cvar_nominate_limit = CreateConVar(
-        "sm_umc_nominate_limit",
-        "0",
-        "Determines how many maps can be nominated during a map.\n 0 = Unlimited.",
-        0, true, 0.0, true, 1.0
-    );*/
-    
     cvar_flags = CreateConVar(
         "sm_umc_nominate_defaultflags",
         "",
@@ -135,6 +121,13 @@ public OnPluginStart()
         "4",
         "Specifies how many past maps to exclude from nominations. 1 = Current Map Only",
         0, true, 0.0
+    );
+    
+    cvar_nominate_time = CreateConVar(
+        "sm_umc_nominate_duration",
+        "20",
+        "Specifies how long the nomination menu should remain open for. Minimum is 10 seconds!",
+        0, true, 10.0
     );
     
     //Create the config if it doesn't exist, and then execute it.
@@ -207,7 +200,9 @@ public OnConfigsExecuted()
     AddToMemoryArray(groupName, vote_catmem_arr, (mapmem > catmem) ? mapmem : catmem);
     
     if (can_nominate)
+    {
         RemovePreviousMapsFromCycle();
+    }
 }
 
 //Called when a player types in chat.
@@ -236,7 +231,7 @@ public Action:OnPlayerChat(client, const String:command[], argc)
     {
         if (vote_completed || !can_nominate)
         {
-            PrintToChat(client, "\x03[UMC]\x01 %t", "No Nominate Nextmap");
+            PrintToChat(client, "[UMC] %t", "No Nominate Nextmap");
         }
         else //Otherwise, let them nominate.
         {
@@ -250,7 +245,7 @@ public Action:OnPlayerChat(client, const String:command[], argc)
                 if (!KvFindGroupOfMap(map_kv, arg, groupName, sizeof(groupName)))
                 {
                     //TODO: Change to translation phrase
-                    PrintToChat(client, "\x03[UMC]\x01 Could not find map \"%s\"", arg);
+                    PrintToChat(client, "[UMC] Could not find map \"%s\"", arg);
                 }
                 else
                 {
@@ -280,7 +275,7 @@ public Action:OnPlayerChat(client, const String:command[], argc)
                     if (adminFlags[0] != '\0' && !(clientFlags & ReadFlagString(adminFlags)))
                     {
                         //TODO: Change to translation phrase
-                        PrintToChat(client, "\x03[UMC]\x01 Could not find map \"%s\"", arg);
+                        PrintToChat(client, "[UMC] Could not find map \"%s\"", arg);
                     }
                     else
                     {
@@ -290,16 +285,17 @@ public Action:OnPlayerChat(client, const String:command[], argc)
                         //Display a message.
                         decl String:clientName[MAX_NAME_LENGTH];
                         GetClientName(client, clientName, sizeof(clientName));
-                        PrintToChatAll("\x03[UMC]\x01 %t", "Player Nomination", clientName, arg);
+                        PrintToChatAll("[UMC] %t", "Player Nomination", clientName, arg);
                         LogUMCMessage("%s has nominated '%s' from group '%s'", clientName, arg, groupName);
                     }
                 }
-                
             }
             else
             {
                 if (!DisplayNominationMenu(client))
-                    PrintToChat(client, "\x03[UMC]\x01 %t", "No Nominate Nextmap");
+                {
+                    PrintToChat(client, "[UMC] %t", "No Nominate Nextmap");
+                }
             }                
         }
     }
@@ -362,11 +358,13 @@ RemovePreviousMapsFromCycle()
 public Action:Command_Nominate(client, args)
 {
     if (!GetConVarBool(cvar_nominate))
+    {
         return Plugin_Handled;
-        
+    }
+    
     if (vote_completed || !can_nominate)
     {
-        ReplyToCommand(client, "\x03[UMC]\x01 %t", "No Nominate Nextmap");
+        ReplyToCommand(client, "[UMC] %t", "No Nominate Nextmap");
     }
     else //Otherwise, let them nominate.
     {
@@ -383,7 +381,7 @@ public Action:Command_Nominate(client, args)
             if (!KvFindGroupOfMap(map_kv, arg, groupName, sizeof(groupName)))
             {
                 //TODO: Change to translation phrase
-                ReplyToCommand(client, "\x03[UMC]\x01 Could not find map \"%s\"", arg);
+                ReplyToCommand(client, "[UMC] Could not find map \"%s\"", arg);
             }
             else
             {
@@ -413,7 +411,7 @@ public Action:Command_Nominate(client, args)
                 if (adminFlags[0] != '\0' && !(clientFlags & ReadFlagString(adminFlags)))
                 {
                     //TODO: Change to translation phrase
-                    ReplyToCommand(client, "\x03[UMC]\x01 Could not find map \"%s\"", arg);
+                    ReplyToCommand(client, "[UMC] Could not find map \"%s\"", arg);
                 }
                 else
                 {
@@ -423,7 +421,7 @@ public Action:Command_Nominate(client, args)
                     //Display a message.
                     decl String:clientName[MAX_NAME_LENGTH];
                     GetClientName(client, clientName, sizeof(clientName));
-                    PrintToChatAll("\x03[UMC]\x01 %t", "Player Nomination", clientName, arg);
+                    PrintToChatAll("[UMC] %t", "Player Nomination", clientName, arg);
                     LogUMCMessage("%s has nominated '%s' from group '%s'", clientName, arg, groupName);
                 }
             }
@@ -432,7 +430,9 @@ public Action:Command_Nominate(client, args)
         else
         {
             if (!DisplayNominationMenu(client))
-                ReplyToCommand(client, "\x03[UMC]\x01 %t", "No Nominate Nextmap");
+            {
+                ReplyToCommand(client, "[UMC] %t", "No Nominate Nextmap");
+            }
         }                
     }
     return Plugin_Handled;
@@ -445,19 +445,19 @@ public Action:Command_Nominate(client, args)
 bool:DisplayNominationMenu(client)
 {
     if (!can_nominate)
-        return false;
-
+    {
+        return false;   
+    }
+    
     LogUMCMessage("%N wants to nominate a map.", client);
 
     //Build the menu
-    new Handle:menu = GetConVarBool(cvar_nominate_tiered) 
-                        ? BuildTieredNominationMenu(client)
-                        : BuildNominationMenu(client);
+    new Handle:menu = GetConVarBool(cvar_nominate_tiered) ? BuildTieredNominationMenu(client) : BuildNominationMenu(client);
     
     //Display the menu if the menu was built successfully.
     if (menu != INVALID_HANDLE)
     {
-        return DisplayMenu(menu, client, 0);
+        return DisplayMenu(menu, client, GetConVarInt(cvar_nominate_time));
     }
     return false;
 }
@@ -485,9 +485,11 @@ Handle:BuildNominationMenu(client, const String:cat[]=INVALID_GROUP)
 
     //Get map array.
     new Handle:mapArray = UMC_CreateValidMapArray(map_kv, umc_mapcycle, cat, true, false);
-                                                  
+
     if (GetConVarBool(cvar_sort))
+    {
         SortMapTrieArray(mapArray);
+    }
     
     new size = GetArraySize(mapArray);
     if (size == 0)
@@ -525,7 +527,9 @@ Handle:BuildNominationMenu(client, const String:cat[]=INVALID_GROUP)
         KvGetString(map_kv, "nominate_group", group, sizeof(group), INVALID_GROUP);
         
         if (StrEqual(group, INVALID_GROUP))
+        {
             strcopy(group, sizeof(group), groupBuff);
+        }
         
         if (UMC_IsMapNominated(mapBuff, group))
         {
@@ -544,7 +548,9 @@ Handle:BuildNominationMenu(client, const String:cat[]=INVALID_GROUP)
         {
             //Check if player has admin flag
             if (!(clientFlags & ReadFlagString(mAdminFlags)))
+            {
                 continue;
+            }
         }
         
         //Get the name of the current map.
@@ -622,7 +628,9 @@ Handle:BuildTieredNominationMenu(client)
             KvGetSectionName(map_kv, mapName, sizeof(mapName));
             
             if (UMC_IsMapNominated(mapName, groupName))
+            {
                 continue;
+            }
             
             KvGetString(map_kv, NOMINATE_ADMINFLAG_KEY, mAdminFlags, sizeof(mAdminFlags), gAdminFlags);
         
@@ -631,7 +639,9 @@ Handle:BuildTieredNominationMenu(client)
             {
                 //Check if player has admin flag
                 if (!(clientFlags & ReadFlagString(mAdminFlags)))
+                {
                     continue;
+                }
             }
             
             excluded = false;
@@ -640,8 +650,10 @@ Handle:BuildTieredNominationMenu(client)
         while (KvGotoNextKey(map_kv));
         
         if (!excluded)
+        {
             PushArrayString(menuItems, groupName);
-            
+        }
+        
         KvGoBack(map_kv);
         KvGoBack(map_kv);
     }
@@ -677,7 +689,7 @@ public Handle_NominationMenu(Handle:menu, MenuAction:action, client, param2)
             //Display a message.
             decl String:clientName[MAX_NAME_LENGTH];
             GetClientName(client, clientName, sizeof(clientName));
-            PrintToChatAll("\x03[UMC]\x01 %t", "Player Nomination", clientName, map);
+            PrintToChatAll("[UMC] %t", "Player Nomination", clientName, map);
             LogUMCMessage("%s has nominated '%s' from group '%s'", clientName, map, group);
             
             //Close handles for stored data for the client's menu.
@@ -707,7 +719,9 @@ public Handle_NominationMenu(Handle:menu, MenuAction:action, client, param2)
                 
                 //Display the menu if the menu was built successfully.
                 if (newmenu != INVALID_HANDLE)
-                    DisplayMenu(newmenu, client, 20);
+                {
+                    DisplayMenu(newmenu, client, GetConVarInt(cvar_nominate_time));
+                }
             }
         }
     }
@@ -727,11 +741,13 @@ public Handle_TieredNominationMenu(Handle:menu, MenuAction:action, client, param
         //Display the menu if the menu was built successfully.
         if (newmenu != INVALID_HANDLE)
         {  
-            DisplayMenu(newmenu, client, 20);
+            DisplayMenu(newmenu, client, GetConVarInt(cvar_nominate_time));
         }
     }
     else
+    {
         Handle_NominationMenu(menu, action, client, param2);
+    }
 }
 
 //************************************************************************************************//
@@ -742,7 +758,9 @@ public UMC_RequestReloadMapcycle()
 {
     can_nominate = ReloadMapcycle();
     if (can_nominate)
+    {
         RemovePreviousMapsFromCycle();
+    }
 }
 
 
@@ -765,15 +783,13 @@ public UMC_DisplayMapCycle(client, bool:filtered)
     if (filtered)
     {
         PrintToConsole(client, "Maps available to nominate:");
-        new Handle:filteredMapcycle = UMC_FilterMapcycle(
-            map_kv, umc_mapcycle, true, false
-        );
+        new Handle:filteredMapcycle = UMC_FilterMapcycle(map_kv, umc_mapcycle, true, false);
+        
         PrintKvToConsole(filteredMapcycle, client);
         CloseHandle(filteredMapcycle);
         PrintToConsole(client, "Maps available for map change (if nominated):");
-        filteredMapcycle = UMC_FilterMapcycle(
-            map_kv, umc_mapcycle, true, true
-        );
+        
+        filteredMapcycle = UMC_FilterMapcycle(map_kv, umc_mapcycle, true, true);
         PrintKvToConsole(filteredMapcycle, client);
         CloseHandle(filteredMapcycle);
     }
