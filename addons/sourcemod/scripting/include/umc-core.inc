@@ -22,7 +22,7 @@ along with this plugin.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma semicolon 1
 
-#define PL_VERSION "3.6.2"
+#define PL_VERSION "3.7.1"
 #define UMC_DEBUG 1
 #define AUTOUPDATE_ENABLE 0
 #define AUTOUPDATE_DEV 0
@@ -419,15 +419,14 @@ native bool:UMC_StopVote(const String:id[]);
  *
  * @return Plugin_Continue on success, Plugin_Stop to prevent the vote.
  */
-functag UMC_VoteHandler Action:public(duration, Handle:vote_items, const clients[], numClients,
-                                      const String:startSound[]);
+typedef UMC_VoteHandler = function Action (int duration, Handle vote_items, const int clients[], int numClients, const char startSound[]);
 
 /**
  *
  */
-functag UMC_VoteCancelledHandler public();
+typedef UMC_VoteCancelledHandler = function void();
 
-functag UMC_VoteInProgressHandler bool:public();
+typedef UMC_VoteInProgressHandler = function bool();
 
 /**
  * Registers a new VoteManager for UMC votes.
@@ -448,7 +447,7 @@ native UMC_RegisterVoteManager(const String:id[], UMC_VoteHandler:mapCallback,
 /**
  *
  */
-functag UMC_VoteResponseHandler public(UMC_VoteResponse:response, const String:param[]);
+typedef UMC_VoteResponseHandler = function void(UMC_VoteResponse response, const char param[]);
 
 /**
  * Notifies UMC that the current vote has completed.
@@ -459,8 +458,7 @@ functag UMC_VoteResponseHandler public(UMC_VoteResponse:response, const String:p
  * 
  * @noreturn
  */
-native UMC_VoteManagerVoteCompleted(const String:id[], Handle:voteOptions,
-                                    UMC_VoteResponseHandler:callback);
+native UMC_VoteManagerVoteCompleted(const String:id[], Handle:voteOptions, UMC_VoteResponseHandler:callback);
 
 
 /**

@@ -161,7 +161,7 @@ public Handle_SQLConnect(Handle:owner, Handle:db, const String:error[], any:data
     new bufferSize = sizeof(table_name) * 2 + 1;
     new String:tableName[bufferSize];
     
-    SQL_QuoteString(db, table_name, tableName, bufferSize);
+    SQL_EscapeString(db, table_name, tableName, bufferSize);
     FormatEx(query, sizeof(query), SQL_STATEMENT, tableName, GetConVarInt(cvar_min_votes));
     
     SQL_TQuery(db, Handle_MapRatingQuery, query);

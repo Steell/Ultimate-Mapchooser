@@ -3,11 +3,17 @@ Ultimate Map Chooser.
 
 This plugin is design to be a more complex mapchooser plugin that can be used to create various map lists to vote from. While it has all the standard map voting items (rtv, nominate, etc.) it also has some complexity in that you can set special conditions (such as player thresholds) for certain maps, which can help introduce some maps when a server is more full or allow users to pick ones based on map prefix, gamemode, and other such things.
 
-For full explainations on the modules, their functions, plugin installation instructions, game compatability, and other information regarding UMC, please refer to the github wiki found here:
-https://github.com/Silenci0/UMC/wiki
+For full explainations on the modules, their functions, plugin installation instructions, game compatability, and other information regarding UMC, please refer to the github wiki found here: https://github.com/Silenci0/UMC/wiki
 
 
 # Changelog
+3.7.1 Update (11-09-2019)
+-----------------
+- Updated functag functions to typedefs in umc-core.inc to be inline with changes presented in SM 1.10.
+    * For those curious, SM 1.10 introduces more Transitional Syntax improvements that are replacing old functionality. For more info regarding the Transitional API, please see their wikipage here: https://wiki.alliedmods.net/SourcePawn_Transitional_Syntax
+- Updated the maprate-reweight plugin to use SQL_EscapeString instead of SQL_QuoteString due to it being depreciated.
+- Recompiled all UMC plugins for SM 1.10 
+
 3.7.0 Update (08-14-2019)
 -----------------
 - Restored 3.4.6's GetMapDisplayName code to UMC for better workshop support. This was taken out initially due to an incompatibility with ZPS 2.4 (back when this fork of the plugin was being used exclusively for that game).
