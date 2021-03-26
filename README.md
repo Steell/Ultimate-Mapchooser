@@ -1,4 +1,4 @@
-# NOTICE: UMC Unsupported
+# NOTICE: UMC is Unsupported
 Hello everyone,
 
 TL;DR: I will no longer be supporting UMC as a project and I will not be responding to issues/pull requests either. As it stands, it works as long as you are not trying to be too complex with the plugins or have large map lists of 100+ maps, but some features do not work as well as they could and it does not completely work with Workshop maps in its current form. If you wish to take on the project, please go ahead and fork the repo and do whatever you wish with my permission/blessing/whatever (you do not need to contact me!). Good luck! 
