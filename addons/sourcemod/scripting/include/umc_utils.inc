@@ -291,151 +291,113 @@ static String:g_sTColors[13][12] = {"{WHITE}", "{RED}", "{GREEN}", "{BLUE}", "{Y
 									"{CYAN}", "{ORANGE}", "{PINK}", "{OLIVE}", "{LIME}", "{VIOLET}",
 									"{LIGHTBLUE}"};
 
-//Handle to the Center Message timer. For Vote Warnings.
-static Handle:center_message_timer = INVALID_HANDLE;
-static bool:center_warning_active = false;
-
 //Displays a message to the server
-stock DisplayServerMessage(const String:msg[], const String:type[])
+stock DisplayServerMessage(const String:type[], const String:msg[], any:...)
 {
-	if (center_warning_active)
-	{
-		center_warning_active = false;
-		TriggerTimer(center_message_timer);
-	}
-
-	if (strlen(msg) == 0)
+	if (msg[0] == '\0')
 	{
 		return;
 	}
 
 	decl String:message[255];
-	strcopy(message, sizeof(message), msg);
+	new bool:translate = (StrContains(msg, "%t") > -1);
 
-	//Display a chat message ("S") if the user specifies.
-	if (StrContains(type, "S") != -1)
+	if (!translate)
 	{
-		new String:sColor[4];
-		Format(message, sizeof(message), "%c%s", 1, message);
-
-		for (new c = 0; c < sizeof(g_iSColors); c++)
-		{
-			if (StrContains(message, g_sSColors[c]))
-			{
-				FormatEx(sColor, sizeof(sColor), "%c", g_iSColors[c]);
-				ReplaceString(message, sizeof(message), g_sSColors[c], sColor);
-			}
-		}
-
-		PrintToChatAll(message);
+		strcopy(message, sizeof(message), msg);
 	}
 
-	//Buffer to hold message in order to manipulate it.
-	decl String:sTextTmp[255];
-
-	//Display a top message ("T") if the user specifies.
-	if (StrContains(type, "T") != -1)
+	for (new i = 1; i <= MaxClients; ++i)
 	{
-		strcopy(sTextTmp, sizeof(sTextTmp), message);
-		decl String:sColor[16];
-		new iColor = -1, iPos = BreakString(sTextTmp, sColor, sizeof(sColor));
-
-		for (new i = 0; i < sizeof(g_sTColors); i++)
+		if (IsClientInGame(i) && !IsFakeClient(i))
 		{
-			if (StrEqual(sColor, g_sTColors[i]))
+			if (translate)
 			{
-				iColor = i;
+				SetGlobalTransTarget(i);
+				VFormat(message, sizeof(message), msg, 3);
 			}
-		}
 
-		if (iColor == -1)
-		{
-			iPos   = 0;
-			iColor = 0;
-		}
-
-		new Handle:hKv = CreateKeyValues("Stuff", "title", sTextTmp[iPos]);
-		KvSetColor(hKv, "color", g_iTColors[iColor][0], g_iTColors[iColor][1], g_iTColors[iColor][2], 255);
-		KvSetNum(hKv, "level", 1);
-		KvSetNum(hKv, "time",  10);
-
-		for (new i = 1; i <= MaxClients; i++)
-		{
-			if (IsClientInGame(i) && !IsFakeClient(i))
+			//Display a chat message ("S") if the user specifies.
+			if (StrContains(type, "S") != -1)
 			{
+				new String:sColor[4];
+				Format(message, sizeof(message), "%c%s", 1, message);
+
+				for (new c = 0; c < sizeof(g_iSColors); c++)
+				{
+					if (StrContains(message, g_sSColors[c]))
+					{
+						FormatEx(sColor, sizeof(sColor), "%c", g_iSColors[c]);
+						ReplaceString(message, sizeof(message), g_sSColors[c], sColor);
+					}
+				}
+
+				PrintToChat(i, message);
+			}
+
+			//Buffer to hold message in order to manipulate it.
+			decl String:sTextTmp[255];
+
+			//Display a top message ("T") if the user specifies.
+			if (StrContains(type, "T") != -1)
+			{
+				strcopy(sTextTmp, sizeof(sTextTmp), message);
+				decl String:sColor[16];
+				new iColor = -1, iPos = BreakString(sTextTmp, sColor, sizeof(sColor));
+
+				for (new j = 0; j < sizeof(g_sTColors); j++)
+				{
+					if (StrEqual(sColor, g_sTColors[j]))
+					{
+						iColor = j;
+					}
+				}
+
+				if (iColor == -1)
+				{
+					iPos   = 0;
+					iColor = 0;
+				}
+
+				new Handle:hKv = CreateKeyValues("Stuff", "title", sTextTmp[iPos]);
+				KvSetColor(hKv, "color", g_iTColors[iColor][0], g_iTColors[iColor][1], g_iTColors[iColor][2], 255);
+				KvSetNum(hKv, "level", 1);
+				KvSetNum(hKv, "time",  10);
 				CreateDialog(i, hKv, DialogType_Msg);
+				CloseHandle(hKv);
+			}
+
+			//Remove colors, because C,H,M methods do not support colors.
+			//Remove a color from the message string for each color in the Say color array.
+			for (new c = 0; c < sizeof(g_iSColors); c++)
+			{
+				if (StrContains(message, g_sSColors[c]) != -1)
+				{
+					ReplaceString(message, sizeof(message), g_sSColors[c], "");
+				}
+			}
+
+			//Remove a color from the message string for each color in the Top color array.
+			for (new c = 0; c < sizeof(g_iTColors); c++)
+			{
+				if (StrContains(message, g_sTColors[c]) != -1)
+				{
+					ReplaceString(message, sizeof(message), g_sTColors[c], "");
+				}
+			}
+
+			//Display a center message ("C") if the user specifies.
+			if (StrContains(type, "C") != -1)
+			{
+				PrintCenterText(i, message);
+			}
+
+			//Display a hint message ("H") if the user specifies.
+			if (StrContains(type, "H") != -1)
+			{
+				PrintHintText(i, message);
 			}
 		}
-
-		CloseHandle(hKv);
-	}
-
-	// Remove colors, because C,H,M methods do not support colors.
-	//Remove a color from the message string for each color in the Say color array.
-	for (new c = 0; c < sizeof(g_iSColors); c++)
-	{
-		if (StrContains(message, g_sSColors[c]) != -1)
-		{
-			ReplaceString(message, sizeof(message), g_sSColors[c], "");
-		}
-	}
-
-	//Remove a color from the message string for each color in the Top color array.
-	for (new c = 0; c < sizeof(g_iTColors); c++)
-	{
-		if (StrContains(message, g_sTColors[c]) != -1)
-		{
-			ReplaceString(message, sizeof(message), g_sTColors[c], "");
-		}
-	}
-
-	//Display a center message ("C") if the user specifies.
-	if (StrContains(type, "C") != -1)
-	{
-		PrintCenterTextAll(message);
-
-		//Setup timer to keep the center message visible.
-		new Handle:hCenterAd;
-		center_message_timer = CreateDataTimer(1.0, Timer_CenterAd, hCenterAd, TIMER_REPEAT);
-		WritePackString(hCenterAd, message);
-
-		center_warning_active = center_message_timer != INVALID_HANDLE;
-
-		if (!center_warning_active)
-		{
-			CloseHandle(hCenterAd);
-		}
-	}
-
-	//Display a hint message ("H") if the user specifies.
-	if (StrContains(type, "H") != -1)
-	{
-		PrintHintTextToAll(message);
-	}
-}
-
-
-//Called with each tick of the timer for center messages. Used to keep the message visible for an
-//extended period.
-public Action:Timer_CenterAd(Handle:timer, Handle:pack)
-{
-	decl String:sText[256];
-	static iCount = 0;
-
-	ResetPack(pack);
-	ReadPackString(pack, sText, sizeof(sText));
-
-	if (center_warning_active && ++iCount < 5)
-	{
-		PrintCenterTextAll(sText);
-		return Plugin_Continue;
-	}
-	else
-	{
-		iCount = 0;
-		center_message_timer = INVALID_HANDLE;
-		center_warning_active = false;
-		return Plugin_Stop;
 	}
 }
 

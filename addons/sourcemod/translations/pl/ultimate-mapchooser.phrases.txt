@@ -188,9 +188,7 @@
 
 	"Default Warning"
 	{
-		//Tu gdzie {TIME} zostanie wstawiona ilość sekund.
-		//Zostaw {TIME} w tej samej postaci - po angielsku - to nie jest błąd.
-		"pl" "{TIME} sekund do rozpoczęcia głosowania."
+		"pl" "{1} sekund do rozpoczęcia głosowania."
 	}
 
 	"Vote Failed"

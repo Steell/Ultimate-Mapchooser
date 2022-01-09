@@ -189,7 +189,7 @@
 
 	"Default Warning"
 	{
-		"fr" "{TIME} secondes avant le début du vote."
+		"fr" "{1} secondes avant le début du vote."
 	}
 
 	"Vote Failed"

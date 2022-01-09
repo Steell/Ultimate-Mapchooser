@@ -76,29 +76,11 @@ public UMC_OnNextmapSet(Handle:kv, const String:map[], const String:group[], con
 
 	if (GetConVarBool(cvar_center))
 	{
-		new String:msg[256];
-
-		if (disp && strlen(display) > 0)
-		{
-			Format(msg, sizeof(msg), "[UMC] %t", "Next Map", display);
-		}
-		else
-		{
-			Format(msg, sizeof(msg), "[UMC] %t", "Next Map", map);
-		}
-
-		DisplayServerMessage(msg, "C");
+		DisplayServerMessage("C", "[UMC] %t", "Next Map", (disp && display[0] != '\0') ? display : map);
 	}
 
 	if (GetConVarBool(cvar_hint))
 	{
-		if (disp && strlen(display) > 0)
-		{
-			PrintHintTextToAll("[UMC] %t", "Next Map", display);
-		}
-		else
-		{
-			PrintHintTextToAll("[UMC] %t", "Next Map", map);
-		}
+		PrintHintTextToAll("[UMC] %t", "Next Map", (disp && display[0] != '\0') ? display : map);
 	}
 }

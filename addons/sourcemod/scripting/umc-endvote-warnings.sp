@@ -183,11 +183,10 @@ GetVoteWarnings(const String:fileName[], Handle:warningArray, &next)
 
 	//Variables to hold default values. Initially set to defaults in the event that the user doesn't
 	//specify his own.
-	decl String:dMessage[255];
-	FormatEx(dMessage, sizeof(dMessage), "%T", "Default Warning", LANG_SERVER); //Message
+	new String:dMessage[255]; //Message
 	new String:dNotification[10] = "C"; //Notification
-	new String:dSound[PLATFORM_MAX_PATH] = ""; //Sound
-	new String:dFlags[64] = "";
+	new String:dSound[PLATFORM_MAX_PATH]; //Sound
+	new String:dFlags[64];
 
 	//Grab defaults from the KV if they are actually defined.
 	if (KvJumpToKey(kv, "default"))
@@ -489,7 +488,7 @@ DisplayVoteWarning(Handle:warning, param=0)
 	}
 
 	//Stop here if there is nothing to display.
-	if (strlen(message) == 0 || strlen(notification) == 0)
+	if (strlen(notification) == 0)
 	{
 		return;
 	}
@@ -519,7 +518,7 @@ DisplayVoteWarning(Handle:warning, param=0)
 	}
 
 	//Display the message
-	DisplayServerMessage(message, notification);
+	DisplayServerMessage(notification, (message[0] != '\0') ? message : "%t", "Default Warning", time);
 }
 
 //************************************************************************************************//

@@ -191,9 +191,7 @@
 
 	"Default Warning"
 	{
-		//{TIME} is where the time in seconds is going to be placed.
-		//Please keep {TIME} in this string in english, it is not an error.
-		"nl" "{TIME} seconden tot en met de volgende stemming."
+		"nl" "{1} seconden tot en met de volgende stemming."
 	}
 
 	"Vote Failed"

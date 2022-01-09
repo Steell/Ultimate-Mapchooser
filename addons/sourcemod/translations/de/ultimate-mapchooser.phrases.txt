@@ -201,9 +201,7 @@
 
 	"Default Warning"
 	{
-		//{TIME} is where the time in seconds is going to be placed.
-		//Please keep {TIME} in this string, it is not an error.
-		"de" "{TIME} Sekunden bis zur Abstimmung."
+		"de" "{1} Sekunden bis zur Abstimmung."
 	}
 
 	"No RTV Admin"

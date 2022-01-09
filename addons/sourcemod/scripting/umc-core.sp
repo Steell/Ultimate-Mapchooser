@@ -2821,10 +2821,9 @@ stock Handle:MakeSecondTieredCatExclusion(Handle:kv, const String:cat[])
 //Updates the display for the interval between tiered votes.
 DisplayTierMessage(timeleft)
 {
-	decl String:msg[255], String:notification[10];
-	FormatEx(msg, sizeof(msg), "%t", "Another Vote", timeleft);
+	decl String:notification[10];
 	GetConVarString(cvar_vote_tierdisplay, notification, sizeof(notification));
-	DisplayServerMessage(msg, notification);
+	DisplayServerMessage(notification, "%t", "Another Vote", timeleft);
 }
 
 //Empties the vote storage
@@ -3340,19 +3339,9 @@ public Action:Handle_RunoffVoteTimer(Handle:timer, Handle:datapack)
 //Displays a notification for the impending runoff vote.
 DisplayRunoffMessage(timeRemaining)
 {
-	decl String:msg[255], String:notification[10];
-
-	if (timeRemaining > 5)
-	{
-		FormatEx(msg, sizeof(msg), "%t", "Runoff Msg");
-	}
-	else
-	{
-		FormatEx(msg, sizeof(msg), "%t", "Another Vote", timeRemaining);
-	}
-
+	decl String:notification[10];
 	GetConVarString(cvar_runoff_display, notification, sizeof(notification));
-	DisplayServerMessage(msg, notification);
+	DisplayServerMessage(notification, "%t", (timeRemaining > 5) ? "Runoff Msg" : "Another Vote", timeRemaining);
 }
 
 //Handles the winner of an end-of-map map vote.

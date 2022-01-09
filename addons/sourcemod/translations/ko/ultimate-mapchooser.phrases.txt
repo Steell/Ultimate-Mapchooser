@@ -191,9 +191,7 @@
 
 	"Default Warning"
 	{
-		//{TIME} is where the time in seconds is going to be placed.
-		//Please keep {TIME} in this string in english, it is not an error.
-		"ko" "투표까지 {TIME}초."
+		"ko" "투표까지 {1}초."
 	}
 
 	"Vote Failed"

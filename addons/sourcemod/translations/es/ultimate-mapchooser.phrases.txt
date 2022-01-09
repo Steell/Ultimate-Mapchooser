@@ -191,9 +191,7 @@
 
 	"Default Warning"
 	{
-		//{TIME} is where the time in seconds is going to be placed.
-		//Please keep {TIME} in this string in english, it is not an error.
-		"es" "{TIME} en segundos hasta el voto."
+		"es" "{1} segundos hasta el voto."
 	}
 
 	"Vote Failed"

@@ -192,9 +192,7 @@
 
 	"Default Warning"
 	{
-		//{TIME} is where the time in seconds is going to be placed.
-		//Please keep {TIME} in this phrase in english.
-		"chi" "{TIME} 秒直到投票"
+		"chi" "{1} 秒直到投票"
 	}
 
 	"Vote Failed"
