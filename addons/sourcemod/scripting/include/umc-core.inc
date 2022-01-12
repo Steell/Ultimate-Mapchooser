@@ -1,12 +1,28 @@
+/*************************************************************************
+*************************************************************************
+This plugin is free software: you can redistribute 
+it and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the License, or
+later version. 
+
+This plugin is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this plugin.  If not, see <http://www.gnu.org/licenses/>.
+*************************************************************************
+*************************************************************************/
 //Header file for Ultimate Mapchooser v3.0 by Steell.
 #if defined _umc_core_included
-    #endinput
+	#endinput
 #endif
 #define _umc_core_included
 
 #pragma semicolon 1
 
-#define PL_VERSION "3.4.6-dev"
+#define PL_VERSION "3.7.1"
 #define UMC_DEBUG 1
 #define AUTOUPDATE_ENABLE 0
 #define AUTOUPDATE_DEV 0
@@ -14,38 +30,37 @@
 //SourceMod Malarky
 public SharedPlugin:__pl_umccore =
 {
-    name = "umccore",
-    file = "umc-core.smx",
+	name = "umccore",
+	file = "umc-core.smx",
 #if defined REQUIRE_PLUGIN
-    required = 1,
+	required = 1,
 #else
-    required = 0,
+	required = 0,
 #endif
 };
 
 public __pl_umccore_SetNTVOptional()
 {
-    MarkNativeAsOptional("UMC_AddWeightModifier");
-    MarkNativeAsOptional("UMC_StartVote");
-    MarkNativeAsOptional("UMC_GetCurrentMapGroup");
-    MarkNativeAsOptional("UMC_GetRandomMap");
-    MarkNativeAsOptional("UMC_SetNextMap");
-    MarkNativeAsOptional("UMC_IsMapNominated");
-    MarkNativeAsOptional("UMC_NominateMap");
-    MarkNativeAsOptional("UMC_CreateValidMapArray");
-    MarkNativeAsOptional("UMC_CreateValidMapGroupArray");
-    MarkNativeAsOptional("UMC_IsMapValid");
-    //MarkNativeAsOptional("UMC_IsGroupValid");
-    MarkNativeAsOptional("UMC_FilterMapcycle");
-    MarkNativeAsOptional("UMC_IsVoteInProgress");
-    MarkNativeAsOptional("UMC_StopVote");
-    MarkNativeAsOptional("UMC_RegisterVoteManager");
-    MarkNativeAsOptional("UMC_UnregisterVoteManager");
-    MarkNativeAsOptional("UMC_VoteManagerVoteCompleted");
-    MarkNativeAsOptional("UMC_VoteManagerVoteCancelled");
-    MarkNativeAsOptional("UMC_VoteManagerClientVoted");
-    MarkNativeAsOptional("UMC_FormatDisplayString");
-    MarkNativeAsOptional("UMC_IsNewVoteAllowed");
+	MarkNativeAsOptional("UMC_AddWeightModifier");
+	MarkNativeAsOptional("UMC_StartVote");
+	MarkNativeAsOptional("UMC_GetCurrentMapGroup");
+	MarkNativeAsOptional("UMC_GetRandomMap");
+	MarkNativeAsOptional("UMC_SetNextMap");
+	MarkNativeAsOptional("UMC_IsMapNominated");
+	MarkNativeAsOptional("UMC_NominateMap");
+	MarkNativeAsOptional("UMC_CreateValidMapArray");
+	MarkNativeAsOptional("UMC_CreateValidMapGroupArray");
+	MarkNativeAsOptional("UMC_IsMapValid");
+	MarkNativeAsOptional("UMC_FilterMapcycle");
+	MarkNativeAsOptional("UMC_IsVoteInProgress");
+	MarkNativeAsOptional("UMC_StopVote");
+	MarkNativeAsOptional("UMC_RegisterVoteManager");
+	MarkNativeAsOptional("UMC_UnregisterVoteManager");
+	MarkNativeAsOptional("UMC_VoteManagerVoteCompleted");
+	MarkNativeAsOptional("UMC_VoteManagerVoteCancelled");
+	MarkNativeAsOptional("UMC_VoteManagerClientVoted");
+	MarkNativeAsOptional("UMC_FormatDisplayString");
+	MarkNativeAsOptional("UMC_IsNewVoteAllowed");
 }
 
 #define INVALID_GROUP ""
@@ -59,36 +74,36 @@ public __pl_umccore_SetNTVOptional()
 
 enum UMC_VoteType
 {
-    VoteType_Map = 0,
-    VoteType_Group,
-    VoteType_Tier,
+	VoteType_Map = 0,
+	VoteType_Group,
+	VoteType_Tier,
 };
 
 enum UMC_ChangeMapTime
 {
-    ChangeMapTime_Now = 0,
-    ChangeMapTime_RoundEnd,
-    ChangeMapTime_MapEnd,
+	ChangeMapTime_Now = 0,
+	ChangeMapTime_RoundEnd,
+	ChangeMapTime_MapEnd,
 };
 
 enum UMC_VoteFailAction
 {
-    VoteFailAction_Nothing = 0,
-    VoteFailAction_Runoff,
+	VoteFailAction_Nothing = 0,
+	VoteFailAction_Runoff,
 };
 
 enum UMC_RunoffFailAction
 {
-    RunoffFailAction_Nothing = 0,
-    RunoffFailAction_Accept,
+	RunoffFailAction_Nothing = 0,
+	RunoffFailAction_Accept,
 };
 
 enum UMC_VoteResponse
 {
-    VoteResponse_Success = 0,
-    VoteResponse_Runoff,
-    VoteResponse_Tiered,
-    VoteResponse_Fail,
+	VoteResponse_Success = 0,
+	VoteResponse_Runoff,
+	VoteResponse_Tiered,
+	VoteResponse_Fail,
 };
 
 
@@ -149,9 +164,9 @@ native UMC_AddWeightModifier(Float:amt);
  * @return  Plugin_Continue to keep the map, Plugin_Stop to exclude the map.
  */
 forward Action:UMC_OnDetermineMapExclude(Handle:kv, const String:map[], const String:group[],
-    bool:isNomination, bool:forMapChange);
- 
- 
+	bool:isNomination, bool:forMapChange);
+
+
 /**
  * Starts a UMC map vote.
  *
@@ -184,13 +199,13 @@ forward Action:UMC_OnDetermineMapExclude(Handle:kv, const String:map[], const St
  * @return True on success, false on failure.
  */
 native bool:UMC_StartVote(const String:id[], Handle:mapcycle, Handle:originalMapcycle,
-    UMC_VoteType:type, time, bool:scramble, const String:startSound[], const String:endSound[],
-    bool:extendOption, Float:timestep, roundstep, fragstep, bool:dontChangeOption, Float:threshold,
-    UMC_ChangeMapTime:successAction, UMC_VoteFailAction:failAction, maxRunoffs, maxRunoffMaps,
-    UMC_RunoffFailAction:runoffFailAction, const String:runoffSound[], bool:nominationStrictness,
-    bool:allowDuplicates, const clients[], numClients, bool:runExclusion=true);
-    
-    
+	UMC_VoteType:type, time, bool:scramble, const String:startSound[], const String:endSound[],
+	bool:extendOption, Float:timestep, roundstep, fragstep, bool:dontChangeOption, Float:threshold,
+	UMC_ChangeMapTime:successAction, UMC_VoteFailAction:failAction, maxRunoffs, maxRunoffMaps,
+	UMC_RunoffFailAction:runoffFailAction, const String:runoffSound[], bool:nominationStrictness,
+	bool:allowDuplicates, const clients[], numClients, bool:runExclusion=true);
+
+
 /**
  * Fetches a random map from a given map group in a given mapcycle.
  *
@@ -207,10 +222,10 @@ native bool:UMC_StartVote(const String:id[], Handle:mapcycle, Handle:originalMap
  * @return True on success, false on failure.
  */
 native bool:UMC_GetRandomMap(Handle:mapcycle, Handle:originalMapcycle, const String:group[],
-                             String:buffer[], size, String:groupBuffer[], gBufferSize,
-                             bool:isNomination, bool:forMapChange);
-                             
-                             
+							 String:buffer[], size, String:groupBuffer[], gBufferSize,
+							 bool:isNomination, bool:forMapChange);
+
+
 /**
  * Sets the next map and map group for UMC.
  *
@@ -221,8 +236,7 @@ native bool:UMC_GetRandomMap(Handle:mapcycle, Handle:originalMapcycle, const Str
  * 
  * @noreturn
  */
-native UMC_SetNextMap(Handle:mapcycle, const String:map[], const String:group[],
-                      UMC_ChangeMapTime:when);
+native UMC_SetNextMap(Handle:mapcycle, const String:map[], const String:group[], UMC_ChangeMapTime:when);
 
 
 /**
@@ -247,9 +261,8 @@ native bool:UMC_IsMapNominated(const String:map[], const String:group[]);
  *
  * @return True on success, false otherwise.
  */
-native bool:UMC_NominateMap(Handle:mapcycle, const String:map[], const String:group[], client, 
-                            const String:nominationGroup[]=INVALID_HANDLE);
- 
+native bool:UMC_NominateMap(Handle:mapcycle, const String:map[], const String:group[], client, const String:nominationGroup[]);
+
 
 /**
  * Determines if the given group is valid (has at least 1 valid map in it) for the given mapcycle.
@@ -273,8 +286,7 @@ native bool:UMC_NominateMap(Handle:mapcycle, const String:map[], const String:gr
  *
  * @return True if the map is valid, false otherwise.
  */
-native bool:UMC_IsMapValid(Handle:mapcycle, const String:map[], const String:group[], bool:isNom,
-                           bool:forMapChange);
+native bool:UMC_IsMapValid(Handle:mapcycle, const String:map[], const String:group[], bool:isNom, bool:forMapChange);
 
 
 /**
@@ -287,7 +299,7 @@ native bool:UMC_IsMapValid(Handle:mapcycle, const String:map[], const String:gro
  * @return Handle to the new mapcycle KV.
  */
 native Handle:UMC_FilterMapcycle(Handle:mapcycle, Handle:originalMapcycle, bool:isNomination,
-                                 bool:forMapChange);
+								 bool:forMapChange);
 
 
 /**
@@ -302,7 +314,7 @@ native Handle:UMC_FilterMapcycle(Handle:mapcycle, Handle:originalMapcycle, bool:
  * @return Handle to the new array containing all of the valid map tries.
  */
 native Handle:UMC_CreateValidMapArray(Handle:mapcycle, Handle:originalMapcycle,
-                                      const String:group[], bool:isNom, bool:forMapChange);
+	const String:group[], bool:isNom, bool:forMapChange);
 
 
 /**
@@ -316,8 +328,7 @@ native Handle:UMC_CreateValidMapArray(Handle:mapcycle, Handle:originalMapcycle,
  *
  * @return Handle to the new array containing all of the valid map groups.
  */
-native Handle:UMC_CreateValidMapGroupArray(Handle:kv, Handle:originalMapcycle, bool:isNom,
-                                           bool:forMapChange);
+native Handle:UMC_CreateValidMapGroupArray(Handle:kv, Handle:originalMapcycle, bool:isNom, bool:forMapChange);
 
 
 /**
@@ -348,7 +359,7 @@ forward UMC_OnVoteFailed(); //UMC_FailReason:reason);
  * @noreturn
  */
 forward UMC_OnNextmapSet(Handle:kv, const String:map[], const String:group[],
-                         const String:display[]);
+						 const String:display[]);
 
 
 /**
@@ -404,15 +415,14 @@ native bool:UMC_StopVote(const String:id[]);
  *
  * @return Plugin_Continue on success, Plugin_Stop to prevent the vote.
  */
-functag UMC_VoteHandler Action:public(duration, Handle:vote_items, const clients[], numClients,
-                                      const String:startSound[]);
+typedef UMC_VoteHandler = function Action (int duration, Handle vote_items, const int[] clients, int numClients, const char[] startSound);
 
 /**
  *
  */
-functag UMC_VoteCancelledHandler public();
+typedef UMC_VoteCancelledHandler = function void();
 
-functag UMC_VoteInProgressHandler bool:public();
+typedef UMC_VoteInProgressHandler = function bool();
 
 /**
  * Registers a new VoteManager for UMC votes.
@@ -424,16 +434,14 @@ functag UMC_VoteInProgressHandler bool:public();
  *
  * @noreturn
  */
-native UMC_RegisterVoteManager(const String:id[], UMC_VoteHandler:mapCallback,
-                               UMC_VoteHandler:groupCallback,
-                               UMC_VoteCancelledHandler:cancelCallback,
-                               UMC_VoteInProgressHandler:progressCallback=INVALID_FUNCTION);
+native UMC_RegisterVoteManager(const String:id[], UMC_VoteHandler:mapCallback, UMC_VoteHandler:groupCallback,
+	UMC_VoteCancelledHandler:cancelCallback, UMC_VoteInProgressHandler:progressCallback=INVALID_FUNCTION);
 
 
 /**
  *
  */
-functag UMC_VoteResponseHandler public(UMC_VoteResponse:response, const String:param[]);
+typedef UMC_VoteResponseHandler = function void(UMC_VoteResponse response, const char[] param);
 
 /**
  * Notifies UMC that the current vote has completed.
@@ -444,8 +452,7 @@ functag UMC_VoteResponseHandler public(UMC_VoteResponse:response, const String:p
  * 
  * @noreturn
  */
-native UMC_VoteManagerVoteCompleted(const String:id[], Handle:voteOptions,
-                                    UMC_VoteResponseHandler:callback);
+native UMC_VoteManagerVoteCompleted(const String:id[], Handle:voteOptions, UMC_VoteResponseHandler:callback);
 
 
 /**
@@ -455,7 +462,7 @@ native UMC_VoteManagerVoteCompleted(const String:id[], Handle:voteOptions,
  * @param id ID of the Vote Manager to cancel.
  */
 native UMC_VoteManagerVoteCancelled(const String:id[]);
-                                    
+
 
 /**
  * Unregisters a Vote Manager from UMC.
@@ -477,8 +484,7 @@ forward UMC_DisplayMapCycle(client, bool:filtered);
 /**
  *
  */
-forward UMC_VoteStarted(const String:voteManagerId[], const clients[], numClients, 
-                        Handle:voteOptions);
+forward UMC_VoteStarted(const String:voteManagerId[], const clients[], numClients, Handle:voteOptions);
 
 
 /**
@@ -502,15 +508,13 @@ native UMC_VoteManagerClientVoted(const String:id[], client, Handle:option);
 /**
  *
  */
-forward UMC_OnFormatTemplateString(String:template[], maxlen, Handle:kv, const String:map[], 
-                                   const String:group[]);
+forward UMC_OnFormatTemplateString(String:template[], maxlen, Handle:kv, const String:map[], const String:group[]);
 
 
 /**
  *
  */
-native UMC_FormatDisplayString(String:display[], maxlen, Handle:mapcycle, const String:map[],
-                               const String:group[]);
+native UMC_FormatDisplayString(String:display[], maxlen, Handle:mapcycle, const String:map[], const String:group[]);
 
 /**
  * Is a new vote allowed on this vote manager?

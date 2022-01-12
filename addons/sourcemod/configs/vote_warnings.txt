@@ -74,19 +74,19 @@
 
 "vote_warnings"
 {
-    "default"
-    {
-        "message"   "{TIME} seconds until vote."
-        "notification"  "H"
-        "sound"     ""
-    }
-    
-    "10-2" {}
-    
-    "1"
-    {
-        "message"   "1 second until vote."
-    }
-    
-    "0" {}
+	"default"
+	{
+		"message"   "{TIME} seconds until vote."
+		"notification"  "H"
+		"sound"     ""
+	}
+
+	"10-2" {}
+
+	"1"
+	{
+		"message"   "1 second until vote."
+	}
+
+	"0" {}
 }

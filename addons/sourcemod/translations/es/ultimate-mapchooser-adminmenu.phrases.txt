@@ -1,230 +1,230 @@
 //Translation Phrases for the UMC Admin Menu module.
 
 "Phrases"
-{    
-    "AM Stop Vote"
-    {
-        "es"    "Parar el Voto UMC Actual."
-    }
-    
-    "AM Start Vote"
-    {
-        "es"    "Comenzar un Voto de Mapa."
-    }
-    
-    "AM Vote Type"
-    {
-        "es"    "Seleccionar Tipo de Voto"
-    }
-    
-    "Maps"
-    {
-        "es"    "Mapas"
-    }
-    
-    "Groups"
-    {
-        "es"    "Grupos"
-    }
-    
-    "Tiered"
-    {
-        "es"    "Grados"
-    }
-    
-    "AM Populate Vote"
-    {
-        "es"    "Agregar Mapas para el Voto"
-    }
-    
-    "AM Vote Settings"
-    {
-        "es"    "Opciones de Votos"
-    }
-    
-    "AM-VS Defaults"
-    {
-        "es"    "Usar Opciones por Defecto"
-    }
-    
-    "Manually Choose"
-    {
-        "es"    "SelecciÛn Manual"
-    }
-    
-    "AM Scramble Menu"
-    {
-        "es"    "Mezclar el Men˙ de Voto?"
-    }
-    
-    "Default Yes"
-    {
-        "es"    "Si (por defecto)"
-    }
-    
-    "Default No"
-    {
-        "es"    "No (por defecto)"
-    }
-    
-    "AM Threshold Menu"
-    {
-        "es"    "Establecer Par·metros de Voto"
-    }
-    
-    "AM Threshold Menu Message 1"
-    {
-        "es"    "Escribe en chat los par·metros de"
-    }
-    
-    "AM Threshold Menu Message 2"
-    {
-        "es"    "votos que deseas establecer de [0 a 100]."
-    }
-    
-    "Default"
-    {
-        "es"    "Por Defecto"
-    }
-    
-    "Previously entered"
-    {
-        "es"    "previamente introducidos"
-    }
-    
-    "AM Fail Action Menu"
-    {
-        "es"    "Par·metros de fallo"
-    }
-    
-    "Do Nothing"
-    {
-        "es"    "Hacer nada"
+{
+	"AM Stop Vote"
+	{
+		"es" "Parar el Voto UMC Actual."
 	}
-    
-    "Perform Runoff Vote"
-    {
-        "es"    "Realizar la segunda ronda votaciÛn"
-    }
-    
-    "Default Do Nothing"
-    {
-        "es"    "Hacer nada (por defecto)"
-    }
-    
-    "Default Perform Runoff Vote"
-    {
-        "es"    "Realizar la segunda ronda votaciÛn (por defecto)"
-    }
-    
-    "AM Max Runoff Menu"
-    {
-        "es"    "Par·metros para el numero m·ximo de segunda ronda de votaciÛn"
-    }
-    
-    "AM Max Runoff Menu Message 1"
-    {
-        "es"    "Escribe en chat el m·ximo que deseas para"
-    }
-    
-    "AM Max Runoff Menu Message 2"
-    {
-        "es"    "asignar la segunda ronda de votos (>= 0)."
-    }
-    
-    "AM Max Runoff Menu Message 3"
-    {
-        //Note to translators:  keep the leading space in this phrase.
-        "es"    " 0 = ilimitado"
-    }
-    
-    "AM Runoff Fail Action Menu"
-    {
-        "es"    "Par·metros de falla para los votos de segunda ronda"
-    }
-    
-    "Accept Winner"
-    {
-        "es"    "Aceptar Ganador"
-    }
-    
-    "Default Accept Winner"
-    {
-        "es"    "Aceptar Ganador (por defecto)"
-    }
-    
-    "AM Extend Menu"
-    {
-        "es"    "Agregar OpciÛn para Extender el Mapa?"
-    }
-    
-    "AM Don't Change Menu"
-    {
-        "es"    "Agregar opciÛn de No Cambiar Mapa?"
-    }
-    
-    "AM Admin Flag Menu"
-    {
-        "es"    "Hacer que votos sean disponible para..."
-    }
-    
-    "Everyone"
-    {
-        "es"    "Todos"
-    }
-    
-    "Admins Only"
-    {
-        "es"    "Solo Admins"
-    }
-    
-    "AM Change When Menu"
-    {
-        "es"    "Cambiar Mapa Cuando?"
-    }
-    
-    "Now"
-    {
-        "es"    "Ahora"
-    }
-    
-    "End of Round"
-    {
-        "es"    "Al final de esta Ronda"
-    }
-    
-    "End of Map"
-    {
-        "es"    "Al final del Mapa"
-    }
-    
-    "Select A Map"
-    {
-        "es"    "Seleccione un Mapa"
-    }
-    
-    "Select A Group"
-    {
-        "es"    "Seleccione un Grupo"
-    }
-    
-    "Auto Select"
-    {
-        "es"    "SelecciÛn Autom·tica"
-    }
-    
-    "Manual Select"
-    {
-        "es"    "SelecciÛn Manual"
-    }
-    
-    "AM Change Map"
-    {
-        "es"    "Cambiar Mapa"
-    }
-    
-    "AM Set Next Map"
-    {
-        "es"    "Seleccionar PrÛximo Mapa"
-    }
+
+	"AM Start Vote"
+	{
+		"es" "Comenzar un Voto de Mapa."
+	}
+
+	"AM Vote Type"
+	{
+		"es" "Seleccionar Tipo de Voto"
+	}
+
+	"Maps"
+	{
+		"es" "Mapas"
+	}
+
+	"Groups"
+	{
+		"es" "Grupos"
+	}
+
+	"Tiered"
+	{
+		"es" "Grados"
+	}
+
+	"AM Populate Vote"
+	{
+		"es" "Agregar Mapas para el Voto"
+	}
+
+	"AM Vote Settings"
+	{
+		"es" "Opciones de Votos"
+	}
+
+	"AM-VS Defaults"
+	{
+		"es" "Usar Opciones por Defecto"
+	}
+
+	"Manually Choose"
+	{
+		"es" "Selecci√≥n Manual"
+	}
+
+	"AM Scramble Menu"
+	{
+		"es" "Mezclar el Men√∫ de Voto?"
+	}
+
+	"Default Yes"
+	{
+		"es" "Si (por defecto)"
+	}
+
+	"Default No"
+	{
+		"es" "No (por defecto)"
+	}
+
+	"AM Threshold Menu"
+	{
+		"es" "Establecer Par√°metros de Voto"
+	}
+
+	"AM Threshold Menu Message 1"
+	{
+		"es" "Escribe en chat los par√°metros de"
+	}
+
+	"AM Threshold Menu Message 2"
+	{
+		"es" "votos que deseas establecer de [0 a 100]."
+	}
+
+	"Default"
+	{
+		"es" "Por Defecto"
+	}
+
+	"Previously entered"
+	{
+		"es" "previamente introducidos"
+	}
+
+	"AM Fail Action Menu"
+	{
+		"es" "Par√°metros de fallo"
+	}
+
+	"Do Nothing"
+	{
+		"es" "Hacer nada"
+	}
+
+	"Perform Runoff Vote"
+	{
+		"es" "Realizar la segunda ronda votaci√≥n"
+	}
+
+	"Default Do Nothing"
+	{
+		"es" "Hacer nada (por defecto)"
+	}
+
+	"Default Perform Runoff Vote"
+	{
+		"es" "Realizar la segunda ronda votaci√≥n (por defecto)"
+	}
+
+	"AM Max Runoff Menu"
+	{
+		"es" "Par√°metros para el numero m√°ximo de segunda ronda de votaci√≥n"
+	}
+
+	"AM Max Runoff Menu Message 1"
+	{
+		"es" "Escribe en chat el m√°ximo que deseas para"
+	}
+
+	"AM Max Runoff Menu Message 2"
+	{
+		"es" "asignar la segunda ronda de votos (>= 0)."
+	}
+
+	"AM Max Runoff Menu Message 3"
+	{
+		//Note to translators: keep the leading space in this phrase.
+		"es" " 0 = ilimitado"
+	}
+
+	"AM Runoff Fail Action Menu"
+	{
+		"es" "Par√°metros de falla para los votos de segunda ronda"
+	}
+
+	"Accept Winner"
+	{
+		"es" "Aceptar Ganador"
+	}
+
+	"Default Accept Winner"
+	{
+		"es" "Aceptar Ganador (por defecto)"
+	}
+
+	"AM Extend Menu"
+	{
+		"es" "Agregar Opci√≥n para Extender el Mapa?"
+	}
+
+	"AM Don't Change Menu"
+	{
+		"es" "Agregar Opci√≥n de No Cambiar Mapa?"
+	}
+
+	"AM Admin Flag Menu"
+	{
+		"es" "Hacer que votos sean disponible para..."
+	}
+
+	"Everyone"
+	{
+		"es" "Todos"
+	}
+
+	"Admins Only"
+	{
+		"es" "Solo Admins"
+	}
+
+	"AM Change When Menu"
+	{
+		"es" "Cambiar Mapa Cuando?"
+	}
+
+	"Now"
+	{
+		"es" "Ahora"
+	}
+
+	"End of Round"
+	{
+		"es" "Al final de esta Ronda"
+	}
+
+	"End of Map"
+	{
+		"es" "Al final del Mapa"
+	}
+
+	"Select A Map"
+	{
+		"es" "Seleccione un Mapa"
+	}
+
+	"Select A Group"
+	{
+		"es" "Seleccione un Grupo"
+	}
+
+	"Auto Select"
+	{
+		"es" "Selecci√≥n Autom√°tica"
+	}
+
+	"Manual Select"
+	{
+		"es" "Selecci√≥n Manual"
+	}
+
+	"AM Change Map"
+	{
+		"es" "Cambiar Mapa"
+	}
+
+	"AM Set Next Map"
+	{
+		"es" "Seleccionar Pr√≥ximo Mapa"
+	}
 }

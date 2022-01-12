@@ -12,7 +12,7 @@ Ultimate Mapchooser allows for increased control over map selection. This includ
   * Which maps are added to votes
   * Which maps are available for nominations
 You can control how the randomization works by dividing your map rotation into groups, and controlling the weights of each group or each individual map, specify a minimum or maximum number of players allowed on the server for the map to be available, specify how many maps from a group are allowed in a vote, etc.
- 
+
 In order for this to work, I had to completely bypass RTV, Mapchooser, and Nominations, which means I rewrote each's functionality into this plugin. You can control each of these features via Ultimate Mapchooser's cvars.
 
 
