@@ -184,9 +184,9 @@
 		"nl" "Nee"
 	}
 
-	"Starting Map Vote"
+	"Map Vote Started"
 	{
-		"nl" "Map stemming gestart. Wanneer de stemming afgelopen is zal de map wisselen."
+		"nl" "Map stemming gestart."
 	}
 
 	"Default Warning"

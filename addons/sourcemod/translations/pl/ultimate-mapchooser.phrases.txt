@@ -181,9 +181,9 @@
 		"pl" "Nie"
 	}
 
-	"Starting Map Vote"
+	"Map Vote Started"
 	{
-		"pl" "Zaczynamy głosowanie. Mapa zmieni się po jego zakończeniu."
+		"pl" "Zaczynamy głosowanie."
 	}
 
 	"Default Warning"

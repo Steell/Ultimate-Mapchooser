@@ -185,9 +185,9 @@
 		"chi" "否"
 	}
 
-	"Starting Map Vote"
+	"Map Vote Started"
 	{
-		"chi" "开始地图投票。 投票结束后，地图将更改."
+		"chi" "地图投票开始。"
 	}
 
 	"Default Warning"

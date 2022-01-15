@@ -184,9 +184,9 @@
 		"lt" "Ne"
 	}
 
-	"Starting Map Vote"
+	"Map Vote Started"
 	{
-		"lt" "Pradedamas MAP balsavimas. Zemelapis pasikeis, vos tik pasibaigs balsavimas."
+		"lt" "Pradedamas MAP balsavimas."
 	}
 
 	"Default Warning"

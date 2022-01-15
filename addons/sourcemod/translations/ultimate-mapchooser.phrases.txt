@@ -198,9 +198,9 @@
 		"en" "No"
 	}
 
-	"Starting Map Vote"
+	"Map Vote Started"
 	{
-		"en" "Starting map vote. Map will change once voting is over."
+		"en" "Map vote started."
 	}
 
 	"Default Warning"

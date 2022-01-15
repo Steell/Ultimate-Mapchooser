@@ -64,10 +64,6 @@ new current_frag;
 new current_round;
 new current_win;
 
-//TODO:
-//  -Possible bug where warnings are never updated (vote timer activates before OnConfigsExecuted
-//      finishes) Possible solution is to update the warnings when the timer ticks (use flags so its
-//      only done when necessary).
 public OnPluginStart()
 {
 	cvar_time = CreateConVar(
@@ -107,15 +103,6 @@ public OnPluginStart()
 
 public OnConfigsExecuted()
 {
-	//Clear warning arrays
-	ClearHandleArray(time_array);
-	ClearHandleArray(frag_array);
-	ClearHandleArray(round_array);
-	ClearHandleArray(win_array);
-}
-
-public OnMapStart()
-{
 	//Store cvar values
 	decl String:timefile[256], String:fragfile[256], String:roundfile[256], String:winfile[256];
 	GetConVarString(cvar_time, timefile, sizeof(timefile));
@@ -154,6 +141,15 @@ public OnMapStart()
 	frag_init = false;
 	round_init = false;
 	win_init = false;
+}
+
+public OnMapEnd()
+{
+	//Clear warning arrays
+	ClearHandleArray(time_array);
+	ClearHandleArray(frag_array);
+	ClearHandleArray(round_array);
+	ClearHandleArray(win_array);
 }
 
 //Comparison function for vote warnings. Used for sorting.
@@ -220,7 +216,7 @@ GetVoteWarnings(const String:fileName[], Handle:warningArray, &next)
 	new warningTime; //Time (in seconds) before vote when the warning is displayed.
 	decl String:nameBuffer[10]; //Buffer to hold the section name;
 	decl String:message[255];
-	decl String:notification[2];
+	decl String:notification[10];
 	decl String:sound[PLATFORM_MAX_PATH];
 	decl String:flags[64];
 
@@ -474,7 +470,7 @@ DisplayVoteWarning(Handle:warning, param=0)
 	//Get warning information.
 	new time;
 	decl String:message[255];
-	decl String:notification[2];
+	decl String:notification[10];
 	decl String:sound[PLATFORM_MAX_PATH];
 	GetTrieValue(warning, "time", time);
 	GetTrieString(warning, "message", message, sizeof(message));
@@ -518,7 +514,13 @@ DisplayVoteWarning(Handle:warning, param=0)
 	}
 
 	//Display the message
-	DisplayServerMessage(notification, (message[0] != '\0') ? message : "%t", "Default Warning", time);
+	if (message[0] != '\0')
+	{
+		DisplayServerMessage(notification, message);
+		return;
+	}
+
+	DisplayServerMessage(notification, "%t", (time > 0) ? "Default Warning" : "Map Vote Started", time);
 }
 
 //************************************************************************************************//

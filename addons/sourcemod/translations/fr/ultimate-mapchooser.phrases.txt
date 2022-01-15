@@ -182,9 +182,9 @@
 		"fr" "Non"
 	}
 
-	"Starting Map Vote"
+	"Map Vote Started"
 	{
-		"fr" "Vote de la map démarré. La map changera une fois le vote fini."
+		"fr" "Vote de la map démarré."
 	}
 
 	"Default Warning"

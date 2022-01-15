@@ -184,9 +184,9 @@
 		"ko" "아니오"
 	}
 
-	"Starting Map Vote"
+	"Map Vote Started"
 	{
-		"ko" "맵 투표가 시작되었습니다. 투표가 끝날 때 맵이 바뀝니다."
+		"ko" "맵 투표가 시작되었습니다."
 	}
 
 	"Default Warning"

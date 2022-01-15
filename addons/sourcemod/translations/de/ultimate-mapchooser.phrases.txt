@@ -194,9 +194,9 @@
 		"de" "Nein"
 	}
 
-	"Starting Map Vote"
+	"Map Vote Started"
 	{
-		"de" "Kartenabstimmung gestartet. Karte ändert sich, sobald die Abstimmung vorbei ist."
+		"de" "Kartenabstimmung gestartet."
 	}
 
 	"Default Warning"
