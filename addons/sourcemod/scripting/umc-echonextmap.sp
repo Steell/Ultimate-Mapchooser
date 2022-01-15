@@ -50,7 +50,7 @@ public OnPluginStart()
 
 	cvar_center = CreateConVar(
 		"sm_umc_echonextmap_center",
-		"1",
+		"0",
 		"If enabled, a message will be displayed in the center of the screen when the next map is set.",
 		0, true, 0.0, true, 1.0
 	);

@@ -128,14 +128,14 @@ public OnPluginStart()
 
 	cvar_fail_action = CreateConVar(
 		"sm_umc_rtv_failaction",
-		"0",
+		"1",
 		"Specifies what action to take if the vote doesn't reach the set threshold.\n 0 - Do Nothing,\n 1 - Perform Runoff Vote",
 		0, true, 0.0, true, 1.0
 	);
 
 	cvar_runoff_fail_action = CreateConVar(
 		"sm_umc_rtv_runoff_failaction",
-		"0",
+		"1",
 		"Specifies what action to take if the runoff vote reaches the maximum amount of runoffs and the set threshold has not been reached.\n 0 - Do Nothing,\n 1 - Change Map to Winner",
 		0, true, 0.0, true, 1.0
 	);
@@ -149,7 +149,7 @@ public OnPluginStart()
 
 	cvar_vote_allowduplicates = CreateConVar(
 		"sm_umc_rtv_allowduplicates",
-		"1",
+		"0",
 		"Allows a map to appear in the vote more than once. This should be enabled if you want the same map in different categories to be distinct.",
 		0, true, 0.0, true, 1.0
 	);
@@ -202,7 +202,7 @@ public OnPluginStart()
 
 	cvar_rtv_interval = CreateConVar(
 		"sm_umc_rtv_interval",
-		"240",
+		"10",
 		"Time (in seconds) after a failed RTV before another can be held.",
 		0, true, 0.0
 	);
@@ -216,7 +216,7 @@ public OnPluginStart()
 
 	cvar_rtv_postaction = CreateConVar(
 		"sm_umc_rtv_postvoteaction",
-		"0",
+		"1",
 		"What to do with RTVs after another UMC vote has completed.\n 0 - Allow, success = instant change,\n 1 - Deny,\n 2 - Hold a normal RTV vote",
 		0, true, 0.0, true, 2.0
 	);
@@ -230,7 +230,7 @@ public OnPluginStart()
 
 	cvar_rtv_delay = CreateConVar(
 		"sm_umc_rtv_initialdelay",
-		"30",
+		"10",
 		"Time (in seconds) before first RTV can be held.",
 		0, true, 0.0
 	);
@@ -244,7 +244,7 @@ public OnPluginStart()
 
 	cvar_rtv_needed = CreateConVar(
 		"sm_umc_rtv_percent",
-		"0.65",
+		"0.60",
 		"Percentage of players required to trigger an RTV vote.",
 		0, true, 0.0, true, 1.0
 	);

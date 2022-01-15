@@ -153,7 +153,7 @@ public OnPluginStart()
 
 	cvar_defaultsflags = CreateConVar(
 		"sm_umc_am_adminflags_default",
-		"",
+		"z",
 		"Flags required for admins to be able to manually select settings for the vote. If the admin does not have the proper priveleges, the vote will automatically use the cvars in this file. If empty, all admins have access."
 	);
 
@@ -186,7 +186,7 @@ public OnPluginStart()
 
 	cvar_vote_allowduplicates = CreateConVar(
 		"sm_umc_am_allowduplicates",
-		"1",
+		"0",
 		"Allows a map to appear in the vote more than once. This should be enabled if you want the same map in different categories to be distinct.",
 		0, true, 0.0, true, 1.0
 	);

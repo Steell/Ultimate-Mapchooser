@@ -202,7 +202,7 @@ public OnPluginStart()
 
 	cvar_vote_allowduplicates = CreateConVar(
 		"sm_umc_endvote_allowduplicates",
-		"1",
+		"0",
 		"Allows a map to appear in the vote more than once. This should be enabled if you want the same map in different categories to be distinct.",
 		0, true, 0.0, true, 1.0
 	);

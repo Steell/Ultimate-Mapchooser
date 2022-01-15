@@ -222,7 +222,7 @@ public OnPluginStart()
 
 	cvar_mapnom_display = CreateConVar(
 		"sm_umc_mapnom_display",
-		"0",
+		"1",
 		"Determines where in votes the nominated maps will be displayed.\n 0 - Bottom,\n 1 - Top",
 		0, true, 0.0, true, 1.0
 	);
