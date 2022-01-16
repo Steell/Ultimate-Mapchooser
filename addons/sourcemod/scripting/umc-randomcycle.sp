@@ -181,11 +181,11 @@ public OnConfigsExecuted()
 		RemovePreviousMapsFromCycle();
 	}
 
-	if (!GetConVarBool(cvar_start))
-	{
-		LogUMCMessage("Selecting random next map due to map starting.");
-		DoRandomNextMap();
-	}
+	// To achieve a high chance that 'nextmap' command outputs match the map from end random selection,
+	// select a provisional next map already, but configure the call so that if there will be a random
+	// selection at map end, the initial next map is set natively (not via UMC) to skip notifying modules
+	LogUMCMessage("Selecting random next map due to map starting.");
+	DoRandomNextMap(GetConVarBool(cvar_start));
 }
 
 //Called when intermission window is active. Necessary for mods without "game_end" event.
@@ -239,6 +239,16 @@ public Event_GameEnd(Handle:evnt, const String:name[], bool:dontBroadcast)
 	//we haven't completed an end-of-map vote AND we haven't completed an RTV.
 	if (GetConVarBool(cvar_start) && GetConVarBool(cvar_randnext) && setting_map)
 	{
+		decl String:map[MAP_LENGTH];
+		GetNextMap(map, sizeof(map));
+
+		if (UMC_IsMapValid(map_kv, map, next_rand_cat, false, true))
+		{
+			// Confirm to UMC core the next map that was set natively at OnConfigsExecuted
+			UMC_SetNextMap(map_kv, map, next_rand_cat, ChangeMapTime_MapEnd);
+			return;
+		}
+
 		LogUMCMessage("Selecting random next map due to map ending.");
 		DoRandomNextMap();
 	}
@@ -358,14 +368,20 @@ public Action:Command_Random(client, args)
 //************************************************************************************************//
 
 //Sets a random next map. Returns true on success.
-DoRandomNextMap() 
+DoRandomNextMap(bool:nativelyOnly = false) 
 {
-	decl String:nextMap[MAP_LENGTH], String:nextGroup[MAP_LENGTH];
+	decl String:nextMap[MAP_LENGTH];
 
-	if (UMC_GetRandomMap(map_kv, umc_mapcycle, next_rand_cat, nextMap,
-		sizeof(nextMap), nextGroup, sizeof(nextGroup), false, true))
+	if (UMC_GetRandomMap(map_kv, umc_mapcycle, next_rand_cat, nextMap, sizeof(nextMap),
+		next_rand_cat, sizeof(next_rand_cat), false, true))
 	{
-		UMC_SetNextMap(map_kv, nextMap, nextGroup, ChangeMapTime_MapEnd);
+		if (nativelyOnly)
+		{
+			SetNextMap(nextMap);
+			return;
+		}
+
+		UMC_SetNextMap(map_kv, nextMap, next_rand_cat, ChangeMapTime_MapEnd);
 	}
 	else
 	{

@@ -976,7 +976,7 @@ public Native_CheckVoteDone(Handle:plugin, numParams)
 // native EndOfMapVoteEnabled();
 public Native_EndOfMapVoteEnabled(Handle:plugin, numParams)
 {
-	return vote_enabled;
+	return GetConVarBool(cvar_endvote);
 }
 
 //************************************************************************************************//
@@ -1321,7 +1321,6 @@ public StartMapVote()
 	}
 
 	vote_enabled = false;
-	vote_completed = true;
 	new String:flags[64];
 	GetConVarString(cvar_flags, flags, sizeof(flags));
 
@@ -1359,8 +1358,9 @@ public StartMapVote()
 
 	vote_failed = !result;
 
-	if (!result)
+	if (vote_failed)
 	{
+		vote_completed = true;
 		LogUMCMessage("Could not start UMC vote.");
 	}
 }
@@ -1385,8 +1385,19 @@ public UMC_OnNextmapSet(Handle:kv, const String:map[], const String:group[], con
 {
 	DestroyTimers();
 	vote_enabled = false;
+	vote_completed = true;
 	vote_roundend = false;
 	vote_failed = false;
+}
+
+public UMC_OnVoteFailed()
+{
+	// Restrict to the case where the end of map vote isn't pending,
+	// to keep ensuring correct "Vote pending" 'nextmap' outputs
+	if (!vote_enabled)
+	{
+		vote_completed = true;
+	}
 }
 
 //Called when UMC requests that the mapcycle should be reloaded.
