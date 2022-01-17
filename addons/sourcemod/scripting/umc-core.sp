@@ -1925,6 +1925,7 @@ Handle:BuildVoteItems(Handle:vM, Handle:kv, Handle:mapcycle, &UMC_VoteType:type,
 	if ((type == VoteType_Group || type == VoteType_Tier) && error == BuildOptionsError_NotEnoughOptions)
 	{
 		type = VoteType_Map;
+		SetTrieValue(vM, "stored_type", type); // Fix map vote result handler
 		error = BuildMapVoteItems(vM, result, kv, mapcycle, scramble, extend,
 			dontChange, allowDupes, strictNoms, .exclude=exclude);
 	}
