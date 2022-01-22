@@ -1304,19 +1304,23 @@ public Native_UMCIsMapValid(Handle:plugin, numParams)
 
 	new bool:isNom = bool:GetNativeCell(4);
 	new bool:forMapChange = bool:GetNativeCell(5);
+	new result;
 
 	if (!KvJumpToKey(kv, group))
 	{
 		LogError("NATIVE: No group '%s' in mapcycle.", group);
-		return _:false;
 	}
-	if (!KvJumpToKey(kv, map))
+	else if (!KvJumpToKey(kv, map))
 	{
 		LogError("NATIVE: No map %s found in group '%s'", map, group);
-		return _:false;
+	}
+	else
+	{
+		result = IsValidMap(kv, arg, group, isNom, forMapChange);
 	}
 
-	return _:IsValidMap(kv, arg, group, isNom, forMapChange);
+	CloseHandle(kv);
+	return result;
 }
 
 public Native_UMCGetCurrentGroup(Handle:plugin, numParams)
@@ -3655,8 +3659,8 @@ public Handle_TierVoteWinner(Handle:vM, const String:cat[], const String:disp[],
 		CloseHandle(kv);
 
 		//Setup timer to delay the next vote for a few seconds.
-		new Handle:pack = CreateDataPack();
-		CreateDataTimer(1.0, Handle_TieredVoteTimer, pack, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
+		new Handle:pack;
+		CreateDataTimer(1.0, Handle_TieredVoteTimer, pack, TIMER_REPEAT);
 		WritePackCell(pack, _:vM);
 		WritePackCell(pack, _:tieredKV);
 	}
@@ -3675,13 +3679,14 @@ public Handle_TierVoteWinner(Handle:vM, const String:cat[], const String:disp[],
 public Action:Handle_TieredVoteTimer(Handle:timer, Handle:pack)
 {
 	ResetPack(pack);
-	new Handle:vM = Handle:ReadPackCell(pack);
+	new Handle:vM = Handle:ReadPackCell(pack), Handle:tieredKV = Handle:ReadPackCell(pack);
 
 	new bool:vote_inprogress;
 	GetTrieValue(vM, "in_progress", vote_inprogress);
 
 	if (!vote_inprogress)
 	{
+		CloseHandle(tieredKV);
 		VoteFailed(vM);
 		DeleteVoteParams(vM);
 		return Plugin_Stop;
@@ -3707,8 +3712,6 @@ public Action:Handle_TieredVoteTimer(Handle:timer, Handle:pack)
 	{
 		return Plugin_Continue;
 	}
-
-	new Handle:tieredKV = Handle:ReadPackCell(pack);
 
 	//Log a message
 	LogUMCMessage("MAPVOTE (Tiered): Starting second stage of tiered vote.");
@@ -3763,6 +3766,7 @@ public Action:Handle_TieredVoteTimer(Handle:timer, Handle:pack)
 		DeleteVoteParams(vM);
 	}
 
+	CloseHandle(tieredKV);
 	return Plugin_Stop;
 }
 
@@ -4239,6 +4243,7 @@ Handle:FilterNominationsArray(Handle:nominations, bool:forMapChange=true)
 
 		if (!KvJumpToKey(kv, gBuffer))
 		{
+			CloseHandle(kv);
 			continue;
 		}
 
@@ -4258,6 +4263,7 @@ bool:InternalNominateMap(Handle:kv, const String:map[], const String:group[], cl
 {
 	if (FindNominationIndex(map, group) != -1)
 	{
+		CloseHandle(kv);
 		return false;
 	}
 

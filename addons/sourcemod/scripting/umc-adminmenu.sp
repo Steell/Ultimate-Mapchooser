@@ -2409,6 +2409,7 @@ stock Handle:FetchMapsFromGroup(Handle:kv, const String:group[])
 
 	KvGoBack(kv);
 	KvGoBack(kv);
+	CloseHandle(mapcycle);
 
 	return result;
 }

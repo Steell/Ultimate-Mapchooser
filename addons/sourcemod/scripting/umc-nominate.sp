@@ -694,10 +694,8 @@ public Handle_NominationMenu(Handle:menu, MenuAction:action, client, param2)
 			LogUMCMessage("%s has nominated '%s' from group '%s'", clientName, map, group);
 
 			//Close handles for stored data for the client's menu.
-			CloseHandle(nom_menu_groups[client]);
-			CloseHandle(nom_menu_nomgroups[client]);
-			nom_menu_groups[client] = INVALID_HANDLE;
-			nom_menu_nomgroups[client] = INVALID_HANDLE;
+			CloseHandleEx(nom_menu_groups[client]);
+			CloseHandleEx(nom_menu_nomgroups[client]);
 		}
 		case MenuAction_End: //The client has closed the menu.
 		{
@@ -724,6 +722,10 @@ public Handle_NominationMenu(Handle:menu, MenuAction:action, client, param2)
 					DisplayMenu(newmenu, client, GetConVarInt(cvar_nominate_time));
 				}
 			}
+
+			//Close handles for stored data for the client's menu.
+			CloseHandleEx(nom_menu_groups[client]);
+			CloseHandleEx(nom_menu_nomgroups[client]);
 		}
 	}
 }
