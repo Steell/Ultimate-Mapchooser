@@ -243,9 +243,10 @@ public OnPluginStart()
 
 	cvar_vote_tieramount = CreateConVar(
 		"sm_umc_vote_tieramount",
-		"6",
-		"Specifies the maximum number of maps to appear in the second part of a tiered vote.",
-		0, true, 2.0
+		"0",
+		"Specifies the maximum number of maps to appear in the second part of a tiered vote."
+		... " If 0, the map group's specific 'maps_invote' setting will be used.",
+		0, true, 0.0
 	);
 
 	cvar_runoff_display = CreateConVar(
@@ -2036,7 +2037,7 @@ UMC_BuildOptionsError:BuildMapVoteItems(Handle:voteManager, Handle:result, Handl
 		numNoms = GetArraySize(nominationsFromCat);
 
 		//Get the total amount of maps to appear in the vote from this category.
-		inVote = ignoreInvoteSetting ? tierAmount : KvGetNum(kv, "maps_invote", 1);
+		inVote = (ignoreInvoteSetting && tierAmount > 0) ? tierAmount : KvGetNum(kv, "maps_invote", 1);
 
 		if (verboseLogs)
 		{
