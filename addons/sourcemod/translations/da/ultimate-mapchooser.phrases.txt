@@ -1,0 +1,211 @@
+//Phrases for Ultimate Mapchooser by Steell
+
+"Phrases"
+{
+	"Slot Block Message 1"
+	{
+		"da" "Overvej hvilket map du vil spille"
+	}
+
+	"Slot Block Message 2"
+	{
+		"da" "og tryk ikke på knapperne tankeløst."
+	}
+
+	"Map Vote Menu Title"
+	{
+		"da" "Stem på det næste map!"
+	}
+
+	"Group Vote Menu Title"
+	{
+		"da" "Stem på den næste gruppe af maps!"
+	}
+
+	"Extend Map"
+	{
+		"da" "Forlæng Map"
+	}
+
+	"Don't Change"
+	{
+		"da" "Skift ikke"
+	}
+
+	"End of Map Vote Over"
+	{
+		"da" "Map afstemning er afsluttet."
+	}
+
+	"Map Extended"
+	{
+		"da" "Det nuværende map vil blive forlænget."
+	}
+
+	"End of Map Vote Map Won"
+	{
+		"da" "Det næste map vil være {1}."
+	}
+
+	"Vote Win Percentage"
+	{
+		//There are supposed to be two percent signs here.
+		//If there is only one, no percent sign will be displayed.
+		"da" "Modtog {1}%% {2} stemmerne"
+	}
+
+	"Map Unchanged"
+	{
+		"da" "Mappet vil ikke blive skiftet."
+	}
+
+	"Map Change in 5"
+	{
+		"da" "Mappet skifter om 5 sekunder."
+	}
+
+	"Map Change at Round End"
+	{
+		"da" "Mappet vil skifte efter denne runde."
+	}
+
+	"End of Map Vote Group Won"
+	{
+		"da" "Det næste map vil være '{1},' valgt fra map gruppen '{2}.'"
+	}
+
+	"Runoff Msg"
+	{
+		"da" "Votering fejlede! Der blev ikke enighed om afstemningen."
+	}
+
+	"Another Vote"
+	{
+		"da" "En nye afstemning er på vej om {1} sekunder."
+	}
+
+	"Player Disconnect RTV"
+	{
+		"da" "Spiller disconnect udløste Rock the Vote."
+	}
+
+	"Not Enough Players"
+	{
+		"da" "Der er ikke nok spillere på serveren for at kunne spille det nuværende map. ({1} påkrævet)"
+	}
+
+	"Too Many Players"
+	{
+		"da" "Der er for mange spillere på serveren for at kunne spille dette map. ({1} maksimalt)"
+	}
+
+	"No RTV Player Count"
+	{
+		"da" "Kan ikke benytte Rock the Vote indtil {1} spiller(e) tilslutter sig serveren."
+	}
+
+	"No RTV Nextmap"
+	{
+		"da" "Kan ikke Rock the Vote indtil næste map."
+	}
+
+	"No RTV Time"
+	{
+		"da" "Kan ikke Rock the Vote i yderligere {1} sekunder."
+	}
+
+	"More Required"
+	{
+		"da" "{1} påkrævet"
+	}
+
+	"RTV Entered"
+	{
+		"da" "{1} Vil gerne Rock the Vote."
+	}
+
+	"RTV Info Msg"
+	{
+		"da" "Skriv 'rtv' for at tilslutte, eller skriv 'nominate' for at nominere et map."
+	}
+
+	"Vote In Progress"
+	{
+		"da" "Afstemning er allerede igang."
+	}
+
+	"RTV Already Entered"
+	{
+		"da" "Du har allerede stemt i Rock the Vote."
+	}
+
+	"No Nominate Nextmap"
+	{
+		"da" "Kan ikke nominere før næste map."
+	}
+
+	"Pending Vote"
+	{
+		"da" "Afventende Afstemning"
+	}
+
+	"Next Map"
+	{
+		"da" "Næste map: {1}"
+	}
+
+	"Player Nomination"
+	{
+		"da" "{1} har nomnineret {2}."
+	}
+
+	"Nomination Menu Title"
+	{
+		"da" "Nominer et map."
+	}
+
+	"Yes/No Menu Title"
+	{
+		"da" "Skift map til {1}?"
+	}
+
+	"Yes"
+	{
+		"da" "Ja"
+	}
+
+	"No"
+	{
+		"da" "Nej"
+	}
+
+	"Map Vote Started"
+	{
+		"da" "Start map afstemning."
+	}
+
+	"Default Warning"
+	{
+		"da" "{1} sekunder før afstemning."
+	}
+
+	"Vote Failed"
+	{
+		"da" "Map afstemning er fejlet. Den valgte mulighed fik ikke høje nok procenter i afstemningen."
+	}
+
+	"Selective Runoff"
+	{
+		"da" "Præsenterer afstemnings menu til spillere der ikke stemte eller hvis stemmer blev nedstemt."
+	}
+
+	"No RTV Admin"
+	{
+		"da" "Du har ikke rettigheder til at deltage i Rock the Vote."
+	}
+
+	"No Nominate Admin"
+	{
+		"da" "Du har ikke rettigheder til at nominere et map."
+	}
+}

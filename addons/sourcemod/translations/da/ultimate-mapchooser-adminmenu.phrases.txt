@@ -1,0 +1,230 @@
+//Translation Phrases for the UMC Admin Menu module.
+
+"Phrases"
+{
+	"AM Stop Vote"
+	{
+		"da" "Stop nuværende UMC votering"
+	}
+
+	"AM Start Vote"
+	{
+		"da" "Start votering om map"
+	}
+
+	"AM Vote Type"
+	{
+		"da" "Vælg voteringstype"
+	}
+
+	"Maps"
+	{
+		"da" "Maps"
+	}
+
+	"Groups"
+	{
+		"da" "Grupper"
+	}
+
+	"Tiered"
+	{
+		"da" "Tiered"
+	}
+
+	"AM Populate Vote"
+	{
+		"da" "Tilføj maps til at votering"
+	}
+
+	"AM Vote Settings"
+	{
+		"da" "Voterings indstillinger"
+	}
+
+	"AM-VS Defaults"
+	{
+		"da" "Benyt standardindstillinger"
+	}
+
+	"Manually Choose"
+	{
+		"da" "Vælg manuelt"
+	}
+
+	"AM Scramble Menu"
+	{
+		"da" "Bland voterings menu?"
+	}
+
+	"Default Yes"
+	{
+		"da" "Ja (standard)"
+	}
+
+	"Default No"
+	{
+		"da" "Nej (standard)"
+	}
+
+	"AM Threshold Menu"
+	{
+		"da" "Sæt voterings grænseværdi"
+	}
+
+	"AM Threshold Menu Message 1"
+	{
+		"da" "Skriv i chatten hvad grænseværdien skal være"
+	}
+
+	"AM Threshold Menu Message 2"
+	{
+		"da" "ønsker at sætte votering imellem [0 til 100]."
+	}
+
+	"Default"
+	{
+		"da" "standard"
+	}
+
+	"Previously Entered"
+	{
+		"da" "tidligere indtastet"
+	}
+
+	"AM Fail Action Menu"
+	{
+		"da" "Indstil fejlhandling"
+	}
+
+	"Do Nothing"
+	{
+		"da" "Gør intet"
+	}
+
+	"Perform Runoff Vote"
+	{
+		"da" "Udfør genvalgsafstemning"
+	}
+
+	"Default Do Nothing"
+	{
+		"da" "Gør intet (standard)"
+	}
+
+	"Default Perform Runoff Vote"
+	{
+		"da" "Udfør genvalgsafstemning (standard)"
+	}
+
+	"AM Max Runoff Menu"
+	{
+		"da" "Indstil maksimal mængde af genvalgsafstemninger"
+	}
+
+	"AM Max Runoff Menu Message 1"
+	{
+		"da" "Skriv i chatten hvad det maksimale antal skal være"
+	}
+
+	"AM Max Runoff Menu Message 2"
+	{
+		"da" "indstil antal genvalg til (>= 0)."
+	}
+
+	"AM Max Runoff Menu Message 3"
+	{
+		//Note to translators: keep the leading space in this phrase.
+		"da" " 0 = uendeligt"
+	}
+
+	"AM Runoff Fail Action Menu"
+	{
+		"da" "Indstil genvalgsafstemning fejlede"
+	}
+
+	"Accept Winner"
+	{
+		"da" "Accepter vinder"
+	}
+
+	"Default Accept Winner"
+	{
+		"da" "Accepter vinder (standard)"
+	}
+
+	"AM Extend Menu"
+	{
+		"da" "Tilføj forlæng map valgmulighed?"
+	}
+
+	"AM Don't Change Menu"
+	{
+		"da" "Tilføj skift ikke valgmulighed?"
+	}
+
+	"AM Admin Flag Menu"
+	{
+		"da" "Gør votering tilgængelig for..."
+	}
+
+	"Everyone"
+	{
+		"da" "Alle"
+	}
+
+	"Admins Only"
+	{
+		"da" "Kun Admins"
+	}
+
+	"AM Change When Menu"
+	{
+		"da" "Skifte map hvornår?"
+	}
+
+	"Now"
+	{
+		"da" "Nu"
+	}
+
+	"End of Round"
+	{
+		"da" "Slutninge af denne runde"
+	}
+
+	"End of Map"
+	{
+		"da" "Slutningen af mappet"
+	}
+
+	"Select A Map"
+	{
+		"da" "Vælg map"
+	}
+
+	"Select A Group"
+	{
+		"da" "Vælg en gruppe"
+	}
+
+	"Auto Select"
+	{
+		"da" "Vælg automatisk"
+	}
+
+	"Manual Select"
+	{
+		"da" "Vælg manuelt"
+	}
+
+	"AM Change Map"
+	{
+		"da" "Skift Map"
+	}
+
+	"AM Set Next Map"
+	{
+		"da" "Indstil næste map"
+	}
+}
