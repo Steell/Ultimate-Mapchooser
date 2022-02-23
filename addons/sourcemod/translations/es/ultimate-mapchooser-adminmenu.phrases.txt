@@ -4,17 +4,17 @@
 {
 	"AM Stop Vote"
 	{
-		"es" "Parar el Voto UMC Actual."
+		"es" "Anular Votación Actual"
 	}
 
 	"AM Start Vote"
 	{
-		"es" "Comenzar un Voto de Mapa."
+		"es" "Crear Votación Mapa"
 	}
 
 	"AM Vote Type"
 	{
-		"es" "Seleccionar Tipo de Voto"
+		"es" "Seleccionar Tipo de Votación"
 	}
 
 	"Maps"
@@ -29,37 +29,42 @@
 
 	"Tiered"
 	{
-		"es" "Grados"
+		"es" "Nivelada"
 	}
 
 	"AM Populate Vote"
 	{
-		"es" "Agregar Mapas para el Voto"
+		"es" "Añadir Mapas a la Votación"
+	}
+
+	"Stop Adding Maps"
+	{
+		"es" "Dejar de Añadir Mapas"
 	}
 
 	"AM Vote Settings"
 	{
-		"es" "Opciones de Votos"
+		"es" "Ajustes de Votación"
 	}
 
 	"AM-VS Defaults"
 	{
-		"es" "Usar Opciones por Defecto"
+		"es" "Usar por Defecto"
 	}
 
 	"Manually Choose"
 	{
-		"es" "Selección Manual"
+		"es" "Elegir Manualmente"
 	}
 
 	"AM Scramble Menu"
 	{
-		"es" "Mezclar el Menú de Voto?"
+		"es" "¿Mezclar el Menú de Voto?"
 	}
 
 	"Default Yes"
 	{
-		"es" "Si (por defecto)"
+		"es" "Sí (por defecto)"
 	}
 
 	"Default No"
@@ -69,17 +74,17 @@
 
 	"AM Threshold Menu"
 	{
-		"es" "Establecer Parámetros de Voto"
+		"es" "Establecer Umbral de Votación"
 	}
 
 	"AM Threshold Menu Message 1"
 	{
-		"es" "Escribe en chat los parámetros de"
+		"es" "Escribe en el chat el umbral que te"
 	}
 
 	"AM Threshold Menu Message 2"
 	{
-		"es" "votos que deseas establecer de [0 a 100]."
+		"es" "gustaría establecer para la votación [0 a 100]."
 	}
 
 	"Default"
@@ -87,49 +92,49 @@
 		"es" "Por Defecto"
 	}
 
-	"Previously entered"
+	"Previously Entered"
 	{
-		"es" "previamente introducidos"
+		"es" "anterior elegido"
 	}
 
 	"AM Fail Action Menu"
 	{
-		"es" "Parámetros de fallo"
+		"es" "Establecer Acción de Fallo"
 	}
 
 	"Do Nothing"
 	{
-		"es" "Hacer nada"
+		"es" "No Hacer Nada"
 	}
 
 	"Perform Runoff Vote"
 	{
-		"es" "Realizar la segunda ronda votación"
+		"es" "Votación 2ª Ronda"
 	}
 
 	"Default Do Nothing"
 	{
-		"es" "Hacer nada (por defecto)"
+		"es" "Ninguna (por defecto)"
 	}
 
 	"Default Perform Runoff Vote"
 	{
-		"es" "Realizar la segunda ronda votación (por defecto)"
+		"es" "2ª Ronda (por defecto)"
 	}
 
 	"AM Max Runoff Menu"
 	{
-		"es" "Parámetros para el numero máximo de segunda ronda de votación"
+		"es" "Establecer Número Máximo\nde Rondas de Desempate"
 	}
 
 	"AM Max Runoff Menu Message 1"
 	{
-		"es" "Escribe en chat el máximo que deseas para"
+		"es" "Escribe en el chat el máximo que deseas"
 	}
 
 	"AM Max Runoff Menu Message 2"
 	{
-		"es" "asignar la segunda ronda de votos (>= 0)."
+		"es" "asignar a las rondas de votación de desempate (>= 0)."
 	}
 
 	"AM Max Runoff Menu Message 3"
@@ -140,7 +145,7 @@
 
 	"AM Runoff Fail Action Menu"
 	{
-		"es" "Parámetros de falla para los votos de segunda ronda"
+		"es" "Establecer Acción de Fallo para\nla Votación de Segunda Ronda"
 	}
 
 	"Accept Winner"
@@ -150,22 +155,22 @@
 
 	"Default Accept Winner"
 	{
-		"es" "Aceptar Ganador (por defecto)"
+		"es" "Aceptar Ganador (def.)"
 	}
 
 	"AM Extend Menu"
 	{
-		"es" "Agregar Opción para Extender el Mapa?"
+		"es" "¿Añadir Opción de Extender Mapa?"
 	}
 
 	"AM Don't Change Menu"
 	{
-		"es" "Agregar Opción de No Cambiar Mapa?"
+		"es" "¿Añadir Opción de No Cambiar Mapa?"
 	}
 
 	"AM Admin Flag Menu"
 	{
-		"es" "Hacer que votos sean disponible para..."
+		"es" "Hacer la votación disponible para..."
 	}
 
 	"Everyone"
@@ -175,17 +180,17 @@
 
 	"Admins Only"
 	{
-		"es" "Solo Admins"
+		"es" "Solo Administradores"
 	}
 
 	"AM Change When Menu"
 	{
-		"es" "Cambiar Mapa Cuando?"
+		"es" "¿Cuándo Cambiar Mapa?"
 	}
 
 	"Now"
 	{
-		"es" "Ahora"
+		"es" "Al instante"
 	}
 
 	"End of Round"
@@ -225,6 +230,6 @@
 
 	"AM Set Next Map"
 	{
-		"es" "Seleccionar Próximo Mapa"
+		"es" "Fijar Próximo Mapa"
 	}
 }

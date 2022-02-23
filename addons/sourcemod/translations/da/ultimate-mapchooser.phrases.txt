@@ -61,7 +61,7 @@
 
 	"Map Change in 5"
 	{
-		"da" "Mappet skifter om 5 sekunder."
+		"da" "Mappet skifter om 5 sekunder..."
 	}
 
 	"Map Change at Round End"
@@ -71,7 +71,7 @@
 
 	"End of Map Vote Group Won"
 	{
-		"da" "Det næste map vil være '{1},' valgt fra map gruppen '{2}.'"
+		"da" "Det næste map vil være '{1}', valgt fra map gruppen '{2}'."
 	}
 
 	"Runoff Msg"
@@ -81,7 +81,7 @@
 
 	"Another Vote"
 	{
-		"da" "En nye afstemning er på vej om {1} sekunder."
+		"da" "En nye afstemning er på vej om {1} sekunder..."
 	}
 
 	"Player Disconnect RTV"
@@ -144,11 +144,6 @@
 		"da" "Kan ikke nominere før næste map."
 	}
 
-	"Pending Vote"
-	{
-		"da" "Afventende Afstemning"
-	}
-
 	"Next Map"
 	{
 		"da" "Næste map: {1}"
@@ -186,7 +181,7 @@
 
 	"Default Warning"
 	{
-		"da" "{1} sekunder før afstemning."
+		"da" "{1} sekunder før afstemning..."
 	}
 
 	"Vote Failed"
@@ -196,7 +191,7 @@
 
 	"Selective Runoff"
 	{
-		"da" "Præsenterer afstemnings menu til spillere der ikke stemte eller hvis stemmer blev nedstemt."
+		"da" "Præsenterer afstemnings menu til spillere der ikke stemte eller hvis stemmer blev nedstemt..."
 	}
 
 	"No RTV Admin"

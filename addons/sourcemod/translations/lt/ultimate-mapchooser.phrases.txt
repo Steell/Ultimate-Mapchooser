@@ -61,7 +61,7 @@
 
 	"Map Change in 5"
 	{
-		"lt" "MAP keiciasi po 5s."
+		"lt" "MAP keiciasi po 5s..."
 	}
 
 	"Map Change at Round End"
@@ -71,7 +71,7 @@
 
 	"End of Map Vote Group Won"
 	{
-		"lt" "Kitas MAP bus:'{1},' isrinktas is MAP grupes: '{2}.'"
+		"lt" "Kitas MAP bus:'{1}', isrinktas is MAP grupes: '{2}'."
 	}
 
 	"Runoff Msg"
@@ -81,7 +81,7 @@
 
 	"Another Vote"
 	{
-		"lt" "Pakartotinis balsavimas po {1} sekundziu."
+		"lt" "Pakartotinis balsavimas po {1} sekundziu..."
 	}
 
 	"Player Disconnect RTV"
@@ -149,11 +149,6 @@
 		"lt" "Negalima nominuoti, iki kito MAP."
 	}
 
-	"Pending Vote"
-	{
-		"lt" "Laukiamas balsavimas"
-	}
-
 	"Next Map"
 	{
 		"lt" "Kitas MAP: {1}"
@@ -191,7 +186,7 @@
 
 	"Default Warning"
 	{
-		"lt" "{1} sekundziu iki balsavimo."
+		"lt" "{1} sekundziu iki balsavimo..."
 	}
 
 	"Vote Failed"
@@ -201,6 +196,6 @@
 
 	"Selective Runoff"
 	{
-		"lt" "Balsavimas pradedamas nebalsavusiems zaidejams, arba tiems, kuriu balsai buvo neuzskaityti."
+		"lt" "Balsavimas pradedamas nebalsavusiems zaidejams, arba tiems, kuriu balsai buvo neuzskaityti..."
 	}
 }

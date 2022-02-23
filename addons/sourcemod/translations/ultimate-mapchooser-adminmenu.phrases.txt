@@ -37,6 +37,11 @@
 		"en" "Add Maps To Vote"
 	}
 
+	"Stop Adding Maps"
+	{
+		"en" "Stop Adding Maps"
+	}
+
 	"AM Vote Settings"
 	{
 		"en" "Vote Settings"
@@ -84,7 +89,7 @@
 
 	"Default"
 	{
-		"en" "default"
+		"en" "Default"
 	}
 
 	"Previously Entered"

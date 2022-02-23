@@ -780,7 +780,9 @@ DisplayGroupSelectMenu(client)
 
 	if (GetArraySize(voteArray) > 1)
 	{
-		InsertMenuItem(menu, 0, VOTE_POP_STOP_INFO, "Stop Adding Maps"); //TODO: Make Translation
+		decl String:display[256];
+		FormatEx(display, sizeof(display), "%T", "Stop Adding Maps", client);
+		InsertMenuItem(menu, 0, VOTE_POP_STOP_INFO, display);
 	}
 
 	DisplayMenu(menu, client, 0);

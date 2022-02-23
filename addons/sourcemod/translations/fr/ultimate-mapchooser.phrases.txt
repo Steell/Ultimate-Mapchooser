@@ -59,7 +59,7 @@
 
 	"Map Change in 5"
 	{
-		"fr" "La map change dans 5 secondes !"
+		"fr" "La map change dans 5 secondes..."
 	}
 
 	"Map Change at Round End"
@@ -79,7 +79,7 @@
 
 	"Another Vote"
 	{
-		"fr" "Un autre vote arrive dans {1} secondes."
+		"fr" "Un autre vote arrive dans {1} secondes..."
 	}
 
 	"Player Disconnect RTV"
@@ -147,11 +147,6 @@
 		"fr" "Impossible de nominer avant la prochaine map."
 	}
 
-	"Pending Vote"
-	{
-		"fr" "Vote en cours"
-	}
-
 	"Next Map"
 	{
 		"fr" "Prochaine map: {1}"
@@ -189,7 +184,7 @@
 
 	"Default Warning"
 	{
-		"fr" "{1} secondes avant le début du vote."
+		"fr" "{1} secondes pour voter..."
 	}
 
 	"Vote Failed"
@@ -199,7 +194,7 @@
 
 	"Selective Runoff"
 	{
-		"fr" "Afficher le vote aux joueurs qui n'ont pas voté ou ceux dont le vote n'a pas été retenu."
+		"fr" "Afficher le vote aux joueurs qui n'ont pas voté ou ceux dont le vote n'a pas été retenu..."
 	}
 
 	"No RTV Admin"

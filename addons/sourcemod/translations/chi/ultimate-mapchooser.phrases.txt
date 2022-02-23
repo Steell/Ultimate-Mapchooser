@@ -62,7 +62,7 @@
 
 	"Map Change in 5"
 	{
-		"chi" "地图将在5秒内更换"
+		"chi" "地图将在5秒内更换..."
 	}
 
 	"Map Change at Round End"
@@ -72,7 +72,7 @@
 
 	"End of Map Vote Group Won"
 	{
-		"chi" "下一张地图是 '{1},' 来自地图组： '{2}.'"
+		"chi" "下一张地图是 '{1}', 来自地图组： '{2}'."
 	}
 
 	"Runoff Msg"
@@ -82,7 +82,7 @@
 
 	"Another Vote"
 	{
-		"chi" "即将进行另一次投票在 {1} 秒后."
+		"chi" "即将进行另一次投票在 {1} 秒后..."
 	}
 
 	"Player Disconnect RTV"
@@ -150,11 +150,6 @@
 		"chi" "在下一张地图之前无法预定"
 	}
 
-	"Pending Vote"
-	{
-		"chi" "待投票"
-	}
-
 	"Next Map"
 	{
 		"chi" "下一张地图: {1}"
@@ -192,7 +187,7 @@
 
 	"Default Warning"
 	{
-		"chi" "{1} 秒直到投票"
+		"chi" "{1} 秒直到投票..."
 	}
 
 	"Vote Failed"
@@ -202,7 +197,7 @@
 
 	"Selective Runoff"
 	{
-		"chi" "地图投票失败。 获胜的选项没有获得足够高的选票百分比。"
+		"chi" "地图投票失败。 获胜的选项没有获得足够高的选票百分比。。。"
 	}
 
 	"No RTV Admin"

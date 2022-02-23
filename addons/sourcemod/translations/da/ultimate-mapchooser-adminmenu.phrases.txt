@@ -84,7 +84,7 @@
 
 	"Default"
 	{
-		"da" "standard"
+		"da" "Standard"
 	}
 
 	"Previously Entered"

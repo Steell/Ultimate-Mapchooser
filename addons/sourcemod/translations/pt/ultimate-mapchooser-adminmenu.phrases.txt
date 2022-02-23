@@ -84,7 +84,7 @@
 
 	"Default"
 	{
-		"pt" "padrão"
+		"pt" "Padrão"
 	}
 
 	"Previously Entered"

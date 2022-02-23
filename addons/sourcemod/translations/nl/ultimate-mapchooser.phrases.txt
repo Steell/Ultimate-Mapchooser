@@ -61,7 +61,7 @@
 
 	"Map Change in 5"
 	{
-		"nl" "Map wordt gewisseld in 5 seconden."
+		"nl" "Map wordt gewisseld in 5 seconden..."
 	}
 
 	"Map Change at Round End"
@@ -71,7 +71,7 @@
 
 	"End of Map Vote Group Won"
 	{
-		"nl" "De volgende map wordt '{1},' gekozen uit de groep '{2}.'"
+		"nl" "De volgende map wordt '{1}', gekozen uit de groep '{2}'."
 	}
 
 	"Runoff Msg"
@@ -81,7 +81,7 @@
 
 	"Another Vote"
 	{
-		"nl" "Een nieuwe stemming start over {1} seconden."
+		"nl" "Een nieuwe stemming start over {1} seconden..."
 	}
 
 	"Player Disconnect RTV"
@@ -149,11 +149,6 @@
 		"nl" "Nominate is niet meer mogelijk tot de volgende map."
 	}
 
-	"Pending Vote"
-	{
-		"nl" "Vote is bezig."
-	}
-
 	"Next Map"
 	{
 		"nl" "Volgende map: {1}"
@@ -191,7 +186,7 @@
 
 	"Default Warning"
 	{
-		"nl" "{1} seconden tot en met de volgende stemming."
+		"nl" "{1} seconden om te stemmen..."
 	}
 
 	"Vote Failed"
@@ -201,6 +196,6 @@
 
 	"Selective Runoff"
 	{
-		"nl" "Presenteer het stem menu opnieuw aan spelers die niet gestemd hebben of die niet geregistreerd waren."
+		"nl" "Presenteer het stem menu opnieuw aan spelers die niet gestemd hebben of die niet geregistreerd waren..."
 	}
 }

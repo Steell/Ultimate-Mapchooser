@@ -92,7 +92,7 @@
 
 	"Default"
 	{
-		"ru" "по умолчанию"
+		"ru" "По умолчанию"
 	}
 
 	"Previously Entered"

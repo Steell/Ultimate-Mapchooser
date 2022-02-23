@@ -54,17 +54,17 @@
 
 		//There are supposed to be two percent signs here.
 		//If there is only one, no percent sign will be displayed.
-		"en" "Received {1}%% of {2} votes"
+		"en" "Received {1}%% of {2} vote(s)"
 	}
 
 	"Map Unchanged"
 	{
-		"en" "The map will not be changed."
+		"en" "The current map will not be changed."
 	}
 
 	"Map Change in 5"
 	{
-		"en" "Map changing in 5 seconds."
+		"en" "Map changing in 5 seconds..."
 	}
 
 	"Map Change at Round End"
@@ -75,7 +75,7 @@
 	"End of Map Vote Group Won"
 	{
 		"#format"	"{1:s},{2:s}"
-		"en"		"The next map will be '{1},' chosen from map group '{2}.'"
+		"en"		"The next map will be '{1}', chosen from map group '{2}'."
 	}
 
 	"Runoff Msg"
@@ -86,7 +86,7 @@
 	"Another Vote"
 	{
 		"#format"	"{1:i}"
-		"en"		"Another vote is on the way in {1} seconds."
+		"en"		"Another vote is on the way in {1} second(s)..."
 	}
 
 	"Player Disconnect RTV"
@@ -109,7 +109,7 @@
 	"No RTV Player Count"
 	{
 		"#format"	"{1:i}"
-		"en"		"Cannot Rock the Vote until {1} more players are connected to the server."
+		"en"		"Cannot Rock the Vote until {1} more player(s) are connected to the server."
 	}
 
 	"No RTV Nextmap"
@@ -120,7 +120,7 @@
 	"No RTV Time"
 	{
 		"#format"	"{1:.f}"
-		"en"		"Cannot Rock the Vote for {1} more seconds."
+		"en"		"Cannot Rock the Vote for {1} more second(s)."
 	}
 
 	"More Required"
@@ -158,11 +158,6 @@
 	"No Nominate Nextmap"
 	{
 		"en" "Cannot nominate until the next map."
-	}
-
-	"Pending Vote"
-	{
-		"en" "Pending Vote"
 	}
 
 	"Next Map"
@@ -206,7 +201,7 @@
 	"Default Warning"
 	{
 		"#format"	"{1:i}"
-		"en"		"{1} seconds until vote."
+		"en"		"{1} second(s) until vote..."
 	}
 
 	"Vote Failed"
@@ -216,16 +211,16 @@
 
 	"Selective Runoff"
 	{
-		"en" "Presenting vote menu to players who did not vote or whose votes were eliminated."
+		"en" "Presenting vote menu to players who did not vote or whose votes were eliminated..."
 	}
 
 	"No RTV Admin"
 	{
-		"en" "You do not have the required priveleges to enter Rock the Vote."
+		"en" "You do not have the required privileges to enter Rock the Vote."
 	}
 
 	"No Nominate Admin"
 	{
-		"en" "You do not have the required priveleges to nominate a map."
+		"en" "You do not have the required privileges to nominate a map."
 	}
 }

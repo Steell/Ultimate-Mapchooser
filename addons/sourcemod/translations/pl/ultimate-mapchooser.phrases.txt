@@ -58,7 +58,7 @@
 
 	"Map Change in 5"
 	{
-		"pl" "Mapa zmieni się za 5 sekund."
+		"pl" "Mapa zmieni się za 5 sekund..."
 	}
 
 	"Map Change at Round End"
@@ -68,7 +68,7 @@
 
 	"End of Map Vote Group Won"
 	{
-		"pl" "Następną mapą będzie '{1},' wybrana z grupy '{2},'"
+		"pl" "Następną mapą będzie '{1}', wybrana z grupy '{2}'."
 	}
 
 	"Runoff Msg"
@@ -78,7 +78,7 @@
 
 	"Another Vote"
 	{
-		"pl" "Kolejne głosowanie zacznie się za {1} sekund."
+		"pl" "Kolejne głosowanie zacznie się za {1} sekund..."
 	}
 
 	"Player Disconnect RTV"
@@ -146,11 +146,6 @@
 		"pl" "Nie można nominować, dopóki mapa się nie zmieni."
 	}
 
-	"Pending Vote"
-	{
-		"pl" "Oczekiwanie na głosowanie"
-	}
-
 	"Next Map"
 	{
 		"pl" "Następna mapa: {1}"
@@ -188,7 +183,7 @@
 
 	"Default Warning"
 	{
-		"pl" "{1} sekund do rozpoczęcia głosowania."
+		"pl" "{1} sekundy na głosowanie..."
 	}
 
 	"Vote Failed"
@@ -198,6 +193,6 @@
 
 	"Selective Runoff"
 	{
-		"pl" "Pokazuje menu głosowania dla graczy, którzy nie głosowali lub których głosy zostały wyeliminowane."
+		"pl" "Pokazuje menu głosowania dla graczy, którzy nie głosowali lub których głosy zostały wyeliminowane..."
 	}
 }
