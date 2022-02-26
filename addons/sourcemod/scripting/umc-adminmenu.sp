@@ -632,6 +632,7 @@ Handle:CreateVoteMenuTrie(client)
 DisplayVoteTypeMenu(client)
 {
 	new Handle:menu = CreateMenu(HandleMV_VoteType, MenuAction_DisplayItem|MenuAction_Display);
+	SetMenuExitBackButton(menu, true);
 	SetMenuTitle(menu, "AM Vote Type");
 
 	AddMenuItem(menu, VTMENU_ITEM_INFO_MAP, "Maps");
@@ -689,19 +690,24 @@ public HandleMV_VoteType(Handle:menu, MenuAction:action, param1, param2)
 		case MenuAction_Cancel:
 		{
 			CloseClientVoteTrie(param1);
+
+			if (param2 == MenuCancel_ExitBack)
+			{
+				RedisplayAdminMenu(GetAdminTopMenu(), param1);
+			}
 		}
 		case MenuAction_End:
 		{
 			CloseHandle(menu);
 		}
 	}
+
 	return Handle_MenuTranslation(menu, action, param1, param2);
 }
 
 DisplayAutoManualMenu(client)
 {
 	new Handle:menu = CreateAutoManualMenu(HandleMV_AutoManual, "AM Populate Vote");
-	SetMenuExitBackButton(menu, true);
 	DisplayMenu(menu, client, 0);
 }
 
@@ -1888,12 +1894,17 @@ public HandleAM_ChangeMap(Handle:menu, MenuAction:action, param1, param2)
 		}
 		case MenuAction_Cancel:
 		{
+			if (param2 == MenuCancel_ExitBack)
+			{
+				RedisplayAdminMenu(GetAdminTopMenu(), param1);
+			}
 		}
 		case MenuAction_End:
 		{
 			CloseHandle(menu);
 		}
 	}
+
 	return Handle_MenuTranslation(menu, action, param1, param2);
 }
 
@@ -2186,11 +2197,19 @@ public HandleAM_NextMap(Handle:menu, MenuAction:action, param1, param2)
 				ManualNextMap(param1);
 			}
 		}
+		case MenuAction_Cancel:
+		{
+			if (param2 == MenuCancel_ExitBack)
+			{
+				RedisplayAdminMenu(GetAdminTopMenu(), param1);
+			}
+		}
 		case MenuAction_End:
 		{
 			CloseHandle(menu);
 		}
 	}
+
 	return Handle_MenuTranslation(menu, action, param1, param2);
 }
 
@@ -2639,6 +2658,7 @@ Handle:CreateMapMenu(MenuHandler:handler, const String:group[], bool:limits, cli
 Handle:CreateAutoManualMenu(MenuHandler:handler, const String:title[])
 {
 	new Handle:menu = CreateMenu(handler, MenuAction_DisplayItem|MenuAction_Display);
+	SetMenuExitBackButton(menu, true);
 	SetMenuTitle(menu, title);
 
 	AddMenuItem(menu, AMMENU_ITEM_INFO_AUTO, "Auto Select");
