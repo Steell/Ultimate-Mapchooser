@@ -46,6 +46,7 @@ public __pl_umccore_SetNTVOptional()
     MarkNativeAsOptional("UMC_VoteManagerClientVoted");
     MarkNativeAsOptional("UMC_FormatDisplayString");
     MarkNativeAsOptional("UMC_IsNewVoteAllowed");
+    MarkNativeAsOptional("UMC_ForceChangeMap");
 }
 
 #define INVALID_GROUP ""
@@ -359,6 +360,15 @@ forward UMC_OnNextmapSet(Handle:kv, const String:map[], const String:group[],
  */
 forward UMC_RequestReloadMapcycle();
 
+/**
+ * Called immediately after UMC ForceChangeMap Native was called
+ *
+ * @param time    The time before the map change
+ * 
+ * @noreturn
+ */
+forward UMC_OnForceMapChange(const Float:time);
+
 
 /**
  * Retrieves the name of the current map group.
@@ -519,3 +529,8 @@ native UMC_FormatDisplayString(String:display[], maxlen, Handle:mapcycle, const 
  * @return  True if we can start a new vote, false otherwise.
  */
 native bool:UMC_IsNewVoteAllowed(const String:id[]="core");
+
+/**
+ * Changes the map after the specified time period.
+ */
+native UMC_ForceChangeMap(const String:map[], Float:time, const String:reason[]="");
