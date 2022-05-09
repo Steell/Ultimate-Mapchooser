@@ -619,10 +619,6 @@ AttemptRTV(client)
 			PushArrayCell(rtv_clients, client);
 		}
 
-		//Get the name of the client.
-		decl String:name[MAX_NAME_LENGTH];
-		GetClientName(client, name, sizeof(name));
-
 		//Display an RTV message to a client for each client on the server.
 		for (new i = 1; i <= MaxClients; i++)
 		{
@@ -633,11 +629,11 @@ AttemptRTV(client)
 				{
 					//Remember that the client has now seen this message.
 					rtv_message[i] = true;
-					PrintToChat(i, "[UMC] %t %t (%t)", "RTV Entered", name, "RTV Info Msg", "More Required", rtv_threshold - size);
+					PrintToChat(i, "[UMC] %t %t (%t)", "RTV Entered", client, "RTV Info Msg", "More Required", rtv_threshold - size);
 				}
 				else //Otherwise, print the standard message.
 				{
-					PrintToChat(i, "[UMC] %t (%t)", "RTV Entered", name, "More Required", rtv_threshold - size);
+					PrintToChat(i, "[UMC] %t (%t)", "RTV Entered", client, "More Required", rtv_threshold - size);
 				}
 			}
 		}

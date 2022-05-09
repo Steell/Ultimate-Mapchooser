@@ -284,10 +284,8 @@ public Action:OnPlayerChat(client, const String:command[], argc)
 						UMC_NominateMap(map_kv, arg, groupName, client, nomGroup);
 
 						//Display a message.
-						decl String:clientName[MAX_NAME_LENGTH];
-						GetClientName(client, clientName, sizeof(clientName));
-						PrintToChatAll("[UMC] %t", "Player Nomination", clientName, arg);
-						LogUMCMessage("%s has nominated '%s' from group '%s'", clientName, arg, groupName);
+						PrintToChatAll("[UMC] %t", "Player Nomination", client, arg);
+						LogUMCMessage("%N has nominated '%s' from group '%s'", client, arg, groupName);
 					}
 				}
 			}
@@ -420,10 +418,8 @@ public Action:Command_Nominate(client, args)
 					UMC_NominateMap(map_kv, arg, groupName, client, nomGroup);
 
 					//Display a message.
-					decl String:clientName[MAX_NAME_LENGTH];
-					GetClientName(client, clientName, sizeof(clientName));
-					PrintToChatAll("[UMC] %t", "Player Nomination", clientName, arg);
-					LogUMCMessage("%s has nominated '%s' from group '%s'", clientName, arg, groupName);
+					PrintToChatAll("[UMC] %t", "Player Nomination", client, arg);
+					LogUMCMessage("%N has nominated '%s' from group '%s'", client, arg, groupName);
 				}
 			}
 
@@ -688,10 +684,8 @@ public Handle_NominationMenu(Handle:menu, MenuAction:action, client, param2)
 			UMC_NominateMap(map_kv, map, group, client, nomGroup);
 
 			//Display a message.
-			decl String:clientName[MAX_NAME_LENGTH];
-			GetClientName(client, clientName, sizeof(clientName));
-			PrintToChatAll("[UMC] %t", "Player Nomination", clientName, map);
-			LogUMCMessage("%s has nominated '%s' from group '%s'", clientName, map, group);
+			PrintToChatAll("[UMC] %t", "Player Nomination", client, map);
+			LogUMCMessage("%N has nominated '%s' from group '%s'", client, map, group);
 
 			//Close handles for stored data for the client's menu.
 			CloseHandleEx(nom_menu_groups[client]);

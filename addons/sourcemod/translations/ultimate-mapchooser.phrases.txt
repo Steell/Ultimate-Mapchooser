@@ -131,7 +131,7 @@
 
 	"RTV Entered"
 	{
-		"#format"	"{1:s}"
+		"#format"	"{1:N}"
 		"en"		"{1} wants to Rock the Vote."
 	}
 
@@ -168,7 +168,7 @@
 
 	"Player Nomination"
 	{
-		"#format"	"{1:s},{2:s}"
+		"#format"	"{1:N},{2:s}"
 		"en"		"{1} has nominated {2}."
 	}
 
