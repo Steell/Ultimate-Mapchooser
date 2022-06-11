@@ -3971,24 +3971,27 @@ bool:IsValidMap(Handle:kv, Handle:mapcycle, const String:groupName[], bool:isNom
 		return false;
 	}
 
-	new Action:result;
+	if (KvJumpToKey(mapcycle, groupName) && KvJumpToKey(mapcycle, mapName))
+	{
+		KvRewind(mapcycle);
+		new Handle:new_kv = CreateKeyValues("umc_rotation"), Action:result;
+		KvCopySubkeys(mapcycle, new_kv);
 
-	new Handle:new_kv = CreateKeyValues("umc_rotation");
-	KvCopySubkeys(mapcycle, new_kv);
+		Call_StartForward(exclude_forward);
+		Call_PushCell(new_kv);
+		Call_PushString(mapName);
+		Call_PushString(groupName);
+		Call_PushCell(isNom);
+		Call_PushCell(forMapChange);
+		Call_Finish(result);
 
-	Call_StartForward(exclude_forward);
-	Call_PushCell(new_kv);
-	Call_PushString(mapName);
-	Call_PushString(groupName);
-	Call_PushCell(isNom);
-	Call_PushCell(forMapChange);
-	Call_Finish(result);
+		CloseHandle(new_kv);
 
-	CloseHandle(new_kv);
+		return (result == Plugin_Continue);
+	}
 
-	new bool:re = result == Plugin_Continue;
-
-	return re;
+	KvRewind(mapcycle);
+	return false;
 }
 
 //Determines if the server has the required number of players for the given category and the required time.
