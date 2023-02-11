@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"NativeVotes Revote"
+	{
+		"en" "Revoting..."
+	}
+}

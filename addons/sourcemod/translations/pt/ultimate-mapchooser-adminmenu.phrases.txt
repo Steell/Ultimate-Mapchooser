@@ -1,230 +1,230 @@
 //Translation Phrases for the UMC Admin Menu module.
 
 "Phrases"
-{    
-    "AM Stop Vote"
-    {
-        "pt"    "Parar a votaÁ„o atual"
-    }
-    
-    "AM Start Vote"
-    {
-        "pt"    "iniciar uma vota"
-    }
-    
-    "AM Vote Type"
-    {
-        "pt"    "Selecionar o tipo de votaÁ„o"
-    }
-    
-    "Maps"
-    {
-        "pt"    "Mapas"
-    }
-    
-    "Groups"
-    {
-        "pt"    "Grupos"
-    }
-    
-    "Tiered"
-    {
-        "pt"    "Tipos"
-    }
-    
-    "AM Populate Vote"
-    {
-        "pt"    "Adicionar mapas para a votaÁ„o"
-    }
-    
-    "AM Vote Settings"
-    {
-        "pt"    "ConfiguraÁıes das votaÁıes"
-    }
-    
-    "AM-VS Defaults"
-    {
-        "pt"    "Usar Padrıes"
-    }
-    
-    "Manually Choose"
-    {
-        "pt"    "Escolha Manual"
-    }
-    
-    "AM Scramble Menu"
-    {
-        "pt"    "Menu de VotÁ„o BagunÁado?"
-    }
-    
-    "Default Yes"
-    {
-        "pt"    "Sim (Padr„o)"
-    }
-    
-    "Default No"
-    {
-        "pt"    "N„o (Padr„o)"
-    }
-    
-    "AM Threshold Menu"
-    {
-        "pt"    "Selecionar a Porcentagem"
-    }
-    
-    "AM Threshold Menu Message 1"
-    {
-        "pt"    "Digite no chat a porcentagem escolhida"
-    }
-    
-    "AM Threshold Menu Message 2"
-    {
-        "pt"    "mude para algum valor entre [de 0 atÈ 100]."
-    }
-    
-    "Default"
-    {
-        "pt"    "padr„o"
-    }
-    
-    "Previously Entered"
-    {
-        "pt"    "escolha prÈvia"
-    }
-    
-    "AM Fail Action Menu"
-    {
-        "pt"    "Escolher aÁ„o em caso de falha"
-    }
-    
-    "Do Nothing"
-    {
-        "pt"    "N„o fazer Nada"
-    }
-    
-    "Perform Runoff Vote"
-    {
-        "pt"    "Fazer votaÁ„o de desempate"
-    }
-    
-    "Default Do Nothing"
-    {
-        "pt"    "N„o fazer Nada (padr„o)"
-    }
-    
-    "Default Perform Runoff Vote"
-    {
-        "pt"    "Efetuar votaÁ„o de desempate (padr„o)"
-    }
-    
-    "AM Max Runoff Menu"
-    {
-        "pt"    "Selecione o montante m·ximo de desempates"
-    }
-    
-    "AM Max Runoff Menu Message 1"
-    {
-        "pt"    "Digite no chat o m·ximo que vocÍ gostaria"
-    }
-    
-    "AM Max Runoff Menu Message 2"
-    {
-        "pt"    "para escolher o n˙mero de desempates (>= 0)."
-    }
-    
-    "AM Max Runoff Menu Message 3"
-    {
-        //Note to translators:  keep the leading space in this phrase.
-        "pt"    " 0 = ilimitado"
-    }
-    
-    "AM Runoff Fail Action Menu"
-    {
-        "pt"    "Selecionar aÁ„o se o desempate falhar"
-    }
-    
-    "Accept Winner"
-    {
-        "pt"    "Aceitar Vencedor"
-    }
-    
-    "Default Accept Winner"
-    {
-        "pt"    "Aceitar Vencedor (padr„o)"
-    }
-    
-    "AM Extend Menu"
-    {
-        "pt"    "Adicionar opÁ„o para extender?"
-    }
-    
-    "AM Don't Change Menu"
-    {
-        "pt"    "Adicionar opÁ„o para n„o mudar?"
-    }
-    
-    "AM Admin Flag Menu"
-    {
-        "pt"    "Fazer o voto disponÌvel para..."
-    }
-    
-    "Everyone"
-    {
-        "pt"    "Todos"
-    }
-    
-    "Admins Only"
-    {
-        "pt"    "Somente ADMINS"
-    }
-    
-    "AM Change When Menu"
-    {
-        "pt"    "Mudar de mapa quando?"
-    }
-    
-    "Now"
-    {
-        "pt"    "Agora"
-    }
-    
-    "End of Round"
-    {
-        "pt"    "No fim da Rodada"
-    }
-    
-    "End of Map"
-    {
-        "pt"    "No fim do Mapa"
-    }
-    
-    "Select A Map"
-    {
-        "pt"    "Escolher o Mapa"
-    }
-    
-    "Select A Group"
-    {
-        "pt"    "Escolher o Grupo"
-    }
-    
-    "Auto Select"
-    {
-        "pt"    "Escolha Autm·tica"
-    }
-    
-    "Manual Select"
-    {
-        "pt"    "Escolha Manual"
-    }
-    
-    "AM Change Map"
-    {
-        "pt"    "Mudar de Mapa"
-    }
-    
-    "AM Set Next Map"
-    {
-        "pt"    "Escolher o PrÛximo Mapa"
-    }
+{ 
+	"AM Stop Vote"
+	{
+		"pt" "Parar a vota√ß√£o atual"
+	}
+
+	"AM Start Vote"
+	{
+		"pt" "iniciar uma vota"
+	}
+
+	"AM Vote Type"
+	{
+		"pt" "Selecionar o tipo de vota√ß√£o"
+	}
+
+	"Maps"
+	{
+		"pt" "Mapas"
+	}
+
+	"Groups"
+	{
+		"pt" "Grupos"
+	}
+
+	"Tiered"
+	{
+		"pt" "Tipos"
+	}
+
+	"AM Populate Vote"
+	{
+		"pt" "Adicionar mapas para a vota√ß√£o"
+	}
+
+	"AM Vote Settings"
+	{
+		"pt" "Configura√ß√µes das vota√ß√µes"
+	}
+
+	"AM-VS Defaults"
+	{
+		"pt" "Usar Padr√µes"
+	}
+
+	"Manually Choose"
+	{
+		"pt" "Escolha Manual"
+	}
+
+	"AM Scramble Menu"
+	{
+		"pt" "Menu de Vot√ß√£o Bagun√ßado?"
+	}
+
+	"Default Yes"
+	{
+		"pt" "Sim (Padr√£o)"
+	}
+
+	"Default No"
+	{
+		"pt" "N√£o (Padr√£o)"
+	}
+
+	"AM Threshold Menu"
+	{
+		"pt" "Selecionar a Porcentagem"
+	}
+
+	"AM Threshold Menu Message 1"
+	{
+		"pt" "Digite no chat a porcentagem escolhida"
+	}
+
+	"AM Threshold Menu Message 2"
+	{
+		"pt" "mude para algum valor entre [de 0 at√© 100]."
+	}
+
+	"Default"
+	{
+		"pt" "Padr√£o"
+	}
+
+	"Previously Entered"
+	{
+		"pt" "escolha pr√©via"
+	}
+
+	"AM Fail Action Menu"
+	{
+		"pt" "Escolher a√ß√£o em caso de falha"
+	}
+
+	"Do Nothing"
+	{
+		"pt" "N√£o fazer Nada"
+	}
+
+	"Perform Runoff Vote"
+	{
+		"pt" "Fazer vota√ß√£o de desempate"
+	}
+
+	"Default Do Nothing"
+	{
+		"pt" "N√£o fazer Nada (padr√£o)"
+	}
+
+	"Default Perform Runoff Vote"
+	{
+		"pt" "Efetuar vota√ß√£o de desempate (padr√£o)"
+	}
+
+	"AM Max Runoff Menu"
+	{
+		"pt" "Selecione o montante m√°ximo de desempates"
+	}
+
+	"AM Max Runoff Menu Message 1"
+	{
+		"pt" "Digite no chat o m√°ximo que voc√™ gostaria"
+	}
+
+	"AM Max Runoff Menu Message 2"
+	{
+		"pt" "para escolher o n√∫mero de desempates (>= 0)."
+	}
+
+	"AM Max Runoff Menu Message 3"
+	{
+		//Note to translators: keep the leading space in this phrase.
+		"pt" " 0 = ilimitado"
+	}
+
+	"AM Runoff Fail Action Menu"
+	{
+		"pt" "Selecionar a√ß√£o se o desempate falhar"
+	}
+
+	"Accept Winner"
+	{
+		"pt" "Aceitar Vencedor"
+	}
+
+	"Default Accept Winner"
+	{
+		"pt" "Aceitar Vencedor (padr√£o)"
+	}
+
+	"AM Extend Menu"
+	{
+		"pt" "Adicionar op√ß√£o para extender?"
+	}
+
+	"AM Don't Change Menu"
+	{
+		"pt" "Adicionar op√ß√£o para n√£o mudar?"
+	}
+
+	"AM Admin Flag Menu"
+	{
+		"pt" "Fazer o voto dispon√≠vel para..."
+	}
+
+	"Everyone"
+	{
+		"pt" "Todos"
+	}
+
+	"Admins Only"
+	{
+		"pt" "Somente ADMINS"
+	}
+
+	"AM Change When Menu"
+	{
+		"pt" "Mudar de mapa quando?"
+	}
+
+	"Now"
+	{
+		"pt" "Agora"
+	}
+
+	"End of Round"
+	{
+		"pt" "No fim da Rodada"
+	}
+
+	"End of Map"
+	{
+		"pt" "No fim do Mapa"
+	}
+
+	"Select A Map"
+	{
+		"pt" "Escolher o Mapa"
+	}
+
+	"Select A Group"
+	{
+		"pt" "Escolher o Grupo"
+	}
+
+	"Auto Select"
+	{
+		"pt" "Escolha Autm√°tica"
+	}
+
+	"Manual Select"
+	{
+		"pt" "Escolha Manual"
+	}
+
+	"AM Change Map"
+	{
+		"pt" "Mudar de Mapa"
+	}
+
+	"AM Set Next Map"
+	{
+		"pt" "Escolher o Pr√≥ximo Mapa"
+	}
 }
